@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets   = "native"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model Post {
+//   id        String     @default(cuid()) @id
+//   title     String
+//   content   String?
+//   published Boolean @default(false)
+//   author    User?   @relation(fields: [authorId], references: [id])
+//   authorId  String?
+// }
+
+model Player {
+  id            String       @default(cuid()) @id
+  supabaseId    String       @unique
+  firstName     String?
+  lastName      String?
+  skillLevel    String?
+  birthday      DateTime?  @db.Date
+  createdAt     DateTime  @default(now())
+  lastActiveAt     DateTime?
+  // the geometry column itself
+  coordinate    Unsupported("geometry(Point, 4326)")?
+  // the index for that column
+  @@index([coordinate], name: "location_idx", type: Gist)
+  city          String? 
+  description   String?
+  
+}

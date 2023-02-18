@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@next/font': 13.1.6
+  '@prisma/client': ^4.10.1
   '@tanstack/react-query': ^4.24.6
   '@trpc/client': ^10.11.0
   '@trpc/next': ^10.11.0
@@ -26,6 +27,7 @@ specifiers:
 
 dependencies:
   '@next/font': 13.1.6
+  '@prisma/client': 4.10.1_prisma@4.10.1
   '@tanstack/react-query': 4.24.6_biqbaboplfbrettd7655fr4n2y
   '@trpc/client': 10.11.0_@trpc+server@10.11.0
   '@trpc/next': 10.11.0_raz3qfxfki7hz5kltyatwmqliq
@@ -37,6 +39,7 @@ dependencies:
   eslint: 8.34.0
   eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
   next: 13.1.6_5mhhrw5dq6gnbuirj2awdzvyuu
+  prisma: 4.10.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   trpc-playground: 1.0.4_yrptcow7mwcqrfla4a342jxnni
@@ -47,7 +50,6 @@ devDependencies:
   eslint-config-prettier: 8.6.0_eslint@8.34.0
   eslint-plugin-prettier: 4.2.1_u5wnrdwibbfomslmnramz52buy
   prettier: 2.8.4
-  prisma: 4.10.1
   sass: 1.58.0
 
 packages:
@@ -451,10 +453,28 @@ packages:
       tslib: 2.5.0
     dev: false
 
+  /@prisma/client/4.10.1_prisma@4.10.1:
+    resolution: {integrity: sha512-VonXLJZybdt8e5XZH5vnIGCRNnIh6OMX1FS3H/yzMGLT3STj5TJ/OkMcednrvELgk8PK89Vo3aSh51MWNO0axA==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.10.1-2.aead147aa326ccb985dcfed5b065b4fdabd44b19
+      prisma: 4.10.1
+    dev: false
+
+  /@prisma/engines-version/4.10.1-2.aead147aa326ccb985dcfed5b065b4fdabd44b19:
+    resolution: {integrity: sha512-tsjTho7laDhf9EJ9EnDxAPEf7yrigSMDhniXeU4YoWc7azHAs4GPxRi2P9LTFonmHkJLMOLjR77J1oIP8Ife1w==}
+    dev: false
+
   /@prisma/engines/4.10.1:
     resolution: {integrity: sha512-B3tcTxjx196nuAu1GOTKO9cGPUgTFHYRdkPkTS4m5ptb2cejyBlH9X7GOfSt3xlI7p4zAJDshJP4JJivCg9ouA==}
     requiresBuild: true
-    dev: true
+    dev: false
 
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
@@ -2154,7 +2174,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.10.1
-    dev: true
+    dev: false
 
   /prop-types/15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}

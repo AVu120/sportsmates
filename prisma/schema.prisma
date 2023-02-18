@@ -23,7 +23,7 @@ datasource db {
 model Player {
   id            String       @default(cuid()) @id
   supabaseId    String       @unique
-  firstName     String?
+  firstName     String
   lastName      String?
   skillLevel    String?
   birthday      DateTime?  @db.Date

@@ -28,11 +28,10 @@ model Player {
   lastName      String?
   skillLevel    String?
   birthday      DateTime?  @db.Date
-  createdAt     DateTime  @default(now())
-  lastActiveAt     DateTime?
-  // the geometry column itself
+  createdAt     DateTime  @db.Timestamptz(3)
+  // Last time a player with a confirmed email address logged in.
+  lastActiveAt  DateTime? @db.Timestamptz(3)
   coordinate    Unsupported("geometry(Point, 4326)")?
-  // the index for that column
   @@index([coordinate], name: "location_idx", type: Gist)
   city          String? 
   description   String?

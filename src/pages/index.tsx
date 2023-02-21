@@ -23,8 +23,9 @@ export default function Home() {
           onClick={async () => {
             console.log("ADD PLAYER");
             const addedPlayer = await addPlayer.mutateAsync({
-              id: "f05335ca-ccf9-4e93-971d-568993121c44",
-              supabaseId: "35ecf683-f701-4e8a-b2be-4932ef371863",
+              // temporary UUIDs used for testing, won't be stored permanently anywhere in prod db.
+              id: "8563cc01-b80b-4027-b420-4056cdb299ec",
+              supabaseId: "24fb84df-9d45-4663-bb7f-000a74a4f04c",
               createdAt: new Date(),
             });
             console.log({ addedPlayer });

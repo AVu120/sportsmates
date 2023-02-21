@@ -42,7 +42,7 @@ export const playerRouter = router({
       z.object({
         id: z.string().uuid(),
         supabaseId: z.string().uuid(),
-        createdAt: z.string(),
+        createdAt: z.coerce.date(),
       })
     )
     .mutation(async ({ input }) => {

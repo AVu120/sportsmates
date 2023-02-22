@@ -1,11 +1,21 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.scss";
 import { trpc } from "../utils/trpc";
+import { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
   const addPlayer = trpc.player.add.useMutation();
-  const latestPlayer = trpc.player.list.useQuery();
-  console.log({ latestPlayer: latestPlayer.data });
+
+  const latestPlayer = trpc.player.getLatestPlayer.useQuery();
+  // const allPlayers = trpc.player.list.useQuery();
+  useEffect(() => {
+    console.log({ latestPlayerData: latestPlayer.data });
+  }, [latestPlayer.data]);
+  // useEffect(() => {
+  //   console.log({ allPlayers: allPlayers.data });
+  // }, [allPlayers.data]);
 
   return (
     <>
@@ -17,15 +27,41 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main
+        className={styles.main}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         Home
+        <div>
+          <h1>Latest Player</h1>
+          <button
+            onClick={() => {
+              latestPlayer.refetch();
+            }}
+          >
+            Refetch latest player
+          </button>
+          {typeof latestPlayer.data === "string" ? (
+            <p>{latestPlayer.data}</p>
+          ) : (
+            <>
+              <p>{latestPlayer?.data?.id}</p>
+              <p>{latestPlayer?.data?.supabaseId}</p>
+              {latestPlayer?.data?.createdAt && (
+                <p>{new Date(latestPlayer.data.createdAt).toString()}</p>
+              )}
+            </>
+          )}
+        </div>
         <button
           onClick={async () => {
             console.log("ADD PLAYER");
             const addedPlayer = await addPlayer.mutateAsync({
-              // temporary UUIDs used for testing, won't be stored permanently anywhere in prod db.
-              id: "8563cc01-b80b-4027-b420-4056cdb299ec",
-              supabaseId: "24fb84df-9d45-4663-bb7f-000a74a4f04c",
+              id: uuidv4(),
+              supabaseId: uuidv4(),
               createdAt: new Date(),
             });
             console.log({ addedPlayer });

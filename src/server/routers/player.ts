@@ -9,13 +9,28 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 
 export const playerRouter = router({
-  list: procedure.query(async () => {
-    const firstPlayer = await prisma.player.findFirst({
+  getLatestPlayer: procedure.query(async () => {
+    const latestPlayer = await prisma.player.findFirst({
       orderBy: {
-        id: "desc",
+        createdAt: "desc",
       },
     });
-    return firstPlayer || "No players yet";
+    return latestPlayer || "No players yet";
+  }),
+  list: procedure.query(async () => {
+    /**
+     * For pagination docs you can have a look here
+     * @see https://trpc.io/docs/useInfiniteQuery
+     * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
+     */
+
+    const players = await prisma.player.findMany({
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    return players;
   }),
   // byId: procedure
   //   .input(

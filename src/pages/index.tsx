@@ -1,9 +1,5 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.scss";
-import { trpc } from "../utils/trpc";
-import { useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
   return (
@@ -23,8 +19,8 @@ export default function Home() {
           flexDirection: "column",
         }}
       >
-        Website is under maintainance. This usually doesn't take long. This site
-        should be back up in a few minutes!
+        Website is under maintainance. This usually does not take long. This
+        site should be back up in a few minutes!
       </main>
     </>
   );

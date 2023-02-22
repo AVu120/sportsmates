@@ -6,17 +6,6 @@ import { v4 as uuidv4 } from "uuid";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-  const addPlayer = trpc.player.add.useMutation();
-
-  const latestPlayer = trpc.player.getLatestPlayer.useQuery();
-  // const allPlayers = trpc.player.list.useQuery();
-  useEffect(() => {
-    console.log({ latestPlayerData: latestPlayer.data });
-  }, [latestPlayer.data]);
-  // useEffect(() => {
-  //   console.log({ allPlayers: allPlayers.data });
-  // }, [allPlayers.data]);
-
   return (
     <>
       <Head>
@@ -34,41 +23,8 @@ export default function Home() {
           flexDirection: "column",
         }}
       >
-        Home
-        <div>
-          <h1>Latest Player</h1>
-          <button
-            onClick={() => {
-              latestPlayer.refetch();
-            }}
-          >
-            Refetch latest player
-          </button>
-          {typeof latestPlayer.data === "string" ? (
-            <p>{latestPlayer.data}</p>
-          ) : (
-            <>
-              <p>{latestPlayer?.data?.id}</p>
-              <p>{latestPlayer?.data?.supabaseId}</p>
-              {latestPlayer?.data?.createdAt && (
-                <p>{new Date(latestPlayer.data.createdAt).toString()}</p>
-              )}
-            </>
-          )}
-        </div>
-        <button
-          onClick={async () => {
-            console.log("ADD PLAYER");
-            const addedPlayer = await addPlayer.mutateAsync({
-              id: uuidv4(),
-              supabaseId: uuidv4(),
-              createdAt: new Date(),
-            });
-            console.log({ addedPlayer });
-          }}
-        >
-          Add Playerr
-        </button>
+        Website is under maintainance. This usually doesn't take long. This site
+        should be back up in a few minutes!
       </main>
     </>
   );

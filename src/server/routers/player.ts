@@ -48,11 +48,11 @@ export const playerRouter = router({
 
       const { longitude, latitude, range } = input;
 
-      const players = await prisma.$queryRawUnsafe(`
+      const players = await prisma.$queryRaw`
       SELECT id, "supabaseId", "firstName", "lastName", "skillLevel", birthday, "lastActiveAt", city, description
       FROM "Player"
       WHERE ST_DWithin(coordinates, ST_Point(${longitude}, ${latitude}), ${range})
-      ORDER BY coordinates <-> ST_Point(${longitude}, ${latitude}) ASC;`);
+      ORDER BY coordinates <-> ST_Point(${longitude}, ${latitude}) ASC;`;
       return players;
     }),
   // byId: procedure
@@ -78,7 +78,6 @@ export const playerRouter = router({
   add: procedure
     .input(
       z.object({
-        id: z.string().uuid(),
         supabaseId: z.string().uuid(),
         // Pass in Javascript Date object here containing user's local timezone info.
         createdAt: z.coerce.date(),
@@ -126,11 +125,11 @@ export const playerRouter = router({
       const { longitude, latitude } = input.data;
       const { supabaseId } = input;
 
-      await prisma.$queryRawUnsafe(`
+      await prisma.$queryRaw`
       UPDATE "Player"
       SET coordinates = st_point(${longitude}, ${latitude})
       WHERE "supabaseId" = '${supabaseId}';
-      `);
+      `;
       return `player location set to longitude: ${longitude}°, latitude: ${latitude}°`;
     }),
 });

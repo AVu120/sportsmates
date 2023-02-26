@@ -32,8 +32,16 @@ model Player {
   // Last time a player with a confirmed email address logged in.
   lastActiveAt  DateTime? @db.Timestamptz(3)
   coordinates    Unsupported("geography(Point)")?
-  @@index([coordinates], name: "location_idx", type: Gist)
+  @@index([coordinates], name: "player_coordinates_index", type: Gist)
   city          String? 
   description   String?
-  
+}
+
+model Net {
+  id            String       @default(cuid()) @id
+  name          String
+  description   String?
+  coordinates   Unsupported("geography(Point)")
+  address       String
+  @@index([coordinates], name: "net_coordinates_index", type: Gist)
 }

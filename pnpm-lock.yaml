@@ -17,6 +17,7 @@ specifiers:
   eslint-config-next: 13.1.6
   eslint-config-prettier: ^8.6.0
   eslint-plugin-prettier: ^4.2.1
+  husky: ^8.0.0
   next: 13.1.6
   prettier: ^2.8.4
   prisma: ^4.10.1
@@ -55,6 +56,7 @@ devDependencies:
   '@types/uuid': 9.0.0
   eslint-config-prettier: 8.6.0_eslint@8.34.0
   eslint-plugin-prettier: 4.2.1_u5wnrdwibbfomslmnramz52buy
+  husky: 8.0.3
   prettier: 2.8.4
   sass: 1.58.0
 
@@ -1644,6 +1646,12 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: false
+
+  /husky/8.0.3:
+    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
 
   /ignore/5.2.4:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}

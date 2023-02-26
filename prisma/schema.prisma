@@ -31,8 +31,8 @@ model Player {
   createdAt     DateTime  @db.Timestamptz(3)
   // Last time a player with a confirmed email address logged in.
   lastActiveAt  DateTime? @db.Timestamptz(3)
-  coordinate    Unsupported("geometry(Point, 4326)")?
-  @@index([coordinate], name: "location_idx", type: Gist)
+  coordinates    Unsupported("geography(Point)")?
+  @@index([coordinates], name: "location_idx", type: Gist)
   city          String? 
   description   String?
   

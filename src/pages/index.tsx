@@ -9,13 +9,10 @@ export default function Home() {
   const addPlayer = trpc.player.add.useMutation();
 
   const latestPlayer = trpc.player.getLatestPlayer.useQuery();
-  // const allPlayers = trpc.player.list.useQuery();
+
   useEffect(() => {
     console.log({ latestPlayerData: latestPlayer.data });
   }, [latestPlayer.data]);
-  // useEffect(() => {
-  //   console.log({ allPlayers: allPlayers.data });
-  // }, [allPlayers.data]);
 
   return (
     <>
@@ -60,7 +57,6 @@ export default function Home() {
           onClick={async () => {
             console.log("ADD PLAYER");
             const addedPlayer = await addPlayer.mutateAsync({
-              id: uuidv4(),
               supabaseId: uuidv4(),
               createdAt: new Date(),
             });

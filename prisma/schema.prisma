@@ -47,9 +47,13 @@ model Session {
   hostId         String
   net            Net      @relation(fields: [netId], references: [id])
   netId          String
-  start_datetime DateTime @db.Timestamptz(3)
-  end_datetime   DateTime @db.Timestamptz(3)
+  startDatetime DateTime @db.Timestamptz(3)
+  endDatetime   DateTime @db.Timestamptz(3)
   name           String
   description    String?
-  max_number_of_attendees Int
+  maxNumberOfAttendees Int
+
+  @@unique([hostId, netId, startDatetime])
+  @@unique([hostId, netId, endDatetime])
+  @@unique([hostId, netId, startDatetime, endDatetime])
 }

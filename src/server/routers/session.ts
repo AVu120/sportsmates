@@ -38,4 +38,19 @@ export const sessionRouter = router({
       const session = await prisma.session.create({ data: input });
       return session;
     }),
+  delete: procedure
+    .input(
+      z.object({
+        id: z.string().cuid2(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { id } = input;
+      await prisma.session.delete({
+        where: {
+          id,
+        },
+      });
+      return `session ${id} deleted`;
+    }),
 });

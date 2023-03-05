@@ -2,46 +2,54 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  binaryTargets   = "native"
+  provider      = "prisma-client-js"
+  binaryTargets = "native"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-// model Post {
-//   id        String     @default(cuid()) @id
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-//   author    User?   @relation(fields: [authorId], references: [id])
-//   authorId  String?
-// }
-
 model Player {
-  id            String       @default(cuid()) @id
-  supabaseId    String       @unique
-  firstName     String?
-  lastName      String?
-  skillLevel    String?
-  birthday      DateTime?  @db.Date
-  createdAt     DateTime  @db.Timestamptz(3)
+  id           String                           @id @default(cuid())
+  supabaseId   String                           @unique
+  firstName    String?
+  lastName     String?
+  skillLevel   String?
+  birthday     DateTime?                        @db.Date
+  createdAt    DateTime                         @db.Timestamptz(3)
   // Last time a player with a confirmed email address logged in.
-  lastActiveAt  DateTime? @db.Timestamptz(3)
-  coordinates    Unsupported("geography(Point)")?
+  lastActiveAt DateTime?                        @db.Timestamptz(3)
+  coordinates  Unsupported("geography(Point)")?
+  city         String?
+  description  String?
+  Session      Session[]
+
   @@index([coordinates], name: "player_coordinates_index", type: Gist)
-  city          String? 
-  description   String?
 }
 
 model Net {
-  id            String       @default(cuid()) @id
-  name          String
-  description   String?
-  coordinates   Unsupported("geography(Point)")
-  address       String
+  id          String                          @id @default(cuid())
+  name        String
+  description String?
+  coordinates Unsupported("geography(Point)")
+  address     String
+  Session     Session[]
+
   @@index([coordinates], name: "net_coordinates_index", type: Gist)
+}
+
+model Session {
+  id             String   @id @default(cuid())
+  host           Player   @relation(fields: [hostId], references: [id])
+  hostId         String
+  net            Net      @relation(fields: [netId], references: [id])
+  netId          String
+  start_datetime DateTime @db.Timestamptz(3)
+  end_datetime   DateTime @db.Timestamptz(3)
+  name           String
+  description    String?
+  max_number_of_attendees Int
 }

@@ -6,36 +6,27 @@ import { router, procedure } from "../trpc";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 
-export const sessionRouter = router({
-  listAll: procedure.query(async () => {
+export const sessionAttendeeRouter = router({
+  list: procedure.query(async () => {
     /**
      * For pagination docs you can have a look here
      * @see https://trpc.io/docs/useInfiniteQuery
      * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
      */
 
-    const nets = await prisma.session.findMany({
-      orderBy: {
-        name: "asc",
-      },
-    });
+    const nets = await prisma.sessionAttendee.findMany();
 
     return nets;
   }),
   add: procedure
     .input(
       z.object({
-        hostId: z.string().cuid2(),
-        netId: z.string().cuid2(),
-        startDatetime: z.coerce.date(),
-        endDatetime: z.coerce.date(),
-        name: z.string(),
-        description: z.string().optional(),
-        maxNumberOfAttendees: z.number(),
+        playerId: z.string().cuid2(),
+        sessionId: z.string().cuid2(),
       })
     )
     .mutation(async ({ input }) => {
-      const session = await prisma.session.create({ data: input });
+      const session = await prisma.sessionAttendee.create({ data: input });
       return session;
     }),
   delete: procedure
@@ -46,11 +37,11 @@ export const sessionRouter = router({
     )
     .mutation(async ({ input }) => {
       const { id } = input;
-      await prisma.session.delete({
+      await prisma.sessionAttendee.delete({
         where: {
           id,
         },
       });
-      return `session ${id} deleted`;
+      return `session attendee ${id} deleted`;
     }),
 });

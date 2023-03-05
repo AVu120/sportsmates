@@ -26,6 +26,7 @@ model Player {
   city         String?
   description  String?
   Session      Session[]
+  SessionAttendee     SessionAttendee[]
 
   @@index([coordinates], name: "player_coordinates_index", type: Gist)
 }
@@ -52,8 +53,19 @@ model Session {
   name           String
   description    String?
   maxNumberOfAttendees Int
+  SessionAttendee     SessionAttendee[]
 
   @@unique([hostId, netId, startDatetime])
   @@unique([hostId, netId, endDatetime])
   @@unique([hostId, netId, startDatetime, endDatetime])
+}
+
+model SessionAttendee {
+  id             String   @id @default(cuid())
+  player           Player   @relation(fields: [playerId], references: [id])
+  playerId         String
+  session            Session      @relation(fields: [sessionId], references: [id])
+  sessionId          String
+
+  @@unique([playerId, sessionId])
 }

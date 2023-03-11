@@ -22,6 +22,28 @@ export const sessionRouter = router({
 
     return nets;
   }),
+  listByDateRange: procedure
+    .input(
+      z.object({
+        startDatetime: z.coerce.date(),
+        endDatetime: z.coerce.date(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { startDatetime, endDatetime } = input;
+      const nets = await prisma.session.findMany({
+        where: {
+          startDatetime: {
+            gte: startDatetime.toISOString(),
+          },
+          endDatetime: {
+            lte: endDatetime.toISOString(),
+          },
+        },
+      });
+
+      return nets;
+    }),
   add: procedure
     .input(
       z.object({

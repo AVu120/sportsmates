@@ -25,8 +25,8 @@ model Player {
   coordinates  Unsupported("geography(Point)")?
   city         String?
   description  String?
-  Session      Session[]
-  SessionAttendee     SessionAttendee[]
+  Meetup      Meetup[]
+  MeetupAttendee     MeetupAttendee[]
 
   @@index([coordinates], name: "player_coordinates_index", type: Gist)
 }
@@ -37,12 +37,12 @@ model Net {
   description String?
   coordinates Unsupported("geography(Point)")
   address     String
-  Session     Session[]
+  Meetup     Meetup[]
 
   @@index([coordinates], name: "net_coordinates_index", type: Gist)
 }
 
-model Session {
+model Meetup {
   id             String   @id @default(cuid())
   host           Player   @relation(fields: [hostId], references: [id])
   hostId         String
@@ -53,19 +53,19 @@ model Session {
   name           String
   description    String?
   maxNumberOfAttendees Int
-  SessionAttendee     SessionAttendee[]
+  MeetupAttendee     MeetupAttendee[]
 
   @@unique([hostId, netId, startDatetime])
   @@unique([hostId, netId, endDatetime])
   @@unique([hostId, netId, startDatetime, endDatetime])
 }
 
-model SessionAttendee {
+model MeetupAttendee {
   id             String   @id @default(cuid())
   player           Player   @relation(fields: [playerId], references: [id])
   playerId         String
-  session            Session      @relation(fields: [sessionId], references: [id])
-  sessionId          String
+  meetup            Meetup      @relation(fields: [meetupId], references: [id])
+  meetupId          String
 
-  @@unique([playerId, sessionId])
+  @@unique([playerId, meetupId])
 }

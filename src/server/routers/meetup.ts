@@ -6,7 +6,7 @@ import { router, procedure } from "../trpc";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 
-export const sessionRouter = router({
+export const meetupRouter = router({
   listAll: procedure.query(async () => {
     /**
      * For pagination docs you can have a look here
@@ -14,13 +14,13 @@ export const sessionRouter = router({
      * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
      */
 
-    const nets = await prisma.session.findMany({
+    const meetups = await prisma.meetup.findMany({
       orderBy: {
         name: "asc",
       },
     });
 
-    return nets;
+    return meetups;
   }),
   listByDateRange: procedure
     .input(
@@ -31,7 +31,7 @@ export const sessionRouter = router({
     )
     .query(async ({ input }) => {
       const { startDatetime, endDatetime } = input;
-      const nets = await prisma.session.findMany({
+      const nets = await prisma.meetup.findMany({
         where: {
           startDatetime: {
             gte: startDatetime.toISOString(),
@@ -57,8 +57,8 @@ export const sessionRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const session = await prisma.session.create({ data: input });
-      return session;
+      const meetup = await prisma.meetup.create({ data: input });
+      return meetup;
     }),
   delete: procedure
     .input(
@@ -68,11 +68,11 @@ export const sessionRouter = router({
     )
     .mutation(async ({ input }) => {
       const { id } = input;
-      await prisma.session.delete({
+      await prisma.meetup.delete({
         where: {
           id,
         },
       });
-      return `session ${id} deleted`;
+      return `meetup ${id} deleted`;
     }),
 });

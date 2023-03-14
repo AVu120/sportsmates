@@ -55,26 +55,6 @@ export const playerRouter = router({
       ORDER BY coordinates <-> ST_Point(${longitude}, ${latitude}) ASC;`;
       return players;
     }),
-  // byId: procedure
-  // .input(
-  //   z.object({
-  //     id: z.string(),
-  //   })
-  // )
-  //   .query(async ({ input }) => {
-  //     const { id } = input;
-  //     const post = await prisma.post.findUnique({
-  //       where: { id },
-  //       select: defaultPostSelect,
-  //     });
-  //     if (!post) {
-  //       throw new TRPCError({
-  //         code: "NOT_FOUND",
-  //         message: `No post with id '${id}'`,
-  //       });
-  //     }
-  //     return post;
-  //   }),
   add: procedure
     .input(
       z.object({
@@ -93,43 +73,41 @@ export const playerRouter = router({
     .input(
       z.object({
         supabaseId: z.string().uuid(),
-        data: z.object({
-          firstName: z.string().optional(),
-          lastName: z.string().optional(),
-          skillLevel: z.string().optional(),
-          birthday: z.coerce.date().optional(),
-          lastActiveAt: z.coerce.date().optional(),
-          city: z.string().optional(),
-          description: z.string().optional(),
-        }),
+        firstName: z.string().optional(),
+        lastName: z.string().optional(),
+        skillLevel: z.string().optional(),
+        birthday: z.coerce.date().optional(),
+        lastActiveAt: z.coerce.date().optional(),
+        city: z.string().optional(),
+        description: z.string().optional(),
+        longitude: z.number().min(-180).max(180),
+        latitude: z.number().min(-180).max(180),
       })
     )
     .mutation(async ({ input }) => {
-      const player = await prisma.player.update({
-        where: { supabaseId: input.supabaseId },
-        data: input.data,
-      });
-      return player;
-    }),
-  updateLocation: procedure
-    .input(
-      z.object({
-        supabaseId: z.string().uuid(),
-        data: z.object({
-          longitude: z.number().min(-180).max(180),
-          latitude: z.number().min(-180).max(180),
-        }),
-      })
-    )
-    .mutation(async ({ input }) => {
-      const { longitude, latitude } = input.data;
-      const { supabaseId } = input;
-
+      const {
+        supabaseId,
+        firstName,
+        lastName,
+        skillLevel,
+        birthday,
+        lastActiveAt,
+        city,
+        description,
+        longitude,
+        latitude,
+      } = input;
       await prisma.$queryRaw`
       UPDATE "Player"
-      SET coordinates = st_point(${longitude}, ${latitude})
-      WHERE "supabaseId" = '${supabaseId}';
-      `;
-      return `player location set to longitude: ${longitude}°, latitude: ${latitude}°`;
+      SET "firstName" = ${firstName}, 
+          "lastName" = ${lastName}, 
+          "skillLevel" = ${skillLevel}, 
+          birthday = ${birthday},
+          "lastActiveAt" = ${lastActiveAt},
+          city = ${city},
+          description = ${description},
+          coordinates = ST_Point(${longitude}, ${latitude})
+      WHERE "supabaseId" = ${supabaseId};`;
+      return input;
     }),
 });

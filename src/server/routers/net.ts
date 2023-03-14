@@ -38,6 +38,28 @@ export const netRouter = router({
       await prisma.$queryRaw`
       INSERT INTO "Net"(id, name, description, address, coordinates)
       VALUES (${createCuid()}, ${name}, ${description}, ${address}, ST_Point(${longitude}, ${latitude}));`;
-      return `net: ${name} added`;
+      return input;
+    }),
+  update: procedure
+    .input(
+      z.object({
+        id: z.string().cuid2(),
+        name: z.string(),
+        description: z.string().optional(),
+        longitude: z.number().min(-180).max(180),
+        latitude: z.number().min(-180).max(180),
+        address: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { id, name, description, longitude, latitude, address } = input;
+      await prisma.$queryRaw`
+      UPDATE "Net"
+      SET name = ${name}, 
+          description = ${description}, 
+          address = ${address}, 
+          coordinates = ST_Point(${longitude}, ${latitude})
+      WHERE id = ${id};`;
+      return input;
     }),
 });

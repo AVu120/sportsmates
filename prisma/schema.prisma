@@ -33,10 +33,10 @@ model Player {
 
 model Net {
   id          String                          @id @default(cuid())
-  name        String
+  name        String                          @unique
   description String?
-  coordinates Unsupported("geography(Point)")
-  address     String
+  coordinates Unsupported("geography(Point)") @unique
+  address     String                          @unique
   Meetup     Meetup[]
 
   @@index([coordinates], name: "net_coordinates_index", type: Gist)

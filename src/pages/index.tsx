@@ -1,5 +1,5 @@
 import Head from "next/head";
-import styles from "@/styles/pages/Home.module.scss";
+import styles from "./_styles/index.module.scss";
 import { Header } from "../components/common/Header";
 
 const Home = () => {

@@ -1,4 +1,4 @@
-import "@/styles/pages/common/globals.scss";
+import "./_styles/common/globals.scss";
 import type { AppType } from "next/app";
 import { trpc } from "../utils/trpc";
 

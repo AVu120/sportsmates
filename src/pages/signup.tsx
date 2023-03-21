@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React from "react";
-import { Header } from "../components/common/Header";
+import { Header } from "../components/navigation/Header";
 import styles from "./_styles/signup.module.scss";
 
 const signup = () => {

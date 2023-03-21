@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import { Header } from "../components/common/Header";
+import { Header } from "../components/navigation/Header";
 import styles from "./_styles/login.module.scss";
 
 const login = () => {

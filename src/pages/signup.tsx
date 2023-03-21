@@ -1,5 +1,6 @@
 import Head from "next/head";
 import React from "react";
+import SignupForm from "../components/form/SignupForm";
 import { Header } from "../components/navigation/Header";
 import styles from "./_styles/signup.module.scss";
 
@@ -15,7 +16,9 @@ const signup = () => {
       </Head>
       <div className={styles.page}>
         <Header />
-        <main>Sign up</main>
+        <main>
+          <SignupForm />
+        </main>
         <footer />
       </div>
     </>

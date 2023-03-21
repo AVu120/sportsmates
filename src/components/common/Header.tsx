@@ -1,38 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
+import styles from "./Header.module.scss";
 
 /** Common Header that displays on the top of every page. */
 export const Header = () => (
-  <header
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      width: "100%",
-      padding: "10px",
-    }}
-  >
+  <header className={styles.header}>
     <Link href="/">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          columnGap: "10px",
-        }}
-      >
+      <div className={styles.logo}>
         <Image src="/logo.png" width={25} height={25} alt="" />{" "}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            fontWeight: "bold",
-          }}
-        >
+        <div className={styles.logo_text}>
           <p>Cricket </p>
           <p>Buddy</p>
         </div>
       </div>
     </Link>
-    <div style={{ display: "flex", columnGap: "10px" }}>
+    <div className={styles.button_group}>
       <Link href="/login">
         <button>Log in</button>
       </Link>

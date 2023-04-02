@@ -1,7 +1,6 @@
-/* reset */
-
 .form_root {
-  width: 260px;
+  min-width: 260px;
+  width: 20vw;
 }
 
 .form_field {
@@ -28,11 +27,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-
   font-size: 15px;
-  // color: white;
-  // background-color: var(--blackA5);
-  box-shadow: 0 0 0 1px var(--blackA9);
+  box-shadow: 0 0 0 1px black;
 }
 .input:hover,
 .text_area:hover {
@@ -43,21 +39,10 @@
   box-shadow: 0 0 0 2px black;
 }
 
-.input::selection,
-.text_area::selection {
-  background-color: var(--blackA9);
-  color: white;
-}
-
 .input {
   padding: 0 10px;
   height: 35px;
   line-height: 1;
-}
-
-.text_area {
-  resize: none;
-  padding: 10px;
 }
 
 .button {
@@ -68,16 +53,19 @@
   padding: 0 15px;
   font-size: 15px;
   line-height: 1;
-  font-weight: 500;
   height: 35px;
   width: 100%;
-
-  background-color: white;
-  color: var(--violet11);
-  box-shadow: 0 2px 10px var(--blackA7);
+  border: 0.5px solid rgb(184, 236, 81);
+  border-radius: 8px;
+  background-color: rgb(184, 236, 81);
+  color: rgb(0, 97, 66);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
 }
 .button:hover {
-  background-color: var(--mauve3);
+  background-color: rgb(147, 188, 64);
+  border:  rgb(147, 188, 64);
 }
 .button:focus {
   box-shadow: 0 0 0 2px black;

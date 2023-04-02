@@ -2,8 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "./Header.module.scss";
 
+interface HeaderProps {
+  page: "login" | "signup" | "home";
+}
 /** Common Header that displays on the top of every page. */
-export const Header = () => (
+export const Header = ({ page }: HeaderProps) => (
   <header className={styles.header}>
     <Link href="/">
       <div className={styles.logo}>
@@ -15,12 +18,16 @@ export const Header = () => (
       </div>
     </Link>
     <div className={styles.button_group}>
-      <Link href="/login">
-        <button>Log in</button>
-      </Link>
-      <Link href="/signup">
-        <button>Sign up</button>
-      </Link>
+      {page !== "login" && (
+        <Link href="/login">
+          <button>Log in</button>
+        </Link>
+      )}
+      {page !== "signup" && (
+        <Link href="/signup">
+          <button>Sign up</button>
+        </Link>
+      )}
     </div>
   </header>
 );

@@ -15,7 +15,7 @@ const signup = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header />
+        <Header page="signup" />
         <main>
           <SignupForm />
         </main>

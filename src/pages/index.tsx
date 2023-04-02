@@ -13,7 +13,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header />
+        <Header page="home" />
         <main>Find a cricket buddy near you</main>
         <footer>
           <a

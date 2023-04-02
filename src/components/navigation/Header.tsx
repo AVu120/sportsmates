@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./Header.module.scss";
+import { Page } from "@/src/types/pages";
 
 interface HeaderProps {
-  page: "login" | "signup" | "home";
+  page: Page;
 }
 /** Common Header that displays on the top of every page. */
 export const Header = ({ page }: HeaderProps) => (

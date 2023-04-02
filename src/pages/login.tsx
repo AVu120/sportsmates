@@ -2,8 +2,14 @@ import React from "react";
 import Head from "next/head";
 import { Header } from "../components/navigation/Header";
 import styles from "./_styles/login.module.scss";
+import EmailPasswordForm from "../components/form/EmailPasswordForm";
+import { Fields } from "@/src/types/forms";
 
 const login = () => {
+  const onClickSubmitButton = (data: Fields) => {
+    console.log({ ...data, page: "login" });
+  };
+
   return (
     <>
       <Head>
@@ -15,7 +21,13 @@ const login = () => {
       </Head>
       <div className={styles.page}>
         <Header page="login" />
-        <main>Login</main>
+        <main>
+          <EmailPasswordForm
+            title="Log in to Cricket Buddy"
+            onClickSubmitButton={onClickSubmitButton}
+            page="login"
+          />
+        </main>
         <footer />
       </div>
     </>

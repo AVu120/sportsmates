@@ -1,13 +1,34 @@
 import React from "react";
 import * as Form from "@radix-ui/react-form";
-import styles from "./SignupForm.module.scss";
+import styles from "./EmailPasswordForm.module.scss";
 import fontStyles from "../_styles/_fonts.module.scss";
 import Link from "next/link";
+import { Fields } from "@/src/types/forms";
 
-const FormDemo = () => (
+interface EmailPasswordFormProps {
+  title: string;
+  onClickSubmitButton: (data: Fields) => void;
+  page: "signup" | "login";
+}
+
+const EmailPasswordForm = ({
+  title,
+  onClickSubmitButton,
+  page,
+}: EmailPasswordFormProps) => (
   <>
-    <h1>Create an account</h1>
-    <Form.Root className={styles.form_root}>
+    <h1>{title}</h1>
+    <Form.Root
+      className={styles.form_root}
+      style={{ marginTop: 10 }}
+      // `onSubmit` only triggered if it passes client-side validation
+      onSubmit={(event: any) => {
+        event.preventDefault();
+        const data = Object.fromEntries(new FormData(event.currentTarget));
+        // @ts-ignore
+        onClickSubmitButton(data as Fields);
+      }}
+    >
       <Form.Field className={styles.form_field} name="email">
         <div
           style={{
@@ -47,17 +68,26 @@ const FormDemo = () => (
       </Form.Field>
       <Form.Submit asChild>
         <button className={styles.button} style={{ marginTop: 10 }}>
-          Sign Up
+          {page === "signup" ? "Sign up" : " Log in"}
         </button>
       </Form.Submit>
     </Form.Root>
-    <p style={{ marginTop: 10, textAlign: "start" }}>
-      Already have an account?{" "}
-      <Link href="/login" className={fontStyles.hyperlink_text}>
-        Log in
-      </Link>
-    </p>
+    {page === "signup" ? (
+      <p style={{ marginTop: 10, textAlign: "start" }}>
+        Already have an account?{" "}
+        <Link href="/login" className={fontStyles.hyperlink_text}>
+          Log in
+        </Link>
+      </p>
+    ) : (
+      <p style={{ marginTop: 10, textAlign: "start" }}>
+        Don&apos;t have an account?{" "}
+        <Link href="/signup" className={fontStyles.hyperlink_text}>
+          Sign up
+        </Link>
+      </p>
+    )}
   </>
 );
 
-export default FormDemo;
+export default EmailPasswordForm;

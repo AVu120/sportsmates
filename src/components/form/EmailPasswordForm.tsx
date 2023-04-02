@@ -1,7 +1,7 @@
 import React from "react";
 import * as Form from "@radix-ui/react-form";
 import styles from "./EmailPasswordForm.module.scss";
-import fontStyles from "../_styles/_fonts.module.scss";
+import fontStyles from "@/src/_styles/_fonts.module.scss";
 import Link from "next/link";
 import { Fields } from "@/src/types/forms";
 

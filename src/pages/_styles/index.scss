@@ -1,6 +1,4 @@
-// Insert global css variables in here then access them with var(--variable-name).
-:root {
-}
+// Don't use this file to define global styles for components & pages. Instead, define these in the @/src/globalStyles folder.
 
 * {
   box-sizing: border-box;

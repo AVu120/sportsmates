@@ -1,4 +1,11 @@
+// Global fields styles are defined and exported from here
 @use "@/src/_styles/_fonts.module.scss";
+
+$field_label_size: 0.938rem;
+$field_error_message_size: 0.813;
+$field_error_message_color: red;
+$field_error_message_opacity: 0.8;
+$field_text_size: 0.938rem;
 
 .form_root {
   min-width: 260px;
@@ -10,15 +17,15 @@
 }
 
 .form_label {
-  font-size: fonts.$field_label_size;
+  font-size: $field_label_size;
   font-weight: 500;
   line-height: 35px;
 }
 
 .form_message {
-  font-size: fonts.$field_error_message_size;
-  color: fonts.$field_error_message_color;
-  opacity: fonts.$field_error_message_opacity;
+  font-size: $field_error_message_size;
+  color: $field_error_message_color;
+  opacity: $field_error_message_opacity;
 }
 
 .input,

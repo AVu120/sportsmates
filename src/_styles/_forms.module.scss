@@ -1,0 +1,47 @@
+@use "@/src/_styles/_fonts.module.scss";
+
+.form_root {
+  min-width: 260px;
+}
+
+.form_field {
+  display: grid;
+  margin-bottom: 10px;
+}
+
+.form_label {
+  font-size: fonts.$field_label_size;
+  font-weight: 500;
+  line-height: 35px;
+}
+
+.form_message {
+  font-size: fonts.$field_error_message_size;
+  color: fonts.$field_error_message_color;
+  opacity: fonts.$field_error_message_opacity;
+}
+
+.input,
+.text_area {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 15px;
+  box-shadow: 0 0 0 1px black;
+}
+.input:hover,
+.text_area:hover {
+  box-shadow: 0 0 0 1px black;
+}
+.input:focus,
+.text_area:focus {
+  box-shadow: 0 0 0 2px black;
+}
+
+.input {
+  padding: 0 10px;
+  height: 35px;
+  line-height: 1;
+}

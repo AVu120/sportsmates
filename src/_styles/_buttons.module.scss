@@ -1,0 +1,42 @@
+// Might need these later:
+// // Normal colors
+// $primary_button_background_color: rgb(184, 236, 81);
+// $primary_button_border_color: rgb(184, 236, 81);
+
+// // Hover colors
+// $primary_button_hover_background_color: rgb(147, 188, 64);
+// $primary_button_hover_border_color: rgb(147, 188, 64);
+
+// // Focus colors
+// $primary_button_focus_box_shadow_color: black;
+
+.primary_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 15px;
+  font-size: 15px;
+  line-height: 1;
+  height: 35px;
+  width: 100%;
+  border: 0.5px solid rgb(184, 236, 81);
+  border-radius: 8px;
+  background-color: rgb(184, 236, 81);
+  color: rgb(0, 97, 66);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.primary_button:hover {
+  background-color: rgb(147, 188, 64);
+  border:  rgb(147, 188, 64);
+}
+.primary_button:focus {
+  box-shadow: 0 0 0 2px black;
+}
+
+.button_group {
+  display: flex;
+  column-gap: 10px;
+}

@@ -1,12 +1,14 @@
 // Global font styles are defined and exported from here
-$button_text_size: 15px;
+
+// 
+$button_text_size: 0.938rem;
 $button_text_decoration: bold;
 
-$field_label_size: 15px;
-$field_error_message_size: 13px;
+$field_label_size: 0.938rem;
+$field_error_message_size: 0.813;
 $field_error_message_color: red;
 $field_error_message_opacity: 0.8;
-$field_text_size: 15px;
+$field_text_size: 0.938rem;
 
 .hyperlink_text {
   color: mediumblue;

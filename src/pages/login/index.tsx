@@ -1,16 +1,33 @@
 import React from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
-import { Fields } from "@/src/types/forms";
+import { supabase } from "@/src/services/authentication";
+import { EmailPasswordFields } from "@/src/types/forms";
 
 import EmailPasswordForm from "../../components/form/EmailPasswordForm";
 import { Header } from "../../components/navigation/Header";
 
 import styles from "./_index.module.scss";
 
-const login = () => {
-  const onClickSubmitButton = (data: Fields) => {
-    console.log({ ...data, page: "login" });
+const LogIn = () => {
+  const router = useRouter();
+
+  const onClickSubmitButton = async ({
+    email,
+    password,
+  }: EmailPasswordFields) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    console.log({ data, error });
+    if (error) alert("Error logging in, please try again later.");
+    else {
+      alert("Successfully logged in!");
+      router.push("/players");
+    }
   };
 
   return (
@@ -37,4 +54,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default LogIn;

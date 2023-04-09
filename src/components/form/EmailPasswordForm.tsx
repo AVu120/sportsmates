@@ -5,11 +5,11 @@ import Link from "next/link";
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import fontStyles from "@/src/_styles/_fonts.module.scss";
 import formStyles from "@/src/_styles/_forms.module.scss";
-import { Fields } from "@/src/types/forms";
+import { EmailPasswordFields } from "@/src/types/forms";
 
-interface EmailPasswordFormProps {
+interface ComponentProps {
   title: string;
-  onClickSubmitButton: (data: Fields) => void;
+  onClickSubmitButton: (data: EmailPasswordFields) => void;
   page: "signup" | "login";
 }
 
@@ -17,7 +17,7 @@ const EmailPasswordForm = ({
   title,
   onClickSubmitButton,
   page,
-}: EmailPasswordFormProps) => (
+}: ComponentProps) => (
   <>
     <h1>{title}</h1>
     <Form.Root
@@ -28,7 +28,7 @@ const EmailPasswordForm = ({
         event.preventDefault();
         const data = Object.fromEntries(new FormData(event.currentTarget));
         // @ts-ignore
-        onClickSubmitButton(data as Fields);
+        onClickSubmitButton(data as EmailPasswordFields);
       }}
     >
       <Form.Field className={formStyles.form_field} name="email">

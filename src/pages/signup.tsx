@@ -2,7 +2,7 @@ import Head from "next/head";
 import React from "react";
 import EmailPasswordForm from "../components/form/EmailPasswordForm";
 import { Header } from "../components/navigation/Header";
-import styles from "./_styles/signup.module.scss";
+import styles from "./_signup.module.scss";
 import { Fields } from "@/src/types/forms";
 
 const signup = () => {

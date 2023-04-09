@@ -1,4 +1,4 @@
-import "./_styles/index.scss";
+import "./_index.scss";
 import type { AppType } from "next/app";
 import { trpc } from "../utils/trpc";
 

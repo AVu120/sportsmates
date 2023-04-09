@@ -1,12 +1,16 @@
 import Head from "next/head";
-import styles from "./_index.module.scss";
-import { Header } from "../components/navigation/Header";
+import styles from "./_edit.module.scss";
+import { Header } from "@/src/components/navigation/Header";
+import { useRouter } from "next/router";
 
-const Home = () => {
+const Profile = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
   return (
     <>
       <Head>
-        <title>Cricket Buddy</title>
+        <title>Cricket Buddy - Edit Profile</title>
 
         <meta name="description" content="Find a cricket buddy near you" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,7 +18,7 @@ const Home = () => {
       </Head>
       <div className={styles.page}>
         <Header page="home" />
-        <main>Find a cricket buddy near you</main>
+        <main>Edit Profile Page of player {id}</main>
         <footer>
           <a
             href="https://www.flaticon.com/free-icons/cricket"
@@ -28,4 +32,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Profile;

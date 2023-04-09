@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import { Header } from "../components/navigation/Header";
-import styles from "./_styles/login.module.scss";
+import styles from "./_login.module.scss";
 import EmailPasswordForm from "../components/form/EmailPasswordForm";
 import { Fields } from "@/src/types/forms";
 

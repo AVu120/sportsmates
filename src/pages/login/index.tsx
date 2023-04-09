@@ -1,31 +1,31 @@
-import Head from "next/head";
 import React from "react";
-import EmailPasswordForm from "../components/form/EmailPasswordForm";
-import { Header } from "../components/navigation/Header";
-import styles from "./_signup.module.scss";
+import Head from "next/head";
+import { Header } from "../../components/navigation/Header";
+import styles from "./_index.module.scss";
+import EmailPasswordForm from "../../components/form/EmailPasswordForm";
 import { Fields } from "@/src/types/forms";
 
-const signup = () => {
+const login = () => {
   const onClickSubmitButton = (data: Fields) => {
-    console.log({ ...data, page: "signup" });
+    console.log({ ...data, page: "login" });
   };
 
   return (
     <>
       <Head>
-        <title>Sign up - Cricket Buddy</title>
+        <title>Log in - Cricket Buddy</title>
 
         <meta name="description" content="Find a cricket buddy near you" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="signup" />
+        <Header page="login" />
         <main>
           <EmailPasswordForm
-            title="Sign up to Cricket Buddy"
+            title="Log in to Cricket Buddy"
             onClickSubmitButton={onClickSubmitButton}
-            page="signup"
+            page="login"
           />
         </main>
         <footer />
@@ -34,4 +34,4 @@ const signup = () => {
   );
 };
 
-export default signup;
+export default login;

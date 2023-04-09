@@ -1,9 +1,10 @@
 import React from "react";
 import * as Form from "@radix-ui/react-form";
-import formStyles from "@/src/_styles/_forms.module.scss";
+import Link from "next/link";
+
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import fontStyles from "@/src/_styles/_fonts.module.scss";
-import Link from "next/link";
+import formStyles from "@/src/_styles/_forms.module.scss";
 import { Fields } from "@/src/types/forms";
 
 interface EmailPasswordFormProps {

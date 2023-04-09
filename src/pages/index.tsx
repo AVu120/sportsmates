@@ -1,6 +1,8 @@
 import Head from "next/head";
-import styles from "./_index.module.scss";
+
 import { Header } from "../components/navigation/Header";
+
+import styles from "./_index.module.scss";
 
 const Home = () => {
   return (

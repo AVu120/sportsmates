@@ -1,9 +1,12 @@
 import React from "react";
 import Head from "next/head";
-import { Header } from "../../components/navigation/Header";
-import styles from "./_index.module.scss";
-import EmailPasswordForm from "../../components/form/EmailPasswordForm";
+
 import { Fields } from "@/src/types/forms";
+
+import EmailPasswordForm from "../../components/form/EmailPasswordForm";
+import { Header } from "../../components/navigation/Header";
+
+import styles from "./_index.module.scss";
 
 const login = () => {
   const onClickSubmitButton = (data: Fields) => {

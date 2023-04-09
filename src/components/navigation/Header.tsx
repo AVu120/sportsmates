@@ -1,9 +1,11 @@
-import Link from "next/link";
 import Image from "next/image";
-import styles from "./Header.module.scss";
+import Link from "next/link";
+
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import logoStyles from "@/src/_styles/_logos.module.scss";
 import { Page } from "@/src/types/pages";
+
+import styles from "./Header.module.scss";
 
 interface HeaderProps {
   page: Page;

@@ -1,7 +1,9 @@
 import Head from "next/head";
-import styles from "./_edit.module.scss";
-import { Header } from "@/src/components/navigation/Header";
 import { useRouter } from "next/router";
+
+import { Header } from "@/src/components/navigation/Header";
+
+import styles from "./_edit.module.scss";
 
 const EditPlayer = () => {
   const router = useRouter();

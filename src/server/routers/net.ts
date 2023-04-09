@@ -2,10 +2,11 @@
  *
  * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
  */
-import { router, procedure } from "../trpc";
-import { z } from "zod";
-import { prisma } from "../lib/prisma";
 import { createId as createCuid } from "@paralleldrive/cuid2";
+import { z } from "zod";
+
+import { prisma } from "../lib/prisma";
+import { procedure, router } from "../trpc";
 
 export const netRouter = router({
   list: procedure.query(async () => {

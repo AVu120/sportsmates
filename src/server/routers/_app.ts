@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { playerRouter } from "./player";
-import { netRouter } from "./net";
-import { meetupRouter } from "./meetup";
-import { meetupAttendeeRouter } from "./meetupAttendee";
 
 import { procedure, router } from "../trpc";
+
+import { meetupRouter } from "./meetup";
+import { meetupAttendeeRouter } from "./meetupAttendee";
+import { netRouter } from "./net";
+import { playerRouter } from "./player";
 
 export const appRouter = router({
   hello: procedure

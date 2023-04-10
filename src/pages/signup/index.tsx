@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
 // import { useUser } from "@supabase/auth-helpers-react";
 // import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // import type { GetServerSideProps } from "next";
@@ -15,8 +16,9 @@ import { Header } from "../../components/navigation/Header";
 import styles from "./_index.module.scss";
 
 const SignUp = () => {
-  const user = useUser();
-  const router = useRouter();
+  const [hasSignedUp, setHasSignedUp] = useState(false);
+  // const user = useUser();
+  // const isLoggedIn = !!user.user;
 
   const onClickSubmitButton = async ({
     email,
@@ -29,12 +31,11 @@ const SignUp = () => {
 
     console.log({ data, error });
     if (error) alert("Error creating account, please try again later.");
-    else alert("account created!");
+    else {
+      setHasSignedUp(true);
+      alert("account created!");
+    }
   };
-
-  useEffect(() => {
-    if (user.user) router.push("/players");
-  }, [router, user]);
 
   return (
     <>
@@ -46,13 +47,22 @@ const SignUp = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
+        {/* <Header page="signup" isLoggedIn={isLoggedIn} /> */}
         <Header page="signup" />
         <main>
-          <EmailPasswordForm
-            title="Sign up to Cricket Buddy"
-            onClickSubmitButton={onClickSubmitButton}
-            page="signup"
-          />
+          {hasSignedUp ? (
+            <p style={{ wordWrap: "break-word", width: "360px" }}>
+              We are happy you signed up for Cricket Buddy! To start finding
+              other players and meetups, please verify your email by clicking
+              the link in the email we just sent to you!
+            </p>
+          ) : (
+            <EmailPasswordForm
+              title="Sign up to Cricket Buddy"
+              onClickSubmitButton={onClickSubmitButton}
+              page="signup"
+            />
+          )}
         </main>
         <footer />
       </div>
@@ -62,24 +72,28 @@ const SignUp = () => {
 
 export default SignUp;
 
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//   console.log({ ctx });
-//   // Create authenticated Supabase Client
-//   const supabase = createServerSupabaseClient(ctx);
-//   // Check if we have a session
-//   const data = await supabase.auth.getSession();
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { req } = ctx;
+  const refreshToken = req.cookies["my-refresh-token"];
+  const accessToken = req.cookies["my-access-token"];
 
-//   console.log({ data });
+  if (refreshToken && accessToken) {
+    const {
+      data: { user },
+    } = await supabase.auth.setSession({
+      refresh_token: refreshToken,
+      access_token: accessToken,
+    });
+    if (user)
+      return {
+        redirect: {
+          destination: "/players",
+          permanent: false,
+        },
+      };
+  }
 
-//   if (data.data.session)
-//     return {
-//       redirect: {
-//         destination: "/login",
-//         permanent: false,
-//       },
-//     };
-
-//   return {
-//     props: {},
-//   };
-// };
+  return {
+    props: {},
+  };
+};

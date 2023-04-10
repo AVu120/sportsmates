@@ -1,4 +1,5 @@
 import React from "react";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
@@ -55,3 +56,30 @@ const LogIn = () => {
 };
 
 export default LogIn;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { req } = ctx;
+  const refreshToken = req.cookies["my-refresh-token"];
+  const accessToken = req.cookies["my-access-token"];
+
+  if (refreshToken && accessToken) {
+    const {
+      data: { user },
+    } = await supabase.auth.setSession({
+      refresh_token: refreshToken,
+      access_token: accessToken,
+    });
+
+    if (user)
+      return {
+        redirect: {
+          destination: "/players",
+          permanent: false,
+        },
+      };
+  }
+
+  return {
+    props: {},
+  };
+};

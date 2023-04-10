@@ -1,10 +1,12 @@
 import Head from "next/head";
 
 import { Header } from "@/src/components/navigation/Header";
+import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_index.module.scss";
 
-const Profile = () => {
+const Players = () => {
+  const { isLoggedIn } = useUser();
   return (
     <>
       <Head>
@@ -15,7 +17,7 @@ const Profile = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="home" />
+        <Header page="home" isLoggedIn={isLoggedIn} />
         <main>Players Page</main>
         <footer>
           <a
@@ -30,4 +32,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Players;

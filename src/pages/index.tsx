@@ -1,10 +1,17 @@
+import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
-import { Header } from "../components/navigation/Header";
+import { Header } from "@/src/components/navigation/Header";
+import { supabase } from "@/src/services/authentication";
+import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_index.module.scss";
 
 const Home = () => {
+  const router = useRouter();
+  const user = useUser();
+  if (user.user) router.push("/players");
   return (
     <>
       <Head>
@@ -31,3 +38,29 @@ const Home = () => {
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { req } = ctx;
+  const refreshToken = req.cookies["my-refresh-token"];
+  const accessToken = req.cookies["my-access-token"];
+
+  if (refreshToken && accessToken) {
+    const {
+      data: { user },
+    } = await supabase.auth.setSession({
+      refresh_token: refreshToken,
+      access_token: accessToken,
+    });
+    if (user)
+      return {
+        redirect: {
+          destination: "/players",
+          permanent: false,
+        },
+      };
+  }
+
+  return {
+    props: {},
+  };
+};

@@ -3,15 +3,13 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import { Header } from "@/src/components/navigation/Header";
-import { supabase } from "@/src/services/authentication";
 import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_index.module.scss";
 
-const Home = () => {
-  const router = useRouter();
-  const user = useUser();
-  if (user.user) router.push("/players");
+const Players = () => {
+  const { isLoggedIn } = useUser();
+
   return (
     <>
       <Head>
@@ -22,7 +20,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="home" />
+        <Header page="home" isLoggedIn={isLoggedIn} />
         <main>Find a cricket buddy near you</main>
         <footer>
           <a
@@ -37,30 +35,30 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Players;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { req } = ctx;
-  const refreshToken = req.cookies["my-refresh-token"];
-  const accessToken = req.cookies["my-access-token"];
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const { req } = ctx;
+//   const refreshToken = req.cookies["my-refresh-token"];
+//   const accessToken = req.cookies["my-access-token"];
 
-  if (refreshToken && accessToken) {
-    const {
-      data: { user },
-    } = await supabase.auth.setSession({
-      refresh_token: refreshToken,
-      access_token: accessToken,
-    });
-    if (user)
-      return {
-        redirect: {
-          destination: "/players",
-          permanent: false,
-        },
-      };
-  }
+//   if (refreshToken && accessToken) {
+//     const {
+//       data: { user },
+//     } = await supabase.auth.setSession({
+//       refresh_token: refreshToken,
+//       access_token: accessToken,
+//     });
+//     if (user)
+//       return {
+//         redirect: {
+//           destination: "/players",
+//           permanent: false,
+//         },
+//       };
+//   }
 
-  return {
-    props: {},
-  };
-};
+//   return {
+//     props: {},
+//   };
+// };

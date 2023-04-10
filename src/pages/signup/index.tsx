@@ -87,7 +87,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (user)
       return {
         redirect: {
-          destination: "/players",
+          destination: "/",
           permanent: false,
         },
       };

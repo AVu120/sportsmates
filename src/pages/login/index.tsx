@@ -27,7 +27,7 @@ const LogIn = () => {
     if (error) alert("Error logging in, please try again later.");
     else {
       alert("Successfully logged in!");
-      router.push("/players");
+      router.push("/");
     }
   };
 
@@ -73,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (user)
       return {
         redirect: {
-          destination: "/players",
+          destination: "/",
           permanent: false,
         },
       };

@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 import { supabase } from "@/src/services/authentication";
 import { EmailPasswordFields } from "@/src/types/forms";
+import useUser from "@/src/utils/hooks/useUser";
 
 import EmailPasswordForm from "../../components/form/EmailPasswordForm";
 import { Header } from "../../components/navigation/Header";
@@ -13,6 +14,7 @@ import styles from "./_index.module.scss";
 
 const LogIn = () => {
   const router = useRouter();
+  const user = useUser();
 
   const onClickSubmitButton = async ({
     email,

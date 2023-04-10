@@ -14,6 +14,7 @@ import styles from "./_index.module.scss";
 
 const LogIn = () => {
   const router = useRouter();
+  // Keep this here to enable adding of auth cookies after logging in.
   const user = useUser();
 
   const onClickSubmitButton = async ({
@@ -67,10 +68,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (refreshToken && accessToken) {
     const {
       data: { user },
+      error,
     } = await supabase.auth.setSession({
       refresh_token: refreshToken,
       access_token: accessToken,
     });
+
+    if (error) {
+      console.log({ error });
+      return {
+        props: {},
+      };
+    }
 
     if (user)
       return {

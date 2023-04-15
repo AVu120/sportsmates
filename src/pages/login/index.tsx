@@ -59,38 +59,3 @@ const LogIn = () => {
 };
 
 export default LogIn;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { req } = ctx;
-  const refreshToken = req.cookies["my-refresh-token"];
-  const accessToken = req.cookies["my-access-token"];
-
-  if (refreshToken && accessToken) {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.setSession({
-      refresh_token: refreshToken,
-      access_token: accessToken,
-    });
-
-    if (error) {
-      console.log({ error });
-      return {
-        props: {},
-      };
-    }
-
-    if (user)
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-  }
-
-  return {
-    props: {},
-  };
-};

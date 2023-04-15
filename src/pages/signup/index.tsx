@@ -71,29 +71,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { req } = ctx;
-  const refreshToken = req.cookies["my-refresh-token"];
-  const accessToken = req.cookies["my-access-token"];
-
-  if (refreshToken && accessToken) {
-    const {
-      data: { user },
-    } = await supabase.auth.setSession({
-      refresh_token: refreshToken,
-      access_token: accessToken,
-    });
-    if (user)
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-  }
-
-  return {
-    props: {},
-  };
-};

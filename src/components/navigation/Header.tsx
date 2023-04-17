@@ -28,18 +28,18 @@ export const Header = ({ page, isLoggedIn }: HeaderProps) => {
       <div className={buttonStyles.button_group}>
         {!isLoggedIn && page !== "login" && (
           <Link href="/login">
-            <button>Log in</button>
+            <button className={buttonStyles.link_button}>Log in</button>
           </Link>
         )}
         {!isLoggedIn && page !== "signup" && (
           <Link href="/signup">
-            <button>Sign up</button>
+            <button className={buttonStyles.link_button}>Sign up</button>
           </Link>
         )}
         {isLoggedIn && (
           <button
             type="button"
-            className={styles.button}
+            className={buttonStyles.link_button}
             onClick={() => supabase.auth.signOut()}
           >
             Log out

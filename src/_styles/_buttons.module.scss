@@ -4,13 +4,15 @@
 // $button_text_size: 0.938rem;
 // $button_text_decoration: bold;
 
-// // Normal colors
-// $primary_button_background_color: rgb(184, 236, 81);
-// $primary_button_border_color: rgb(184, 236, 81);
+// Normal colors
+$primary_button_background_color: rgb(184, 236, 81);
+$primary_button_border_color: rgb(184, 236, 81);
+$primary_button_text_color: rgb(0, 97, 66);
 
-// // Hover colors
-// $primary_button_hover_background_color: rgb(147, 188, 64);
-// $primary_button_hover_border_color: rgb(147, 188, 64);
+// Hover colors
+$primary_button_hover_background_color: rgb(147, 188, 64);
+$primary_button_hover_border_color: rgb(147, 188, 64);
+$primary_button_hover_text_color: rgb(0, 97, 66);
 
 // // Focus colors
 // $primary_button_focus_box_shadow_color: black;
@@ -25,17 +27,17 @@
   line-height: 1;
   height: 35px;
   width: 100%;
-  border: 0.5px solid rgb(184, 236, 81);
+  border: 0.5px solid $primary_button_border_color;
   border-radius: 8px;
-  background-color: rgb(184, 236, 81);
-  color: rgb(0, 97, 66);
+  background-color: $primary_button_background_color;
+  color: $primary_button_text_color;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
 }
 .primary_button:hover {
-  background-color: rgb(147, 188, 64);
-  border:  rgb(147, 188, 64);
+  background-color: $primary_button_hover_background_color;
+  border:  $primary_button_hover_border_color;
 }
 .primary_button:focus {
   box-shadow: 0 0 0 2px black;
@@ -44,4 +46,13 @@
 .button_group {
   display: flex;
   column-gap: 10px;
+}
+
+.link_button {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.link_button:hover {
+  color: $primary_button_hover_text_color;
 }

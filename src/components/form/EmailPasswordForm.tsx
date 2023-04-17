@@ -18,7 +18,7 @@ const EmailPasswordForm = ({
   onClickSubmitButton,
   page,
 }: ComponentProps) => (
-  <>
+  <div className={formStyles.form_border}>
     <h1>{title}</h1>
     <Form.Root
       className={formStyles.form_root}
@@ -101,7 +101,7 @@ const EmailPasswordForm = ({
         </Link>
       </p>
     )}
-  </>
+  </div>
 );
 
 export default EmailPasswordForm;

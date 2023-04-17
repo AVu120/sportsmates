@@ -7,6 +7,10 @@ $field_error_message_color: red;
 $field_error_message_opacity: 0.8;
 $field_text_size: 0.938rem;
 
+.form_border {
+  padding: 10px;
+}
+
 .form_root {
   min-width: 260px;
 }

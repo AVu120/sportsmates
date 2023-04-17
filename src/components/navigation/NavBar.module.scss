@@ -1,0 +1,13 @@
+.NavigationMenuIndicator {
+  background-color: grey;
+}
+.NavigationMenuIndicator[data-orientation='horizontal'] {
+  height: 3px;
+  transition: width, transform, 250ms ease;
+}
+
+.list {
+  display: flex;
+  list-style: none;
+  column-gap: 20px;
+}

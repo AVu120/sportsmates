@@ -13,7 +13,7 @@ interface ComponentProps {
   page: "signup" | "login";
 }
 
-const EmailPasswordForm = ({
+export const EmailPasswordForm = ({
   title,
   onClickSubmitButton,
   page,
@@ -103,5 +103,3 @@ const EmailPasswordForm = ({
     )}
   </div>
 );
-
-export default EmailPasswordForm;

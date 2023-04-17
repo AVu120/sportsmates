@@ -6,14 +6,16 @@ import logoStyles from "@/src/_styles/_logos.module.scss";
 import { supabase } from "@/src/services/authentication";
 import { Page } from "@/src/types/pages";
 
+import { NavBar } from "./NavBar";
+
 import styles from "./Header.module.scss";
 
-interface HeaderProps {
+interface ComponentProps {
   page: Page;
   isLoggedIn?: boolean;
 }
 /** Common Header that displays on the top of every page. */
-export const Header = ({ page, isLoggedIn }: HeaderProps) => {
+export const Header = ({ page, isLoggedIn }: ComponentProps) => {
   return (
     <header className={styles.header}>
       <Link href="/">
@@ -25,6 +27,8 @@ export const Header = ({ page, isLoggedIn }: HeaderProps) => {
           </div>
         </div>
       </Link>
+
+      <NavBar page={page} />
       <div className={buttonStyles.button_group}>
         {!isLoggedIn && page !== "login" && (
           <Link href="/login">

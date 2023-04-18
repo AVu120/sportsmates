@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import logoStyles from "@/src/_styles/_logos.module.scss";
+import { DropDownMenu } from "@/src/components/menu/DropDownMenu";
 import { supabase } from "@/src/services/authentication";
 import { Page } from "@/src/types/pages";
 
@@ -18,17 +19,24 @@ interface ComponentProps {
 export const Header = ({ page, isLoggedIn }: ComponentProps) => {
   return (
     <header className={styles.header}>
-      <Link href="/">
-        <div className={`${logoStyles.logo} ${buttonStyles.link_button}`}>
-          <Image src="/logo.png" width={25} height={25} alt="" />{" "}
-          <div>
-            <p>Cricket </p>
-            <p>Buddy</p>
+      {/* Only show dropdown menu in mobile screen width */}
+      <div className={`${styles.dropdown_menu} ${buttonStyles.link_button}`}>
+        <DropDownMenu />
+      </div>
+      {/* Only show this when screen width is more than mobile width */}
+      <div className={styles.logo_button}>
+        <Link href="/">
+          <div className={`${logoStyles.logo} ${buttonStyles.link_button}`}>
+            <Image src="/logo.png" width={25} height={25} alt="" />{" "}
+            <div>
+              <p>Cricket </p>
+              <p>Buddy</p>
+            </div>
           </div>
-        </div>
-      </Link>
-
-      <div className={styles.move_buttons_down}>
+        </Link>
+      </div>
+      {/* Only show this when screen width is more than mobile width */}
+      <div className={`${styles.move_buttons_down} ${styles.navbar}`}>
         <NavBar page={page} />
       </div>
       <div

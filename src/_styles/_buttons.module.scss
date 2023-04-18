@@ -61,3 +61,7 @@ $primary_button_hover_text_color: rgb(0, 97, 66);
 .link_button:hover {
   color: $primary_button_hover_text_color;
 }
+
+.dropdown_menu:hover {
+  cursor: pointer;
+}

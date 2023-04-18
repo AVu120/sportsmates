@@ -19,9 +19,9 @@ export const Header = ({ page, isLoggedIn }: ComponentProps) => {
   return (
     <header className={styles.header}>
       <Link href="/">
-        <div className={logoStyles.logo}>
+        <div className={`${logoStyles.logo} ${buttonStyles.link_button}`}>
           <Image src="/logo.png" width={25} height={25} alt="" />{" "}
-          <div className={logoStyles.logo_text}>
+          <div>
             <p>Cricket </p>
             <p>Buddy</p>
           </div>

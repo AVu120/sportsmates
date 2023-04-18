@@ -13,7 +13,9 @@ interface ComponentProps {
 export const NavBar = ({ page }: ComponentProps) => {
   return (
     <NavigationMenu.Root>
-      <NavigationMenu.List className={styles.list}>
+      <NavigationMenu.List
+        className={`${styles.list} ${buttonStyles.button_group}`}
+      >
         <NavigationMenu.Item
           className={`${buttonStyles.link_button} ${
             page === "home" ? buttonStyles.selected_link_button : ""

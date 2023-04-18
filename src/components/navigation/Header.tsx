@@ -28,8 +28,12 @@ export const Header = ({ page, isLoggedIn }: ComponentProps) => {
         </div>
       </Link>
 
-      <NavBar page={page} />
-      <div className={buttonStyles.button_group}>
+      <div className={styles.move_buttons_down}>
+        <NavBar page={page} />
+      </div>
+      <div
+        className={`${buttonStyles.button_group} ${styles.move_buttons_down}`}
+      >
         {!isLoggedIn && page !== "login" && (
           <Link href="/login">
             <button className={buttonStyles.link_button}>Log in</button>

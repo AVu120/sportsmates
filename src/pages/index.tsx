@@ -20,14 +20,10 @@ const Players = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <div className={styles.header_container}>
-          <Header page="home" isLoggedIn={isLoggedIn} />
-        </div>
-        <div className={styles.title_container}>
-          <main className={styles.main}>
-            <h1 className={styles.title}>Welcome!</h1>
-          </main>
-        </div>
+        <Header page="home" isLoggedIn={isLoggedIn} />
+        <main className={styles.main}>
+          <h1 className={styles.title}>Welcome!</h1>
+        </main>
         <footer>
           <a
             href="https://www.flaticon.com/free-icons/cricket"

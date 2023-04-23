@@ -28,3 +28,37 @@
   }
 }
 
+.title {
+  height: 10%;
+  width: 100%;
+}
+.filters_players_container {
+  display: flex;
+  height: 90%;
+  width: 100%;
+}
+
+.filters_container {
+  background-color: blue;
+  width: 30%;
+}
+
+.players_container {
+  background-color: green;
+  width: 70%;
+}
+
+// tablet width
+@media screen and (max-width: 768px) {
+  .filters_players_container {
+    flex-direction: column;
+  }
+
+  .filters_container {
+    width: 100%;
+  }
+  
+  .players_container {
+    width: 100%;
+  }
+}

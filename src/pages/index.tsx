@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
 import useUser from "@/src/utils/hooks/useUser";
 
@@ -23,15 +24,16 @@ const Players = () => {
         <Header page="home" isLoggedIn={isLoggedIn} />
         <main className={styles.main}>
           <h1 className={styles.title}>Welcome!</h1>
+          <div className={styles.filters_players_container}>
+            <div className={styles.filters_container}>
+              Placeholder for filters
+            </div>
+            <div className={styles.players_container}>
+              Placeholder for list of player cards
+            </div>
+          </div>
         </main>
-        <footer>
-          <a
-            href="https://www.flaticon.com/free-icons/cricket"
-            title="cricket icons"
-          >
-            Cricket icons created by Freepik - Flaticon
-          </a>
-        </footer>
+        <Footer />
       </div>
     </>
   );

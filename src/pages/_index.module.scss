@@ -1,33 +1,5 @@
 @use '@/src/_styles/_basePage.module.scss';
 
-.main {
-  height: 100%;
-  width: 100%;
-  padding-left: 20vw;
-  padding-right: 20vw;
-}
-
-@media screen and (max-width: 1550px) {
-  .main {
-    padding-left: 15vw;
-    padding-right: 15vw;
-  }
-}
-
-@media screen and (max-width: 1400px) {
-  .main {
-    padding-left: 12vw;
-    padding-right: 12vw;
-  }
-}
-
-@media screen and (max-width: 1000px) {
-  .main {
-    padding-left: 8vw;
-    padding-right: 8vw;
-  }
-}
-
 .title {
   height: 10%;
   width: 100%;
@@ -39,13 +11,15 @@
 }
 
 .filters_container {
-  background-color: blue;
   width: 30%;
 }
 
 .players_container {
-  background-color: green;
   width: 70%;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
 }
 
 // tablet width

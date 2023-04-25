@@ -24,9 +24,11 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
   const { ref } = usePlacesWidget({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (place) => console.log(place),
+    options: {
+      types: "(cities)",
+      componentRestrictions: { country: "au" },
+    },
   });
-
-  console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
   return (
     <div className={`${formStyles.form_border} ${styles.form_border}`}>

@@ -5,6 +5,7 @@
   padding: 0;
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, HelveticaNeue, "Helvetica Neue", Helvetica, Roboto, "Segoe UI", Arial, sans-serif;
+  font-size: 1rem;
 }
 
 // Additionally enables setting of box-sizing:border-box on these elements if they're children elements.
@@ -26,6 +27,7 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+
 }
 
 a {

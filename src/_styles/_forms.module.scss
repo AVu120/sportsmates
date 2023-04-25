@@ -1,11 +1,14 @@
 // Global fields styles are defined and exported from here
 @use "@/src/_styles/_fonts.module.scss";
 
+
 $field_label_size: 0.938rem;
 $field_error_message_size: 0.813;
 $field_error_message_color: red;
 $field_error_message_opacity: 0.8;
 $field_text_size: 0.938rem;
+$field_box_shadow: 0 0 0 1px black;
+$field_placeholder_text_color: rgb(133, 133, 133);
 
 .form_border {
   padding: 10px;

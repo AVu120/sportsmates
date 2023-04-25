@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import { Filters } from "@/src/components/form/Filters";
+import { Filters } from "@/src/components/form/FiltersForm";
 import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
 import { FilterFields } from "@/src/types/forms";

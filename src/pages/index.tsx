@@ -13,8 +13,7 @@ import { SelectField } from "../components/form/Select";
 import styles from "./_index.module.scss";
 
 const Players = () => {
-  const { isLoggedIn } = useUser();
-
+  const { isLoggedIn, user } = useUser();
   //@ts-ignore
   const onClickSubmitButton = async ({ location }: FilterFields) => {
     // const { data, error } = await supabase.auth.signUp({
@@ -33,7 +32,7 @@ const Players = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="home" isLoggedIn={isLoggedIn} />
+        <Header page="home" isLoggedIn={isLoggedIn} user={user} />
 
         <main className={styles.main}>
           <h1 className={styles.title}>Welcome!</h1>

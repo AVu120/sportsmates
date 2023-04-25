@@ -26,6 +26,8 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
     onPlaceSelected: (place) => console.log(place),
   });
 
+  console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+
   return (
     <div className={`${formStyles.form_border} ${styles.form_border}`}>
       <Form.Root
@@ -64,10 +66,6 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
           </Form.Control>
         </Form.Field>
         {/* Search Radius Dropdown */}
-        {/* <AutoComplete
-          apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-          onPlaceSelected={(place) => console.log(place)}
-        /> */}
         <SelectField
           setValue={setSearchRadius}
           value={searchRadius}

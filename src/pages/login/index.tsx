@@ -26,8 +26,16 @@ const LogIn = () => {
       password,
     });
 
-    if (error) alert("Error logging in, please try again later.");
-    else {
+    //@ts-ignore
+    console.log({ error });
+    if (error) {
+      if (error.message.includes("Invalid login credentials"))
+        alert("Wrong username and/or password.");
+      if (error.message.includes("Email not confirmed"))
+        alert(
+          "Please confirm your email first to log in. You can do this by clicking the link in the email we sent you."
+        );
+    } else {
       alert("Successfully logged in!");
       router.push("/");
     }

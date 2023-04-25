@@ -1,3 +1,4 @@
+import { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,9 +15,10 @@ import styles from "./Header.module.scss";
 interface ComponentProps {
   page: Page;
   isLoggedIn?: boolean;
+  user?: User | null;
 }
 /** Common Header that displays on the top of every page. */
-export const Header = ({ page, isLoggedIn }: ComponentProps) => {
+export const Header = ({ page, isLoggedIn, user }: ComponentProps) => {
   return (
     <header className={styles.header}>
       {/* Only show dropdown menu in mobile screen width */}
@@ -53,13 +55,25 @@ export const Header = ({ page, isLoggedIn }: ComponentProps) => {
           </Link>
         )}
         {isLoggedIn && (
-          <button
-            type="button"
-            className={buttonStyles.link_button}
-            onClick={() => supabase.auth.signOut()}
-          >
-            Log out
-          </button>
+          <div>
+            <span
+              style={{
+                position: "absolute",
+                fontSize: "0.8rem",
+                right: "80px",
+                top: "22px",
+              }}
+            >
+              Hello {user?.email}!
+            </span>
+            <button
+              type="button"
+              className={buttonStyles.link_button}
+              onClick={() => supabase.auth.signOut()}
+            >
+              Log out
+            </button>
+          </div>
         )}
       </div>
     </header>

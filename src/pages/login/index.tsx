@@ -26,7 +26,6 @@ const LogIn = () => {
       password,
     });
 
-    console.log({ data, error });
     if (error) alert("Error logging in, please try again later.");
     else {
       alert("Successfully logged in!");

@@ -21,8 +21,6 @@ const Players = () => {
     //   email,
     //   password,
     // });
-
-    console.log({ location });
   };
 
   return (

@@ -17,7 +17,6 @@ interface ComponentProps {
 
 export const SelectField = ({ value, setValue, options }: ComponentProps) => {
   const selectedOption = options.find((option) => option.value === value);
-  console.log({ value, options, selectedOption });
   return (
     <Select.Root onValueChange={setValue} value={value}>
       <Select.Trigger

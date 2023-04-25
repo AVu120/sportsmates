@@ -34,6 +34,7 @@ specifiers:
   prisma: ^4.10.1
   react: 18.2.0
   react-dom: 18.2.0
+  react-google-autocomplete: ^2.7.3
   sass: ^1.58.0
   trpc-playground: ^1.0.4
   typescript: 4.9.5
@@ -68,6 +69,7 @@ dependencies:
   prisma: 4.10.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-google-autocomplete: 2.7.3_react@18.2.0
   trpc-playground: 1.0.4_yrptcow7mwcqrfla4a342jxnni
   typescript: 4.9.5
   uuid: 9.0.0
@@ -2600,6 +2602,10 @@ packages:
     dependencies:
       p-locate: 5.0.0
 
+  /lodash.debounce/4.0.8:
+    resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+    dev: false
+
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
@@ -2938,6 +2944,16 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-google-autocomplete/2.7.3_react@18.2.0:
+    resolution: {integrity: sha512-Nm+7/VDe7/NDWb8p/a39is7ktNqt5bNqAOoQv2Ev/XkuEvjsRk08VAPFmXUH03xKuM8IUuDrk2Lwfge44YEj6Q==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      lodash.debounce: 4.0.8
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /react-is/16.13.1:

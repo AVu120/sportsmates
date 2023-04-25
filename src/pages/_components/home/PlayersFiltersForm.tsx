@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { usePlacesWidget } from "react-google-autocomplete";
 import * as Form from "@radix-ui/react-form";
 
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
@@ -19,6 +20,12 @@ export const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
   );
   const [gender, setGender] = useState<string>("Any gender");
   const [sortBy, setSortBy] = useState<string>("Most recently active");
+
+  const { ref } = usePlacesWidget({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    onPlaceSelected: (place) => console.log(place),
+  });
+
   return (
     <div className={`${formStyles.form_border} ${styles.form_border}`}>
       <Form.Root
@@ -51,10 +58,16 @@ export const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
               className={formStyles.input}
               type="text"
               placeholder="Enter your location"
+              //@ts-ignore
+              ref={ref}
             />
           </Form.Control>
         </Form.Field>
         {/* Search Radius Dropdown */}
+        {/* <AutoComplete
+          apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+          onPlaceSelected={(place) => console.log(place)}
+        /> */}
         <SelectField
           setValue={setSearchRadius}
           value={searchRadius}

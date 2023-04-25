@@ -25,7 +25,6 @@ const useUser = () => {
     setLoading(false);
 
     supabase.auth.onAuthStateChange((event, session) => {
-      console.log({ event, session });
       if (event === "SIGNED_OUT" || event === "USER_DELETED") {
         // delete cookies on sign out
         const expires = new Date(0).toUTCString();

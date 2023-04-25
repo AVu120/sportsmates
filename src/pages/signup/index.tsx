@@ -29,7 +29,6 @@ const SignUp = () => {
       password,
     });
 
-    console.log({ data, error });
     if (error) alert("Error creating account, please try again later.");
     else {
       setHasSignedUp(true);

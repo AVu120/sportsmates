@@ -10,26 +10,22 @@ import classnames from "classnames";
 import styles from "./Select.module.scss";
 
 interface ComponentProps {
-  value: string | undefined;
-  setValue: (value: string | undefined) => void;
+  value: string;
+  setValue: (value: string) => void;
   options: { value: string; label: string }[];
-  placeholderText: string;
 }
 
-export const SelectField = ({
-  value,
-  setValue,
-  options,
-  placeholderText,
-}: ComponentProps) => {
+export const SelectField = ({ value, setValue, options }: ComponentProps) => {
+  const selectedOption = options.find((option) => option.value === value);
+  console.log({ value, options, selectedOption });
   return (
-    <Select.Root onValueChange={setValue} value={value || ""}>
-      <Select.Trigger className={styles.SelectTrigger} aria-label="Food">
-        <Select.Value
-          placeholder={placeholderText}
-          style={{ fontSize: "1rem" }}
-        >
-          {options.find((option) => option.value === value)?.label}
+    <Select.Root onValueChange={setValue} value={value}>
+      <Select.Trigger
+        className={styles.SelectTrigger}
+        aria-label="select-field-trigger"
+      >
+        <Select.Value aria-label={value}>
+          {selectedOption ? selectedOption.label : value}
         </Select.Value>
         <Select.Icon className={styles.SelectIcon}>
           <ChevronDownIcon />
@@ -47,7 +43,7 @@ export const SelectField = ({
                 <SelectItem
                   value={value}
                   className={styles.SelectItem}
-                  key={label}
+                  key={value}
                 >
                   {label}
                 </SelectItem>
@@ -76,7 +72,7 @@ const SelectItem = React.forwardRef(
       >
         <Select.ItemText>{children}</Select.ItemText>
         <Select.ItemIndicator className={styles.SelectItemIndicator}>
-          {/* <CheckIcon /> */}
+          <CheckIcon />
         </Select.ItemIndicator>
       </Select.Item>
     );

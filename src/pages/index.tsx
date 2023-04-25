@@ -2,17 +2,20 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import { Filters } from "@/src/components/form/FiltersForm";
 import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
+import { PlayersFiltersForm } from "@/src/pages/_components/home/PlayersFiltersForm";
 import { FilterFields } from "@/src/types/forms";
 import useUser from "@/src/utils/hooks/useUser";
+
+import { SelectField } from "../components/form/Select";
 
 import styles from "./_index.module.scss";
 
 const Players = () => {
   const { isLoggedIn } = useUser();
 
+  //@ts-ignore
   const onClickSubmitButton = async ({ location }: FilterFields) => {
     // const { data, error } = await supabase.auth.signUp({
     //   email,
@@ -38,7 +41,7 @@ const Players = () => {
           <h1 className={styles.title}>Welcome!</h1>
           <div className={styles.filters_players_container}>
             <div className={styles.filters_container}>
-              <Filters onClickSubmitButton={onClickSubmitButton} />
+              <PlayersFiltersForm onClickSubmitButton={onClickSubmitButton} />
             </div>
             <div className={styles.players_container}>
               Placeholder for list of player cards

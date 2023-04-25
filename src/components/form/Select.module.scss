@@ -11,7 +11,7 @@
   line-height: 1;
   height: 35px;
   gap: 5px;
-  background-color: white;
+  // background-color: white;
   box-shadow: forms.$field_box_shadow;
   width: 100%;
 }
@@ -42,7 +42,9 @@
 }
 
 .SelectItem {
-  padding: 5px;
+  padding: 5px 5px 5px 15px;
+  display: flex;
+  align-items: center;
   cursor: pointer;
 }
 .SelectItem[data-disabled] {
@@ -78,6 +80,6 @@
   align-items: center;
   justify-content: center;
   height: 25px;
-  background-color: white;
+  // background-color: white;
   cursor: default;
 }

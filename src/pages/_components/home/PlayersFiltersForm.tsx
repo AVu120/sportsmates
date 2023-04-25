@@ -6,16 +6,19 @@ import formStyles from "@/src/_styles/_forms.module.scss";
 import { SelectField } from "@/src/components/form/Select";
 import { FilterFields } from "@/src/types/forms";
 
-import styles from "./FiltersForm.module.scss";
+import styles from "./PlayersFiltersForm.module.scss";
 
 interface ComponentProps {
   onClickSubmitButton: (data: FilterFields) => void;
 }
 
-export const Filters = ({ onClickSubmitButton }: ComponentProps) => {
-  const [searchRadius, setSearchRadius] = useState<string | undefined>();
-  const [gender, setGender] = useState<string | undefined>();
-  const [sortBy, setSortBy] = useState<string | undefined>();
+//@ts-ignore
+export const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
+  const [searchRadius, setSearchRadius] = useState<string>(
+    "Any distance from you"
+  );
+  const [gender, setGender] = useState<string>("Any gender");
+  const [sortBy, setSortBy] = useState<string>("Most recently active");
   return (
     <div className={`${formStyles.form_border} ${styles.form_border}`}>
       <Form.Root
@@ -23,12 +26,14 @@ export const Filters = ({ onClickSubmitButton }: ComponentProps) => {
         style={{ marginTop: 10 }}
         // `onSubmit` only triggered if it passes client-side validation
         onSubmit={(event: any) => {
-          console.log("HI");
           event.preventDefault();
-          const data = Object.fromEntries(new FormData(event.currentTarget));
-          console.log({ data });
+          const locationData = Object.fromEntries(
+            new FormData(event.currentTarget)
+          );
+          const formData = { ...locationData, searchRadius, gender, sortBy };
+          console.log("submitted", { formData });
           // @ts-ignore
-          onClickSubmitButton(data as FilterFields);
+          // onClickSubmitButton(data as FilterFields);
         }}
       >
         <Form.Field className={formStyles.form_field} name="location">
@@ -39,9 +44,7 @@ export const Filters = ({ onClickSubmitButton }: ComponentProps) => {
               justifyContent: "space-between",
             }}
           >
-            <Form.Label className={formStyles.form_label}>
-              Find players nearby
-            </Form.Label>
+            <Form.Label className={formStyles.form_label}>Filters</Form.Label>
           </div>
           <Form.Control asChild>
             <input
@@ -56,24 +59,24 @@ export const Filters = ({ onClickSubmitButton }: ComponentProps) => {
           setValue={setSearchRadius}
           value={searchRadius}
           options={[
+            { label: "Any distance from you", value: "Any distance from you" },
+            { label: "Within 10km", value: "10" },
             { label: "Within 10km", value: "10" },
             { label: "Within 20km", value: "20" },
             { label: "Within 30km", value: "30" },
             { label: "Within 40km", value: "40" },
             { label: "Within 50km", value: "50" },
           ]}
-          placeholderText="Select a search radius"
         />
         {/* Gender Dropdown */}
         <SelectField
           setValue={setGender}
           value={gender}
           options={[
-            { label: "", value: "" },
-            { label: "male", value: "male" },
-            { label: "female", value: "female" },
+            { label: "Any gender", value: "Any gender" },
+            { label: "Male", value: "Male" },
+            { label: "Female", value: "Female" },
           ]}
-          placeholderText="Select a gender"
         />
         {/* SortBy Dropdown */}
         <SelectField
@@ -85,7 +88,6 @@ export const Filters = ({ onClickSubmitButton }: ComponentProps) => {
             { label: "Youngest to oldest", value: "Youngest to oldest" },
             { label: "Closest to me", value: "Closest to me" },
           ]}
-          placeholderText="Sort by"
         />
 
         <Form.Submit asChild>
@@ -93,7 +95,7 @@ export const Filters = ({ onClickSubmitButton }: ComponentProps) => {
             className={buttonStyles.primary_button}
             style={{ marginTop: 10 }}
           >
-            Search
+            Apply filters
           </button>
         </Form.Submit>
       </Form.Root>

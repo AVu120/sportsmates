@@ -1,12 +1,15 @@
+import { NumberLiteralType } from "typescript";
+
 export interface EmailPasswordFields {
   email: string;
   password: string;
 }
 
 export interface FilterFields {
-  location: string;
+  longitude: number;
+  latitude: number;
   // Range in meters
-  // range: number;
-  // gender: string;
-  // sortBy: string;
+  searchRadius: number;
+  gender: string;
+  sortBy: string;
 }

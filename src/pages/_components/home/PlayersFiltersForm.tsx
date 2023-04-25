@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { usePlacesWidget } from "react-google-autocomplete";
+import AutoComplete, { usePlacesWidget } from "react-google-autocomplete";
 import * as Form from "@radix-ui/react-form";
 
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
@@ -14,7 +14,7 @@ interface ComponentProps {
 }
 
 //@ts-ignore
-export const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
+const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
   const [searchRadius, setSearchRadius] = useState<string>(
     "Any distance from you"
   );
@@ -115,3 +115,5 @@ export const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
     </div>
   );
 };
+
+export default PlayersFiltersForm;

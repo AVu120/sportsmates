@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
-import { PlayersFiltersForm } from "@/src/pages/_components/home/PlayersFiltersForm";
+import PlayersFiltersForm from "@/src/pages/_components/home/PlayersFiltersForm";
 import { FilterFields } from "@/src/types/forms";
 import useUser from "@/src/utils/hooks/useUser";
 

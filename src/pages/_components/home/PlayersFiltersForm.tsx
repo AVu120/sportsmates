@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import AutoComplete, { usePlacesWidget } from "react-google-autocomplete";
+import AutoComplete, {
+  ReactGoogleAutocompleteProps,
+  usePlacesWidget,
+} from "react-google-autocomplete";
 import * as Form from "@radix-ui/react-form";
 
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
@@ -15,15 +18,25 @@ interface ComponentProps {
 
 //@ts-ignore
 const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
+  const [location, setLocation] = useState<{ lat: number; long: number }>();
   const [searchRadius, setSearchRadius] = useState<string>(
     "Any distance from you"
   );
   const [gender, setGender] = useState<string>("Any gender");
   const [sortBy, setSortBy] = useState<string>("Most recently active");
 
+  const onPlaceSelected: ReactGoogleAutocompleteProps["onPlaceSelected"] = (
+    places
+  ) => {
+    const lat = places.geometry.location.lat();
+    const long = places.geometry.location.lng();
+    setLocation({ lat, long });
+    console.log({ lat, long });
+  };
+
   const { ref } = usePlacesWidget({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    onPlaceSelected: (place) => console.log(place),
+    onPlaceSelected,
     options: {
       types: "(cities)",
       componentRestrictions: { country: "au" },
@@ -38,10 +51,11 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
         // `onSubmit` only triggered if it passes client-side validation
         onSubmit={(event: any) => {
           event.preventDefault();
-          const locationData = Object.fromEntries(
-            new FormData(event.currentTarget)
-          );
-          const formData = { ...locationData, searchRadius, gender, sortBy };
+          /* Not needed yet */
+          // const locationData = Object.fromEntries(
+          //   new FormData(event.currentTarget)
+          // );
+          const formData = { ...location, searchRadius, gender, sortBy };
           console.log("submitted", { formData });
           // @ts-ignore
           // onClickSubmitButton(data as FilterFields);
@@ -73,7 +87,6 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
           value={searchRadius}
           options={[
             { label: "Any distance from you", value: "Any distance from you" },
-            { label: "Within 10km", value: "10" },
             { label: "Within 10km", value: "10" },
             { label: "Within 20km", value: "20" },
             { label: "Within 30km", value: "30" },

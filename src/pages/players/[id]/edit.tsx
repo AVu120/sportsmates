@@ -2,13 +2,18 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import { Header } from "@/src/components/navigation/Header";
+import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_edit.module.scss";
 
 const EditPlayer = () => {
   const router = useRouter();
   const { id } = router.query;
+  const { user, isLoggedIn } = useUser();
 
+  const isAllowedToEdit = isLoggedIn && user?.id === id;
+
+  console.log({ isLoggedIn, userId: user?.id, id });
   return (
     <>
       <Head>
@@ -19,8 +24,12 @@ const EditPlayer = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="home" />
-        <main>Edit Player Page of {id}</main>
+        <Header page="home" isLoggedIn={isLoggedIn} user={user} />
+        {isAllowedToEdit ? (
+          <main>Edit Player Page of {id}</main>
+        ) : (
+          <main>You are not allowed to edit this profile.</main>
+        )}
         <footer>
           <a
             href="https://www.flaticon.com/free-icons/cricket"

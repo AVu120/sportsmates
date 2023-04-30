@@ -8,7 +8,22 @@ import { prisma } from "../lib/prisma";
 import { procedure, router } from "../trpc";
 
 export const playerRouter = router({
-  getLatestPlayer: procedure.query(async () => {
+  get: procedure
+    .input(
+      z.object({
+        supabaseId: z.string().uuid(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { supabaseId } = input;
+      const latestPlayer = await prisma.player.findFirst({
+        where: {
+          supabaseId,
+        },
+      });
+      return latestPlayer;
+    }),
+  getLatest: procedure.query(async ({}) => {
     const latestPlayer = await prisma.player.findFirst({
       orderBy: {
         createdAt: "desc",
@@ -75,25 +90,30 @@ export const playerRouter = router({
     .input(
       z.object({
         supabaseId: z.string().uuid(),
-        firstName: z.string().optional(),
-        lastName: z.string().optional(),
-        skillLevel: z.string().optional(),
-        birthday: z.coerce.date().optional(),
-        lastActiveAt: z.coerce.date().optional(),
-        city: z.string().optional(),
+        firstName: z.string(),
+        lastName: z.string(),
+        skillLevel: z.string(),
+        birthday: z.coerce.date(),
+        city: z.string(),
         description: z.string().optional(),
         longitude: z.number().min(-180).max(180),
         latitude: z.number().min(-180).max(180),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      // @ts-ignore
+      if (ctx?.user?.id !== input.supabaseId) {
+        throw new Error(
+          "You are not authorized to update this player. You can only update your own profile"
+        );
+      }
+
       const {
         supabaseId,
         firstName,
         lastName,
         skillLevel,
         birthday,
-        lastActiveAt,
         city,
         description,
         longitude,
@@ -105,10 +125,24 @@ export const playerRouter = router({
           "lastName" = ${lastName}, 
           "skillLevel" = ${skillLevel}, 
           birthday = ${birthday},
-          "lastActiveAt" = ${lastActiveAt},
           city = ${city},
           description = ${description},
           coordinates = ST_Point(${longitude}, ${latitude})
+      WHERE "supabaseId" = ${supabaseId};`;
+      return input;
+    }),
+  updateLastSignIn: procedure
+    .input(
+      z.object({
+        supabaseId: z.string().uuid(),
+        lastSignIn: z.coerce.date(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { supabaseId, lastSignIn } = input;
+      await prisma.$queryRaw`
+      UPDATE "Player"
+      SET "lastSignIn" = ${lastSignIn}
       WHERE "supabaseId" = ${supabaseId};`;
       return input;
     }),

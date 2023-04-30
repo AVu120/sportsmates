@@ -1,17 +1,20 @@
+import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import superjson from "superjson";
 
 import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
 import PlayersFiltersForm from "@/src/pages/_components/home/PlayersFiltersForm";
+import { appRouter } from "@/src/server/routers/_app";
+import { supabase } from "@/src/services/authentication";
 import { FilterFields } from "@/src/types/forms";
 import useUser from "@/src/utils/hooks/useUser";
-
-import { SelectField } from "../components/form/Select";
+import { trpc } from "@/src/utils/trpc";
 
 import styles from "./_index.module.scss";
 
+// Home Page
 const Players = () => {
   const { isLoggedIn, user } = useUser();
   //@ts-ignore
@@ -53,28 +56,42 @@ const Players = () => {
 
 export default Players;
 
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//   const { req } = ctx;
-//   const refreshToken = req.cookies["my-refresh-token"];
-//   const accessToken = req.cookies["my-access-token"];
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { req } = ctx;
+  const refreshToken = req.cookies["my-refresh-token"];
+  const accessToken = req.cookies["my-access-token"];
 
-//   if (refreshToken && accessToken) {
-//     const {
-//       data: { user },
-//     } = await supabase.auth.setSession({
-//       refresh_token: refreshToken,
-//       access_token: accessToken,
-//     });
-//     if (user)
-//       return {
-//         redirect: {
-//           destination: "/players",
-//           permanent: false,
-//         },
-//       };
-//   }
+  const helpers = createProxySSGHelpers({
+    router: appRouter,
+    ctx,
+    transformer: superjson,
+  });
 
-//   return {
-//     props: {},
-//   };
-// };
+  if (refreshToken && accessToken) {
+    const {
+      data: { user },
+    } = await supabase.auth.setSession({
+      refresh_token: refreshToken,
+      access_token: accessToken,
+    });
+
+    // Check to see if user has set their profile yet.
+    // If not, redirect to edit profile page.
+    if (user) {
+      const supabaseId = user.id;
+      const userData = await helpers.player.get.fetch({ supabaseId });
+      if (!userData?.description) {
+        return {
+          redirect: {
+            destination: `/players/${supabaseId}/edit`,
+            permanent: false,
+          },
+        };
+      }
+    }
+  }
+
+  return {
+    props: {},
+  };
+};

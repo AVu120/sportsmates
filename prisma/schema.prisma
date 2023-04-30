@@ -15,13 +15,14 @@ datasource db {
 model Player {
   id           String                           @id @default(cuid())
   supabaseId   String                           @unique
+  email        String                           @unique
   firstName    String?
   lastName     String?
   skillLevel   String?
   birthday     DateTime?                        @db.Date
   createdAt    DateTime                         @db.Timestamptz(3)
   // Last time a player with a confirmed email address logged in.
-  lastActiveAt DateTime?                        @db.Timestamptz(3)
+  lastSignIn   DateTime?                        @db.Timestamptz(3)
   coordinates  Unsupported("geography(Point)")?
   city         String?
   description  String?

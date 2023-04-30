@@ -27,14 +27,23 @@ const SignUp = () => {
       if (error) throw error;
       if (data?.user) {
         const { id, created_at } = data.user;
-        const createdPlayer = await addPlayer.mutateAsync({
+        await addPlayer.mutateAsync({
           supabaseId: id,
+          email,
           createdAt: new Date(created_at),
         });
-        console.log({ createdPlayer });
       }
     } catch (error) {
       console.log({ error });
+      if (
+        //@ts-ignore
+        error?.shape?.message
+          ?.toLowerCase()
+          .includes("unique constraint failed")
+      )
+        return alert(
+          "Account already exists. Please log in. If you have not verified your email, another verification email has been sent to you."
+        );
       return alert("Error creating account, please try again later.");
     }
 

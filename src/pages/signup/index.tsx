@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
-// import { useUser } from "@supabase/auth-helpers-react";
-// import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-// import type { GetServerSideProps } from "next";
+import { useState } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 
 import { supabase } from "@/src/services/authentication";
 import { EmailPasswordFields } from "@/src/types/forms";
-import useUser from "@/src/utils/hooks/useUser";
+import { trpc } from "@/src/utils/trpc";
 
 import { EmailPasswordForm } from "../../components/form/EmailPasswordForm";
 import { Header } from "../../components/navigation/Header";
@@ -17,23 +12,34 @@ import styles from "./_index.module.scss";
 
 const SignUp = () => {
   const [hasSignedUp, setHasSignedUp] = useState(false);
-  // const user = useUser();
-  // const isLoggedIn = !!user.user;
+  const addPlayer = trpc.player.add.useMutation();
 
   const onClickSubmitButton = async ({
     email,
     password,
   }: EmailPasswordFields) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    if (error) alert("Error creating account, please try again later.");
-    else {
-      setHasSignedUp(true);
-      alert("account created!");
+      if (error) throw error;
+      if (data?.user) {
+        const { id, created_at } = data.user;
+        const createdPlayer = await addPlayer.mutateAsync({
+          supabaseId: id,
+          createdAt: new Date(created_at),
+        });
+        console.log({ createdPlayer });
+      }
+    } catch (error) {
+      console.log({ error });
+      return alert("Error creating account, please try again later.");
     }
+
+    setHasSignedUp(true);
+    alert("account created!");
   };
 
   return (

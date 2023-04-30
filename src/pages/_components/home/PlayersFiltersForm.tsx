@@ -31,7 +31,6 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
     const lat = places.geometry.location.lat();
     const long = places.geometry.location.lng();
     setLocation({ lat, long });
-    console.log({ lat, long });
   };
 
   const { ref } = usePlacesWidget({

@@ -60,7 +60,7 @@ export const playerRouter = router({
     .input(
       z.object({
         supabaseId: z.string().uuid(),
-        // Pass in Javascript Date object here containing user's local timezone info.
+        // Pass in Javascript Date object here containing user's local timezone info (aka new Date() in browser).
         createdAt: z.coerce.date(),
       })
     )

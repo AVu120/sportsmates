@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import { Header } from "@/src/components/navigation/Header";
+import { ProfilePicture } from "@/src/components/profile/Avatar";
 import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_edit.module.scss";
@@ -13,7 +14,6 @@ const EditPlayer = () => {
 
   const isAllowedToEdit = isLoggedIn && user?.id === id;
 
-  console.log({ isLoggedIn, userId: user?.id, id });
   return (
     <>
       <Head>
@@ -26,7 +26,10 @@ const EditPlayer = () => {
       <div className={styles.page}>
         <Header page="home" isLoggedIn={isLoggedIn} user={user} />
         {isAllowedToEdit ? (
-          <main>Edit Player Page of {id}</main>
+          <main className={styles.main}>
+            <h1 className={styles.title}>Edit your profile</h1>
+            <ProfilePicture />
+          </main>
         ) : (
           <main>You are not allowed to edit this profile.</main>
         )}

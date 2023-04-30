@@ -1,1 +1,11 @@
 @use '@/src/_styles/_basePage.module.scss';
+
+
+.title {
+  margin-top: 10vh;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}

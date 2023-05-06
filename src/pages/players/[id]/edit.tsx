@@ -120,7 +120,7 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
               />
               <Input
                 label="Profile Description (what other players will see)"
-                type="text"
+                type="textarea"
                 name="description"
                 isRequired
                 valueMissingText="Please enter your profile description"

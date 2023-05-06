@@ -53,7 +53,7 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
           <main className={styles.main}>
             <h1 className={styles.title}>Edit your profile</h1>
             {hasNotSetUpProfile && (
-              <p style={{ width: "50%" }}>
+              <p className={styles.not_set_up_profile_message}>
                 You must set up your profile below before you can message other
                 players or attend meetups.
               </p>
@@ -119,8 +119,8 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
                 valueMissingText="Please enter your city"
               />
               <Input
-                label="Profile Description"
-                type="textarea"
+                label="Profile Description (what other players will see)"
+                type="text"
                 name="description"
                 isRequired
                 valueMissingText="Please enter your profile description"

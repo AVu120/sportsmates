@@ -2,7 +2,7 @@
 
 
 .title {
-  margin-top: 10vh;
+  margin-top: 5vh;
 }
 .main {
   display: flex;
@@ -13,4 +13,8 @@
 
 .form_root {
   width: 50%;
+}
+
+.not_set_up_profile_message {
+  width: max(260px, 50%);
 }

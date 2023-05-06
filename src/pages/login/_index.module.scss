@@ -1,1 +1,7 @@
 @use '@/src/_styles/_basePage.module.scss';
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
 
 import styles from "./_index.module.scss";
@@ -20,15 +21,8 @@ const Meetups = () => {
       </Head>
       <div className={styles.page}>
         <Header page="meetups" />
-        <main>Meetups Page</main>
-        <footer>
-          <a
-            href="https://www.flaticon.com/free-icons/cricket"
-            title="cricket icons"
-          >
-            Cricket icons created by Freepik - Flaticon
-          </a>
-        </footer>
+        <main className={styles.main}>Meetups Page</main>
+        <Footer />
       </div>
     </>
   );

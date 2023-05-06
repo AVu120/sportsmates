@@ -8,6 +8,7 @@ import formStyles from "@/src/_styles/_forms.module.scss";
 import { DatePicker } from "@/src/components/form/DatePicker";
 import { Input } from "@/src/components/form/Input";
 import { SelectField } from "@/src/components/form/Select";
+import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
 import { ProfilePicture } from "@/src/components/profile/Avatar";
 import useUser from "@/src/utils/hooks/useUser";
@@ -123,14 +124,7 @@ const EditProfilePage = () => {
         ) : (
           <main>You are not allowed to edit this profile.</main>
         )}
-        <footer>
-          <a
-            href="https://www.flaticon.com/free-icons/cricket"
-            title="cricket icons"
-          >
-            Cricket icons created by Freepik - Flaticon
-          </a>
-        </footer>
+        <Footer />
       </div>
     </>
   );

@@ -52,7 +52,7 @@ const LogIn = () => {
       </Head>
       <div className={styles.page}>
         <Header page="login" />
-        <main>
+        <main className={styles.main}>
           <EmailPasswordForm
             title="Log in to Cricket Buddy"
             onClickSubmitButton={onClickSubmitButton}

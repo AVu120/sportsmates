@@ -63,7 +63,7 @@ const SignUp = () => {
       <div className={styles.page}>
         {/* <Header page="signup" isLoggedIn={isLoggedIn} /> */}
         <Header page="signup" />
-        <main>
+        <main className={styles.main}>
           {hasSignedUp ? (
             <p style={{ wordWrap: "break-word", width: "360px" }}>
               We are happy you signed up for Cricket Buddy! To start finding
@@ -78,7 +78,6 @@ const SignUp = () => {
             />
           )}
         </main>
-        <footer />
       </div>
     </>
   );

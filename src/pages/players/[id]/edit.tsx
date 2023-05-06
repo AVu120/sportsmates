@@ -119,8 +119,8 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
                 valueMissingText="Please enter your city"
               />
               <Input
-                label="Profile Description (what other players will see)"
-                type="text"
+                label="Profile Description"
+                type="textarea"
                 name="description"
                 isRequired
                 valueMissingText="Please enter your profile description"

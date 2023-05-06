@@ -5,7 +5,7 @@ import formStyles from "@/src/_styles/_forms.module.scss";
 
 interface ComponentProps {
   label: string;
-  type: HTMLInputTypeAttribute;
+  type: HTMLInputTypeAttribute | "textarea";
   name: string;
   isRequired: boolean;
   valueMissingText?: string;
@@ -34,7 +34,7 @@ export const Input = ({
       )}
       {customValidation && (
         <Form.Message
-          className={formStyles.form_message}
+          className={`${formStyles.form_label} ${formStyles.form_message}`}
           match={customValidation}
         >
           {invalidValueText || "Please enter a valid value"}
@@ -42,7 +42,11 @@ export const Input = ({
       )}
     </div>
     <Form.Control asChild>
-      <input className={formStyles.input} type={type} required={isRequired} />
+      {type === "textarea" ? (
+        <textarea className={formStyles.text_area} required={isRequired} />
+      ) : (
+        <input className={formStyles.input} type={type} required={isRequired} />
+      )}
     </Form.Control>
   </Form.Field>
 );

@@ -32,7 +32,7 @@ export const DatePicker = ({
         <Form.Label className={formStyles.form_label}>{label}</Form.Label>
         {isRequired && (
           <Form.Message
-            className={formStyles.form_message}
+            className={`${formStyles.form_label} ${formStyles.form_message}`}
             match="valueMissing"
           >
             {valueMissingText || "Please enter a value"}
@@ -40,7 +40,7 @@ export const DatePicker = ({
         )}
         {customValidation && (
           <Form.Message
-            className={formStyles.form_message}
+            className={`${formStyles.form_label} ${formStyles.form_message}`}
             match={customValidation}
           >
             {invalidValueText || "Please enter a valid value"}

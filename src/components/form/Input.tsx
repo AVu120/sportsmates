@@ -1,10 +1,11 @@
+import { HTMLInputTypeAttribute } from "react";
 import * as Form from "@radix-ui/react-form";
 
 import formStyles from "@/src/_styles/_forms.module.scss";
 
 interface ComponentProps {
   label: string;
-  type: string;
+  type: HTMLInputTypeAttribute;
   name: string;
   isRequired: boolean;
   valueMissingText?: string;

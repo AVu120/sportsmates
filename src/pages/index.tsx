@@ -80,14 +80,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (user) {
       const supabaseId = user.id;
       const userData = await helpers.player.get.fetch({ supabaseId });
-      if (!userData?.description) {
-        return {
-          redirect: {
-            destination: `/players/${supabaseId}/edit`,
-            permanent: false,
-          },
-        };
-      }
+      // if (!userData?.description) {
+      //   return {
+      //     redirect: {
+      //       destination: `/players/${supabaseId}/edit`,
+      //       permanent: false,
+      //     },
+      //   };
+      // }
     }
   }
 

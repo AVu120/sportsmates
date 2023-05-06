@@ -140,6 +140,7 @@ export const playerRouter = router({
     )
     .mutation(async ({ input }) => {
       const { supabaseId, lastSignIn } = input;
+      console.log({ supabaseId, lastSignIn });
       await prisma.$queryRaw`
       UPDATE "Player"
       SET "lastSignIn" = ${lastSignIn}

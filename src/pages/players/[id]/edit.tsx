@@ -1,19 +1,31 @@
+import { useState } from "react";
 import * as Form from "@radix-ui/react-form";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import formStyles from "@/src/_styles/_forms.module.scss";
+import { DatePicker } from "@/src/components/form/DatePicker";
+import { Input } from "@/src/components/form/Input";
+import { SelectField } from "@/src/components/form/Select";
 import { Header } from "@/src/components/navigation/Header";
 import { ProfilePicture } from "@/src/components/profile/Avatar";
 import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_edit.module.scss";
 
-const EditPlayer = () => {
+const EditProfilePage = () => {
   const router = useRouter();
   const { id } = router.query;
   const { user, isLoggedIn } = useUser();
+  // const [gender, setGender] = useState("male");
+  // const [skillLevel, setSkillLevel] = useState("beginner");
+  // const todaysDate = `${new Date().getFullYear()}-${
+  //   new Date().getMonth() + 1 < 10 ? "0" : ""
+  // }${new Date().getMonth() + 1}-${
+  //   new Date().getDate() < 10 ? "0" : ""
+  // }${new Date().getDate()}`;
+  // const [birthday, setBirthday] = useState(todaysDate);
 
   const isAllowedToEdit = isLoggedIn && user?.id === id;
 
@@ -39,51 +51,75 @@ const EditPlayer = () => {
                 const data = Object.fromEntries(
                   new FormData(event.currentTarget)
                 );
-                console.log({ data });
+                console.log({ ...data });
               }}
             >
-              <Form.Field className={formStyles.form_field} name="email">
-                <div className={formStyles.form_field_label_container}>
-                  <Form.Label className={formStyles.form_label}>
-                    Email
-                  </Form.Label>
-                  <Form.Message
-                    className={formStyles.form_message}
-                    match="valueMissing"
-                  >
-                    Please enter your email
-                  </Form.Message>
-                </div>
-                <Form.Control asChild>
-                  <input className={formStyles.input} type="" required />
-                </Form.Control>
-              </Form.Field>
-              <Form.Field className={formStyles.form_field} name="password">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "baseline",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Form.Label className={formStyles.form_label}>
-                    Password
-                  </Form.Label>
-                  <Form.Message
-                    className={formStyles.form_message}
-                    match="valueMissing"
-                  >
-                    Please enter your password
-                  </Form.Message>
-                </div>
-                <Form.Control asChild>
-                  <input
-                    className={formStyles.input}
-                    type="password"
-                    required
-                  />
-                </Form.Control>
-              </Form.Field>
+              <Input
+                label="First name"
+                type="text"
+                name="firstName"
+                isRequired
+                valueMissingText="Please enter your first name"
+              />
+              <Input
+                label="Last name"
+                type="text"
+                name="lastName"
+                isRequired
+                valueMissingText="Please enter your last name"
+              />
+              <SelectField
+                name="skillLevel"
+                label="Skill level"
+                // setValue={setSkillLevel}
+                // value={skillLevel}
+                options={[
+                  {
+                    label: "Advanced",
+                    value: "advanced",
+                  },
+                  { label: "Intermediate", value: "intermediate" },
+                  { label: "Beginner", value: "beginner" },
+                ]}
+              />
+              <SelectField
+                name="gender"
+                label="Gender"
+                // setValue={setGender}
+                // value={gender}
+                options={[
+                  {
+                    label: "Male",
+                    value: "male",
+                  },
+                  { label: "Female", value: "female" },
+                ]}
+              />
+              <DatePicker
+                label="Birthday (write below or click on the calendar)"
+                // value={birthday}
+                name="birthday"
+                // onChange={(selectedDatetime: any) => {
+                //   console.log({
+                //     selectedDatetime: selectedDatetime.target.value,
+                //   });
+                //   setBirthday(selectedDatetime.target.value);
+                // }}
+              />
+              <Input
+                label="City"
+                type="text"
+                name="city"
+                isRequired
+                valueMissingText="Please enter your city"
+              />
+              <Input
+                label="Profile Description (what other players will see)"
+                type="text"
+                name="description"
+                isRequired
+                valueMissingText="Please enter your profile description"
+              />
               <Form.Submit asChild>
                 <button
                   className={buttonStyles.primary_button}
@@ -110,4 +146,4 @@ const EditPlayer = () => {
   );
 };
 
-export default EditPlayer;
+export default EditProfilePage;

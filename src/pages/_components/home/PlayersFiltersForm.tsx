@@ -19,11 +19,6 @@ interface ComponentProps {
 //@ts-ignore
 const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
   const [location, setLocation] = useState<{ lat: number; long: number }>();
-  const [searchRadius, setSearchRadius] = useState<string>(
-    "Any distance from you"
-  );
-  const [gender, setGender] = useState<string>("Any gender");
-  const [sortBy, setSortBy] = useState<string>("Most recently active");
 
   const onPlaceSelected: ReactGoogleAutocompleteProps["onPlaceSelected"] = (
     places
@@ -51,11 +46,11 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
         onSubmit={(event: any) => {
           event.preventDefault();
           /* Not needed yet */
-          // const locationData = Object.fromEntries(
-          //   new FormData(event.currentTarget)
-          // );
-          const formData = { ...location, searchRadius, gender, sortBy };
-          console.log("submitted", { formData });
+          const formData = Object.fromEntries(
+            new FormData(event.currentTarget)
+          );
+          const filterData = { ...location, ...formData };
+          console.log("submitted", { filterData });
           // @ts-ignore
           // onClickSubmitButton(data as FilterFields);
         }}
@@ -80,10 +75,8 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
             />
           </Form.Control>
         </Form.Field>
-        {/* Search Radius Dropdown */}
         <SelectField
-          setValue={setSearchRadius}
-          value={searchRadius}
+          name="searchRadius"
           options={[
             { label: "Any distance from you", value: "Any distance from you" },
             { label: "Within 10km", value: "10" },
@@ -93,20 +86,16 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
             { label: "Within 50km", value: "50" },
           ]}
         />
-        {/* Gender Dropdown */}
         <SelectField
-          setValue={setGender}
-          value={gender}
+          name="gender"
           options={[
             { label: "Any gender", value: "Any gender" },
             { label: "Male", value: "Male" },
             { label: "Female", value: "Female" },
           ]}
         />
-        {/* SortBy Dropdown */}
         <SelectField
-          setValue={setSortBy}
-          value={sortBy}
+          name="sortBy"
           options={[
             { label: "Most recently active", value: "Most recently active" },
             { label: "Oldest to youngest", value: "Oldest to youngest" },

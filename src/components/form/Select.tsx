@@ -7,18 +7,34 @@ import {
 import * as Select from "@radix-ui/react-select";
 import classnames from "classnames";
 
+import formStyles from "@/src/_styles/_forms.module.scss";
+
 import styles from "./Select.module.scss";
 
 interface ComponentProps {
-  value: string;
-  setValue: (value: string) => void;
+  value?: string;
+  setValue?: (value: string) => void;
   options: { value: string; label: string }[];
+  label?: string;
+  name: string;
 }
 
-export const SelectField = ({ value, setValue, options }: ComponentProps) => {
+export const SelectField = ({
+  value,
+  setValue,
+  options,
+  label,
+  name,
+}: ComponentProps) => {
   const selectedOption = options.find((option) => option.value === value);
   return (
-    <Select.Root onValueChange={setValue} value={value}>
+    <Select.Root
+      onValueChange={setValue}
+      value={value}
+      name={name}
+      defaultValue={options[0].value}
+    >
+      {label && <p className={formStyles.form_label}>{label}</p>}
       <Select.Trigger
         className={styles.SelectTrigger}
         aria-label="select-field-trigger"

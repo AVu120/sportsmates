@@ -5,6 +5,7 @@ import Link from "next/link";
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import fontStyles from "@/src/_styles/_fonts.module.scss";
 import formStyles from "@/src/_styles/_forms.module.scss";
+import { Input } from "@/src/components/form/Input";
 import { EmailPasswordFields } from "@/src/types/forms";
 
 interface ComponentProps {
@@ -31,52 +32,22 @@ export const EmailPasswordForm = ({
         onClickSubmitButton(data as EmailPasswordFields);
       }}
     >
-      <Form.Field className={formStyles.form_field} name="email">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-          }}
-        >
-          <Form.Label className={formStyles.form_label}>Email</Form.Label>
-          <Form.Message
-            className={formStyles.form_message}
-            match="valueMissing"
-          >
-            Please enter your email
-          </Form.Message>
-          <Form.Message
-            className={formStyles.form_message}
-            match="typeMismatch"
-          >
-            Please provide a valid email
-          </Form.Message>
-        </div>
-        <Form.Control asChild>
-          <input className={formStyles.input} type="email" required />
-        </Form.Control>
-      </Form.Field>
-      <Form.Field className={formStyles.form_field} name="password">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-          }}
-        >
-          <Form.Label className={formStyles.form_label}>Password</Form.Label>
-          <Form.Message
-            className={formStyles.form_message}
-            match="valueMissing"
-          >
-            Please enter your password
-          </Form.Message>
-        </div>
-        <Form.Control asChild>
-          <input className={formStyles.input} type="password" required />
-        </Form.Control>
-      </Form.Field>
+      <Input
+        label="Email"
+        type="email"
+        name="email"
+        isRequired
+        customValidation="typeMismatch"
+        valueMissingText="Please enter your email"
+        invalidValueText="Please enter a valid email"
+      />
+      <Input
+        label="Password"
+        type="password"
+        name="password"
+        valueMissingText="Please enter your password"
+        isRequired
+      />
       <Form.Submit asChild>
         <button
           className={buttonStyles.primary_button}

@@ -22,6 +22,12 @@ $field_placeholder_text_color: rgb(133, 133, 133);
   display: grid;
 }
 
+.form_field_label_container {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
 .form_label {
   font-size: $field_label_size;
   font-weight: 500;

@@ -94,6 +94,7 @@ const EditProfilePage = () => {
               <DatePicker
                 label="Birthday (write below or click on the calendar)"
                 name="birthday"
+                isRequired
               />
               <Input
                 label="City"

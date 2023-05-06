@@ -1,4 +1,5 @@
 import { ChangeEventHandler } from "react";
+import * as Form from "@radix-ui/react-form";
 
 import formStyles from "@/src/_styles/_forms.module.scss";
 
@@ -9,6 +10,10 @@ interface ComponentProps {
   value?: string;
   name: string;
   label?: string;
+  isRequired?: boolean;
+  valueMissingText?: string;
+  customValidation?: any;
+  invalidValueText?: string;
 }
 
 export const DatePicker = ({
@@ -16,26 +21,43 @@ export const DatePicker = ({
   value,
   name,
   label,
+  isRequired,
+  valueMissingText,
+  customValidation,
+  invalidValueText,
 }: ComponentProps) => {
   return (
-    <>
-      {label && (
-        <label
-          className={`${formStyles.form_label} ${styles.label}`}
-          htmlFor={name}
-        >
-          {label}
-        </label>
-      )}
-
-      <input
-        className={styles.input}
-        type="date"
-        id={name}
-        name={name}
-        value={value}
-        onChange={onChange}
-      ></input>
-    </>
+    <Form.Field className={formStyles.form_field} name={name}>
+      <div className={formStyles.form_field_label_container}>
+        <Form.Label className={formStyles.form_label}>{label}</Form.Label>
+        {isRequired && (
+          <Form.Message
+            className={formStyles.form_message}
+            match="valueMissing"
+          >
+            {valueMissingText || "Please enter a value"}
+          </Form.Message>
+        )}
+        {customValidation && (
+          <Form.Message
+            className={formStyles.form_message}
+            match={customValidation}
+          >
+            {invalidValueText || "Please enter a valid value"}
+          </Form.Message>
+        )}
+      </div>
+      <Form.Control asChild>
+        <input
+          className={styles.input}
+          type="date"
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={isRequired}
+        />
+      </Form.Control>
+    </Form.Field>
   );
 };

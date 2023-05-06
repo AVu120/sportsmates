@@ -12,36 +12,20 @@ import formStyles from "@/src/_styles/_forms.module.scss";
 import styles from "./Select.module.scss";
 
 interface ComponentProps {
-  value?: string;
-  setValue?: (value: string) => void;
   options: { value: string; label: string }[];
   label?: string;
   name: string;
 }
 
-export const SelectField = ({
-  value,
-  setValue,
-  options,
-  label,
-  name,
-}: ComponentProps) => {
-  const selectedOption = options.find((option) => option.value === value);
+export const SelectField = ({ options, label, name }: ComponentProps) => {
   return (
-    <Select.Root
-      onValueChange={setValue}
-      value={value}
-      name={name}
-      defaultValue={options[0].value}
-    >
+    <Select.Root name={name} defaultValue={options[0].value}>
       {label && <p className={formStyles.form_label}>{label}</p>}
       <Select.Trigger
         className={styles.SelectTrigger}
         aria-label="select-field-trigger"
       >
-        <Select.Value aria-label={value}>
-          {selectedOption ? selectedOption.label : value}
-        </Select.Value>
+        <Select.Value />
         <Select.Icon className={styles.SelectIcon}>
           <ChevronDownIcon />
         </Select.Icon>

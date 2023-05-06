@@ -71,8 +71,6 @@ const EditProfilePage = () => {
               <SelectField
                 name="skillLevel"
                 label="Skill level"
-                // setValue={setSkillLevel}
-                // value={skillLevel}
                 options={[
                   {
                     label: "Advanced",
@@ -85,8 +83,6 @@ const EditProfilePage = () => {
               <SelectField
                 name="gender"
                 label="Gender"
-                // setValue={setGender}
-                // value={gender}
                 options={[
                   {
                     label: "Male",
@@ -97,14 +93,7 @@ const EditProfilePage = () => {
               />
               <DatePicker
                 label="Birthday (write below or click on the calendar)"
-                // value={birthday}
                 name="birthday"
-                // onChange={(selectedDatetime: any) => {
-                //   console.log({
-                //     selectedDatetime: selectedDatetime.target.value,
-                //   });
-                //   setBirthday(selectedDatetime.target.value);
-                // }}
               />
               <Input
                 label="City"

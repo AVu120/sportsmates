@@ -25,7 +25,10 @@ export const Input = ({
     <div className={formStyles.form_field_label_container}>
       <Form.Label className={formStyles.form_label}>{label}</Form.Label>
       {isRequired && (
-        <Form.Message className={formStyles.form_message} match="valueMissing">
+        <Form.Message
+          className={`${formStyles.form_label} ${formStyles.form_message}`}
+          match="valueMissing"
+        >
           {valueMissingText || "Please enter a value"}
         </Form.Message>
       )}

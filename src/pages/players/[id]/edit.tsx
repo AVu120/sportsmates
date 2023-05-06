@@ -1,7 +1,10 @@
 import { useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import superjson from "superjson";
 
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import formStyles from "@/src/_styles/_forms.module.scss";
@@ -11,22 +14,21 @@ import { SelectField } from "@/src/components/form/Select";
 import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
 import { ProfilePicture } from "@/src/components/profile/Avatar";
+import { appRouter } from "@/src/server/routers/_app";
+import { supabase } from "@/src/services/authentication";
 import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_edit.module.scss";
 
-const EditProfilePage = () => {
+interface ComponentProps {
+  hasNotSetUpProfile: boolean;
+}
+
+// Every field is required.
+const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
   const router = useRouter();
   const { id } = router.query;
   const { user, isLoggedIn } = useUser();
-  // const [gender, setGender] = useState("male");
-  // const [skillLevel, setSkillLevel] = useState("beginner");
-  // const todaysDate = `${new Date().getFullYear()}-${
-  //   new Date().getMonth() + 1 < 10 ? "0" : ""
-  // }${new Date().getMonth() + 1}-${
-  //   new Date().getDate() < 10 ? "0" : ""
-  // }${new Date().getDate()}`;
-  // const [birthday, setBirthday] = useState(todaysDate);
 
   const isAllowedToEdit = isLoggedIn && user?.id === id;
 
@@ -40,10 +42,22 @@ const EditProfilePage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="home" isLoggedIn={isLoggedIn} user={user} />
+        <Header
+          page="home"
+          isLoggedIn={isLoggedIn}
+          user={user}
+          hasNotSetUpProfile={hasNotSetUpProfile}
+          redirectOnLogout
+        />
         {isAllowedToEdit ? (
           <main className={styles.main}>
             <h1 className={styles.title}>Edit your profile</h1>
+            {hasNotSetUpProfile && (
+              <p style={{ width: "50%" }}>
+                You must set up your profile below before you can message other
+                players or attend meetups.
+              </p>
+            )}
             <ProfilePicture />
             <Form.Root
               className={`${formStyles.form_root} ${styles.form_root}`}
@@ -122,7 +136,9 @@ const EditProfilePage = () => {
             </Form.Root>
           </main>
         ) : (
-          <main>You are not allowed to edit this profile.</main>
+          <main className={styles.main}>
+            You are not allowed to edit this profile.
+          </main>
         )}
         <Footer />
       </div>
@@ -131,3 +147,39 @@ const EditProfilePage = () => {
 };
 
 export default EditProfilePage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { req } = ctx;
+  const refreshToken = req.cookies["my-refresh-token"];
+  const accessToken = req.cookies["my-access-token"];
+
+  const helpers = createProxySSGHelpers({
+    router: appRouter,
+    ctx,
+    transformer: superjson,
+  });
+
+  let hasNotSetUpProfile = false;
+
+  if (refreshToken && accessToken) {
+    const {
+      data: { user },
+    } = await supabase.auth.setSession({
+      refresh_token: refreshToken,
+      access_token: accessToken,
+    });
+
+    // Check to see if user has set their profile yet.
+    // If not, hide navigation links in navbar and display message.
+
+    if (user) {
+      const supabaseId = user.id;
+      const userData = await helpers.player.get.fetch({ supabaseId });
+      hasNotSetUpProfile = !userData?.description;
+    }
+  }
+
+  return {
+    props: { hasNotSetUpProfile },
+  };
+};

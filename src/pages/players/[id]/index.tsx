@@ -2,7 +2,7 @@ import {} from "@radix-ui/react-icons";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import { Header } from "@/src/components/navigation/Header";
+import { Header } from "@/components/navigation/Header";
 
 import styles from "./_index.module.scss";
 

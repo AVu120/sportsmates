@@ -1,11 +1,11 @@
 import { useState } from "react";
 import * as Form from "@radix-ui/react-form";
 
-import buttonStyles from "@/src/_styles/_buttons.module.scss";
-import formStyles from "@/src/_styles/_forms.module.scss";
-import { PlacesAutoComplete } from "@/src/components/form/PlacesAutoComplete";
-import { SelectField } from "@/src/components/form/Select";
-import { FilterFields } from "@/src/types/forms";
+import buttonStyles from "@/_styles/_buttons.module.scss";
+import formStyles from "@/_styles/_forms.module.scss";
+import { PlacesAutoComplete } from "@/components/form/PlacesAutoComplete";
+import { SelectField } from "@/components/form/Select";
+import { FilterFields } from "@/types/forms";
 
 import styles from "./PlayersFiltersForm.module.scss";
 

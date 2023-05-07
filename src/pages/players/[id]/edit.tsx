@@ -6,18 +6,18 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import superjson from "superjson";
 
-import buttonStyles from "@/src/_styles/_buttons.module.scss";
-import formStyles from "@/src/_styles/_forms.module.scss";
-import { DatePicker } from "@/src/components/form/DatePicker";
-import { Input } from "@/src/components/form/Input";
-import { PlacesAutoComplete } from "@/src/components/form/PlacesAutoComplete";
-import { SelectField } from "@/src/components/form/Select";
-import { Footer } from "@/src/components/navigation/Footer";
-import { Header } from "@/src/components/navigation/Header";
-import { ProfilePicture } from "@/src/components/profile/Avatar";
-import { appRouter } from "@/src/server/routers/_app";
-import { supabase } from "@/src/services/authentication";
-import useUser from "@/src/utils/hooks/useUser";
+import buttonStyles from "@/_styles/_buttons.module.scss";
+import formStyles from "@/_styles/_forms.module.scss";
+import { DatePicker } from "@/components/form/DatePicker";
+import { Input } from "@/components/form/Input";
+import { PlacesAutoComplete } from "@/components/form/PlacesAutoComplete";
+import { SelectField } from "@/components/form/Select";
+import { Footer } from "@/components/navigation/Footer";
+import { Header } from "@/components/navigation/Header";
+import { ProfilePicture } from "@/components/profile/Avatar";
+import { appRouter } from "@/server/routers/_app";
+import { supabase } from "@/services/authentication";
+import useUser from "@/utils/hooks/useUser";
 
 import styles from "./_edit.module.scss";
 

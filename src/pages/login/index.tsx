@@ -3,9 +3,9 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import { supabase } from "@/src/services/authentication";
-import { EmailPasswordFields } from "@/src/types/forms";
-import useUser from "@/src/utils/hooks/useUser";
+import { supabase } from "@/services/authentication";
+import { EmailPasswordFields } from "@/types/forms";
+import useUser from "@/utils/hooks/useUser";
 
 import { EmailPasswordForm } from "../../components/form/EmailPasswordForm";
 import { Header } from "../../components/navigation/Header";

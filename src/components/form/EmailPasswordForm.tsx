@@ -2,11 +2,11 @@ import React from "react";
 import * as Form from "@radix-ui/react-form";
 import Link from "next/link";
 
-import buttonStyles from "@/src/_styles/_buttons.module.scss";
-import fontStyles from "@/src/_styles/_fonts.module.scss";
-import formStyles from "@/src/_styles/_forms.module.scss";
-import { Input } from "@/src/components/form/Input";
-import { EmailPasswordFields } from "@/src/types/forms";
+import buttonStyles from "@/_styles/_buttons.module.scss";
+import fontStyles from "@/_styles/_fonts.module.scss";
+import formStyles from "@/_styles/_forms.module.scss";
+import { Input } from "@/components/form/Input";
+import { EmailPasswordFields } from "@/types/forms";
 
 interface ComponentProps {
   title: string;

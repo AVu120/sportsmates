@@ -1,8 +1,8 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import Link from "next/link";
 
-import buttonStyles from "@/src/_styles/_buttons.module.scss";
-import { Page } from "@/src/types/pages";
+import buttonStyles from "@/_styles/_buttons.module.scss";
+import { Page } from "@/types/pages";
 
 import styles from "./NavBar.module.scss";
 

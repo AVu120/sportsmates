@@ -1,7 +1,7 @@
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 
-import { supabase } from "@/src/services/authentication";
+import { supabase } from "@/services/authentication";
 // The app's context - is generated for each incoming request
 export async function createContext(opts?: trpcNext.CreateNextContextOptions) {
   // Create your context based on the request object

@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { supabase } from "@/src/services/authentication";
+import { supabase } from "@/services/authentication";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {

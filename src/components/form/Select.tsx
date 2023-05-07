@@ -7,7 +7,7 @@ import {
 import * as Select from "@radix-ui/react-select";
 import classnames from "classnames";
 
-import formStyles from "@/src/_styles/_forms.module.scss";
+import formStyles from "@/_styles/_forms.module.scss";
 
 import styles from "./Select.module.scss";
 

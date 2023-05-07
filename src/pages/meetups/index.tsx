@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import { Footer } from "@/src/components/navigation/Footer";
-import { Header } from "@/src/components/navigation/Header";
-import useUser from "@/src/utils/hooks/useUser";
+import { Footer } from "@/components/navigation/Footer";
+import { Header } from "@/components/navigation/Header";
+import useUser from "@/utils/hooks/useUser";
 
 import styles from "./_index.module.scss";
 

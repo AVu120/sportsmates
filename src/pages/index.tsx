@@ -3,14 +3,14 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import superjson from "superjson";
 
-import { Footer } from "@/src/components/navigation/Footer";
-import { Header } from "@/src/components/navigation/Header";
-import PlayersFiltersForm from "@/src/pages/_components/home/PlayersFiltersForm";
-import { appRouter } from "@/src/server/routers/_app";
-import { supabase } from "@/src/services/authentication";
-import { FilterFields } from "@/src/types/forms";
-import useUser from "@/src/utils/hooks/useUser";
-import { trpc } from "@/src/utils/trpc";
+import { Footer } from "@/components/navigation/Footer";
+import { Header } from "@/components/navigation/Header";
+import PlayersFiltersForm from "@/pages/_components/home/PlayersFiltersForm";
+import { appRouter } from "@/server/routers/_app";
+import { supabase } from "@/services/authentication";
+import { FilterFields } from "@/types/forms";
+import useUser from "@/utils/hooks/useUser";
+import { trpc } from "@/utils/trpc";
 
 import styles from "./_index.module.scss";
 

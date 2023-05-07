@@ -4,7 +4,7 @@ import {
 } from "react-google-autocomplete";
 import * as Form from "@radix-ui/react-form";
 
-import formStyles from "@/src/_styles/_forms.module.scss";
+import formStyles from "@/_styles/_forms.module.scss";
 
 interface ComponentProps {
   onSelect: (location: { lat: number; long: number }) => void;

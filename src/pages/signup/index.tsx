@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Head from "next/head";
 
-import { supabase } from "@/src/services/authentication";
-import { EmailPasswordFields } from "@/src/types/forms";
-import { trpc } from "@/src/utils/trpc";
+import { supabase } from "@/services/authentication";
+import { EmailPasswordFields } from "@/types/forms";
+import { trpc } from "@/utils/trpc";
 
 import { EmailPasswordForm } from "../../components/form/EmailPasswordForm";
 import { Header } from "../../components/navigation/Header";

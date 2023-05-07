@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import buttonStyles from "@/src/_styles/_buttons.module.scss";
-import logoStyles from "@/src/_styles/_logos.module.scss";
-import { DropDownMenu } from "@/src/components/menu/DropDownMenu";
-import { supabase } from "@/src/services/authentication";
-import { Page } from "@/src/types/pages";
+import buttonStyles from "@/_styles/_buttons.module.scss";
+import logoStyles from "@/_styles/_logos.module.scss";
+import { DropDownMenu } from "@/components/menu/DropDownMenu";
+import { supabase } from "@/services/authentication";
+import { Page } from "@/types/pages";
 
 import { NavBar } from "./NavBar";
 

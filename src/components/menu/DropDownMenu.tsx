@@ -2,7 +2,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
-import buttonStyles from "@/src/_styles/_buttons.module.scss";
+import buttonStyles from "@/_styles/_buttons.module.scss";
 
 import styles from "./DropDownMenu.module.scss";
 

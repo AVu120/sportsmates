@@ -2,13 +2,16 @@ import {} from "@radix-ui/react-icons";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
+import useUser from "@/utils/hooks/useUser";
 
 import styles from "./_index.module.scss";
 
 const Player = () => {
   const router = useRouter();
   const { id } = router.query;
+  const { user, isLoggedIn } = useUser();
 
   return (
     <>

@@ -94,7 +94,6 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
           hasNotSetUpProfile={hasNotSetUpProfile}
           redirectOnLogout
         />
-        (
         <main className={styles.main}>
           <h1 className={styles.title}>Edit your profile</h1>
           {hasNotSetUpProfile && (
@@ -198,7 +197,6 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
             </Form.Submit>
           </Form.Root>
         </main>
-        )
         <Footer />
       </div>
     </>

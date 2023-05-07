@@ -14,7 +14,7 @@ import { NavBar } from "./NavBar";
 import styles from "./Header.module.scss";
 
 interface ComponentProps {
-  page: Page;
+  page?: Page;
   isLoggedIn?: boolean;
   user?: User | null;
   hasNotSetUpProfile?: boolean;

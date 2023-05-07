@@ -7,7 +7,7 @@ import { Page } from "@/types/pages";
 import styles from "./NavBar.module.scss";
 
 interface ComponentProps {
-  page: Page;
+  page?: Page;
 }
 
 export const NavBar = ({ page }: ComponentProps) => {

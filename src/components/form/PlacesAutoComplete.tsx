@@ -24,7 +24,7 @@ export const PlacesAutoComplete = ({
   const onPlaceSelected: ReactGoogleAutocompleteProps["onPlaceSelected"] = (
     places
   ) => {
-    const latitude = places.geometry.location.latitude();
+    const latitude = places.geometry.location.lat();
     const longitude = places.geometry.location.lng();
     onSelect({ latitude, longitude });
   };

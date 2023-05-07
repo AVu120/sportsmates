@@ -1,15 +1,11 @@
-import React, { useState } from "react";
-import AutoComplete, {
-  ReactGoogleAutocompleteProps,
-  usePlacesWidget,
-} from "react-google-autocomplete";
+import { useState } from "react";
 import * as Form from "@radix-ui/react-form";
 
 import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import formStyles from "@/src/_styles/_forms.module.scss";
+import { PlacesAutoComplete } from "@/src/components/form/PlacesAutoComplete";
 import { SelectField } from "@/src/components/form/Select";
 import { FilterFields } from "@/src/types/forms";
-import { useLocation } from "@/src/utils/hooks/useLocation";
 
 import styles from "./PlayersFiltersForm.module.scss";
 
@@ -19,11 +15,12 @@ interface ComponentProps {
 
 //@ts-ignore
 const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
-  const { location, ref } = useLocation({
-    options: {
-      types: "(cities)",
-      componentRestrictions: { country: "au" },
-    },
+  const [location, setLocation] = useState<{
+    lat: number | undefined;
+    long: number | undefined;
+  }>({
+    lat: undefined,
+    long: undefined,
   });
 
   return (
@@ -38,32 +35,23 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
           const formData = Object.fromEntries(
             new FormData(event.currentTarget)
           );
-          const filterData = { ...location, ...formData };
-          console.log("submitted", { filterData });
-          // @ts-ignore
-          // onClickSubmitButton(data as FilterFields);
+
+          if (location.lat && location.long) {
+            const filterData = { ...location, ...formData };
+            console.log("submitted", { filterData });
+            // @ts-ignore
+            // onClickSubmitButton(data as FilterFields);
+          } else alert("Please select your location");
         }}
       >
-        <Form.Field className={formStyles.form_field} name="location">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-            }}
-          >
-            <Form.Label className={formStyles.form_label}>Filters</Form.Label>
-          </div>
-          <Form.Control asChild>
-            <input
-              className={formStyles.input}
-              type="text"
-              placeholder="Enter your location"
-              //@ts-ignore
-              ref={ref}
-            />
-          </Form.Control>
-        </Form.Field>
+        <PlacesAutoComplete
+          onSelect={setLocation}
+          options={{
+            types: "(cities)",
+            componentRestrictions: { country: "au" },
+          }}
+          label="Filters"
+        />
         <SelectField
           name="searchRadius"
           options={[

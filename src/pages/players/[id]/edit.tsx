@@ -10,13 +10,13 @@ import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import formStyles from "@/src/_styles/_forms.module.scss";
 import { DatePicker } from "@/src/components/form/DatePicker";
 import { Input } from "@/src/components/form/Input";
+import { PlacesAutoComplete } from "@/src/components/form/PlacesAutoComplete";
 import { SelectField } from "@/src/components/form/Select";
 import { Footer } from "@/src/components/navigation/Footer";
 import { Header } from "@/src/components/navigation/Header";
 import { ProfilePicture } from "@/src/components/profile/Avatar";
 import { appRouter } from "@/src/server/routers/_app";
 import { supabase } from "@/src/services/authentication";
-import { useLocation } from "@/src/utils/hooks/useLocation";
 import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_edit.module.scss";
@@ -27,13 +27,13 @@ interface ComponentProps {
 
 // Every field is required.
 const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
-  const { location, ref } = useLocation({
-    options: {
-      types: ["locality"],
-      componentRestrictions: { country: "au" },
-    },
+  const [location, setLocation] = useState<{
+    lat: number | undefined;
+    long: number | undefined;
+  }>({
+    lat: undefined,
+    long: undefined,
   });
-
   const router = useRouter();
   const { id } = router.query;
   const { user, isLoggedIn } = useUser();
@@ -74,7 +74,9 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
                 const data = Object.fromEntries(
                   new FormData(event.currentTarget)
                 );
-                console.log({ ...location, ...data });
+                if (location.lat && location.long) {
+                  console.log({ ...location, ...data });
+                } else alert("Please select your location");
               }}
             >
               <Input
@@ -119,12 +121,13 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
                 name="birthday"
                 isRequired
               />
-              <Input
+              <PlacesAutoComplete
+                onSelect={setLocation}
+                options={{
+                  types: ["locality"],
+                  componentRestrictions: { country: "au" },
+                }}
                 label="City"
-                type="text"
-                name="city"
-                isRequired
-                valueMissingText="Please enter your city"
               />
               <Input
                 label="Profile Description (what other players will see)"

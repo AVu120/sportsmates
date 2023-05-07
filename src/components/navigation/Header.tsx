@@ -72,12 +72,16 @@ export const Header = ({
               style={{
                 position: "absolute",
                 fontSize: "0.8rem",
-                right: "80px",
-                top: "22px",
+                top: "50px",
               }}
             >
               Hello {user?.email}!
             </span>
+            <Link href={`/players/${user?.id}/edit`}>
+              <button type="button" className={buttonStyles.link_button}>
+                Edit profile
+              </button>
+            </Link>
             <button
               type="button"
               className={buttonStyles.link_button}

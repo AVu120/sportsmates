@@ -11,6 +11,7 @@ interface ComponentProps {
   valueMissingText?: string;
   customValidation?: any;
   invalidValueText?: string;
+  value?: string;
 }
 export const Input = ({
   label,
@@ -20,6 +21,7 @@ export const Input = ({
   customValidation,
   invalidValueText,
   type,
+  value,
 }: ComponentProps) => (
   <Form.Field className={formStyles.form_field} name={name}>
     <div className={formStyles.form_field_label_container}>
@@ -43,9 +45,18 @@ export const Input = ({
     </div>
     <Form.Control asChild>
       {type === "textarea" ? (
-        <textarea className={formStyles.text_area} required={isRequired} />
+        <textarea
+          className={formStyles.text_area}
+          required={isRequired}
+          value={value}
+        />
       ) : (
-        <input className={formStyles.input} type={type} required={isRequired} />
+        <input
+          className={formStyles.input}
+          type={type}
+          required={isRequired}
+          value={value}
+        />
       )}
     </Form.Control>
   </Form.Field>

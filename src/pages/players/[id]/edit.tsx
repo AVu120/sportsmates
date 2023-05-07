@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Prisma } from "@prisma/client";
 import * as Form from "@radix-ui/react-form";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
@@ -22,8 +23,11 @@ import { trpc } from "@/utils/trpc";
 
 import styles from "./_edit.module.scss";
 
+// 1. Define a User type that includes the "cars" relation.
+type player = Prisma.PlayerGetPayload<{}>;
+
 interface ComponentProps {
-  hasNotSetUpProfile: boolean;
+  player: player;
 }
 
 interface FormFields {
@@ -36,7 +40,7 @@ interface FormFields {
 }
 
 // Every field is required.
-const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
+const EditProfilePage = ({ player }: ComponentProps) => {
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -48,6 +52,7 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
   const { id } = router.query;
   const { user, isLoggedIn } = useUser();
   const isAllowedToEdit = isLoggedIn && user?.id && user?.id === id;
+  const hasNotSetUpProfile = !player?.description;
 
   const updatePlayer = trpc.player.update.useMutation({
     async onSuccess() {
@@ -135,6 +140,7 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
               name="firstName"
               isRequired
               valueMissingText="Please enter your first name"
+              // value={player?.firstName || ""}
             />
             <Input
               label="Last name"
@@ -216,8 +222,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     transformer: superjson,
   });
 
-  let hasNotSetUpProfile = false;
-
   if (refreshToken && accessToken) {
     const {
       data: { user },
@@ -231,12 +235,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // need to set their profile in order to use the app.
     if (user) {
       const supabaseId = user.id;
-      const userData = await helpers.player.get.fetch({ supabaseId });
-      hasNotSetUpProfile = !userData?.description;
+      const player = await helpers.player.get.fetch({ supabaseId });
+      console.log({ player });
+
+      const serializedPlayer = superjson.serialize(player);
+
+      return {
+        props: { player: serializedPlayer.json },
+      };
     }
   }
 
   return {
-    props: { hasNotSetUpProfile },
+    props: {},
   };
 };

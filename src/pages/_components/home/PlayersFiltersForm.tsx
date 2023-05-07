@@ -9,6 +9,7 @@ import buttonStyles from "@/src/_styles/_buttons.module.scss";
 import formStyles from "@/src/_styles/_forms.module.scss";
 import { SelectField } from "@/src/components/form/Select";
 import { FilterFields } from "@/src/types/forms";
+import { useLocation } from "@/src/utils/hooks/useLocation";
 
 import styles from "./PlayersFiltersForm.module.scss";
 
@@ -18,19 +19,7 @@ interface ComponentProps {
 
 //@ts-ignore
 const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
-  const [location, setLocation] = useState<{ lat: number; long: number }>();
-
-  const onPlaceSelected: ReactGoogleAutocompleteProps["onPlaceSelected"] = (
-    places
-  ) => {
-    const lat = places.geometry.location.lat();
-    const long = places.geometry.location.lng();
-    setLocation({ lat, long });
-  };
-
-  const { ref } = usePlacesWidget({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    onPlaceSelected,
+  const { location, ref } = useLocation({
     options: {
       types: "(cities)",
       componentRestrictions: { country: "au" },

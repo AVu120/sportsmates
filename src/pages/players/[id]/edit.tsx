@@ -16,6 +16,7 @@ import { Header } from "@/src/components/navigation/Header";
 import { ProfilePicture } from "@/src/components/profile/Avatar";
 import { appRouter } from "@/src/server/routers/_app";
 import { supabase } from "@/src/services/authentication";
+import { useLocation } from "@/src/utils/hooks/useLocation";
 import useUser from "@/src/utils/hooks/useUser";
 
 import styles from "./_edit.module.scss";
@@ -26,6 +27,13 @@ interface ComponentProps {
 
 // Every field is required.
 const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
+  const { location, ref } = useLocation({
+    options: {
+      types: ["locality"],
+      componentRestrictions: { country: "au" },
+    },
+  });
+
   const router = useRouter();
   const { id } = router.query;
   const { user, isLoggedIn } = useUser();
@@ -66,7 +74,7 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
                 const data = Object.fromEntries(
                   new FormData(event.currentTarget)
                 );
-                console.log({ ...data });
+                console.log({ ...location, ...data });
               }}
             >
               <Input

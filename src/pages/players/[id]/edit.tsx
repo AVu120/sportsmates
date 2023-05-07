@@ -18,6 +18,7 @@ import { ProfilePicture } from "@/components/profile/Avatar";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import useUser from "@/utils/hooks/useUser";
+import { trpc } from "@/utils/trpc";
 
 import styles from "./_edit.module.scss";
 
@@ -25,20 +26,56 @@ interface ComponentProps {
   hasNotSetUpProfile: boolean;
 }
 
+interface FormFields {
+  firstName: string;
+  lastName: string;
+  skillLevel: string;
+  birthday: string;
+  city: string;
+  description: string;
+}
+
 // Every field is required.
 const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
   const [location, setLocation] = useState<{
-    lat: number | undefined;
-    long: number | undefined;
+    latitude: number;
+    longitude: number;
   }>({
-    lat: undefined,
-    long: undefined,
+    latitude: NaN,
+    longitude: NaN,
   });
   const router = useRouter();
   const { id } = router.query;
   const { user, isLoggedIn } = useUser();
+  const isAllowedToEdit = isLoggedIn && user?.id && user?.id === id;
 
-  const isAllowedToEdit = isLoggedIn && user?.id === id;
+  const updatePlayer = trpc.player.update.useMutation({
+    async onSuccess() {
+      alert("Profile updated successfully");
+      // Redirect user to home page after they have set their profile for the first time.
+      if (hasNotSetUpProfile) router.push("/");
+    },
+  });
+
+  if (!isAllowedToEdit)
+    return (
+      <>
+        <Head>
+          <title>Cricket Buddy - Meetups</title>
+
+          <meta name="description" content="Find a cricket buddy near you" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <div className={styles.page}>
+          <Header page="meetups" isLoggedIn={isLoggedIn} user={user} />
+          <main className={styles.main}>
+            You are not allowed to edit this page.
+          </main>
+          <Footer />
+        </div>
+      </>
+    );
 
   return (
     <>
@@ -57,100 +94,111 @@ const EditProfilePage = ({ hasNotSetUpProfile }: ComponentProps) => {
           hasNotSetUpProfile={hasNotSetUpProfile}
           redirectOnLogout
         />
-        {isAllowedToEdit ? (
-          <main className={styles.main}>
-            <h1 className={styles.title}>Edit your profile</h1>
-            {hasNotSetUpProfile && (
-              <p className={styles.not_set_up_profile_message}>
-                You must set up your profile below before you can message other
-                players or attend meetups.
-              </p>
-            )}
-            <ProfilePicture />
-            <Form.Root
-              className={`${formStyles.form_root} ${styles.form_root}`}
-              onSubmit={(event: any) => {
-                event.preventDefault();
-                const data = Object.fromEntries(
-                  new FormData(event.currentTarget)
+        (
+        <main className={styles.main}>
+          <h1 className={styles.title}>Edit your profile</h1>
+          {hasNotSetUpProfile && (
+            <p className={styles.not_set_up_profile_message}>
+              You must set up your profile below before you can message other
+              players or attend meetups.
+            </p>
+          )}
+          <ProfilePicture />
+          <Form.Root
+            className={`${formStyles.form_root} ${styles.form_root}`}
+            onSubmit={async (event: any) => {
+              event.preventDefault();
+              //@ts-ignore
+              const formData = Object.fromEntries(
+                new FormData(event.currentTarget)
+              ) as FormFields;
+              const input = {
+                ...formData,
+                ...location,
+                supabaseId: user?.id,
+                birthday: new Date(formData.birthday),
+              };
+              if (location.latitude && location.longitude) {
+                console.log({ input });
+                await updatePlayer.mutateAsync(input);
+              } else
+                alert(
+                  //@ts-ignore
+                  input.city.length === 0
+                    ? "Please enter your city"
+                    : "Please select your city from the dropdown menu"
                 );
-                if (location.lat && location.long) {
-                  console.log({ ...location, ...data });
-                } else alert("Please select your location");
+            }}
+          >
+            <Input
+              label="First name"
+              type="text"
+              name="firstName"
+              isRequired
+              valueMissingText="Please enter your first name"
+            />
+            <Input
+              label="Last name"
+              type="text"
+              name="lastName"
+              isRequired
+              valueMissingText="Please enter your last name"
+            />
+            <SelectField
+              name="skillLevel"
+              label="Skill level"
+              options={[
+                {
+                  label: "Advanced",
+                  value: "advanced",
+                },
+                { label: "Intermediate", value: "intermediate" },
+                { label: "Beginner", value: "beginner" },
+              ]}
+            />
+            <SelectField
+              name="gender"
+              label="Gender"
+              options={[
+                {
+                  label: "Male",
+                  value: "male",
+                },
+                { label: "Female", value: "female" },
+              ]}
+            />
+            <DatePicker
+              label="Birthday (write below or click on the calendar)"
+              name="birthday"
+              isRequired
+            />
+            <PlacesAutoComplete
+              name="city"
+              onSelect={setLocation}
+              options={{
+                types: ["locality"],
+                componentRestrictions: { country: "au" },
               }}
-            >
-              <Input
-                label="First name"
-                type="text"
-                name="firstName"
-                isRequired
-                valueMissingText="Please enter your first name"
-              />
-              <Input
-                label="Last name"
-                type="text"
-                name="lastName"
-                isRequired
-                valueMissingText="Please enter your last name"
-              />
-              <SelectField
-                name="skillLevel"
-                label="Skill level"
-                options={[
-                  {
-                    label: "Advanced",
-                    value: "advanced",
-                  },
-                  { label: "Intermediate", value: "intermediate" },
-                  { label: "Beginner", value: "beginner" },
-                ]}
-              />
-              <SelectField
-                name="gender"
-                label="Gender"
-                options={[
-                  {
-                    label: "Male",
-                    value: "male",
-                  },
-                  { label: "Female", value: "female" },
-                ]}
-              />
-              <DatePicker
-                label="Birthday (write below or click on the calendar)"
-                name="birthday"
-                isRequired
-              />
-              <PlacesAutoComplete
-                onSelect={setLocation}
-                options={{
-                  types: ["locality"],
-                  componentRestrictions: { country: "au" },
-                }}
-                label="City"
-              />
-              <Input
-                label="Profile Description (what other players will see)"
-                type="textarea"
-                name="description"
-                isRequired
-                valueMissingText="Please enter your profile description"
-              />
-              <Form.Submit asChild>
-                <button
-                  className={buttonStyles.primary_button}
-                  style={{ marginTop: 10 }}
-                >
-                  Save changes
-                </button>
-              </Form.Submit>
-            </Form.Root>
-          </main>
-        ) : (
-          <main className={styles.main}>
-            You are not allowed to edit this profile.
-          </main>
-        )}
+              label="City"
+            />
+            <Input
+              label="Profile Description (what other players will see)"
+              type="textarea"
+              name="description"
+              isRequired
+              valueMissingText="Please enter your profile description"
+            />
+            <Form.Submit asChild>
+              <button
+                className={buttonStyles.primary_button}
+                style={{ marginTop: 10 }}
+              >
+                Save changes
+              </button>
+            </Form.Submit>
+          </Form.Root>
+        </main>
+        )
         <Footer />
       </div>
     </>
@@ -181,8 +229,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     });
 
     // Check to see if user has set their profile yet.
-    // If not, hide navigation links in navbar and display message.
-
+    // If not, hide navigation links in navbar and display message that they
+    // need to set their profile in order to use the app.
     if (user) {
       const supabaseId = user.id;
       const userData = await helpers.player.get.fetch({ supabaseId });

@@ -7,10 +7,11 @@ import * as Form from "@radix-ui/react-form";
 import formStyles from "@/_styles/_forms.module.scss";
 
 interface ComponentProps {
-  onSelect: (location: { lat: number; long: number }) => void;
+  onSelect: (location: { latitude: number; longitude: number }) => void;
   options: ReactGoogleAutocompleteProps["options"];
   label?: string;
   placeholderText?: string;
+  name: string;
 }
 
 export const PlacesAutoComplete = ({
@@ -18,13 +19,14 @@ export const PlacesAutoComplete = ({
   options,
   label,
   placeholderText,
+  name,
 }: ComponentProps) => {
   const onPlaceSelected: ReactGoogleAutocompleteProps["onPlaceSelected"] = (
     places
   ) => {
-    const lat = places.geometry.location.lat();
-    const long = places.geometry.location.lng();
-    onSelect({ lat, long });
+    const latitude = places.geometry.location.latitude();
+    const longitude = places.geometry.location.lng();
+    onSelect({ latitude, longitude });
   };
 
   const { ref } = usePlacesWidget({
@@ -34,7 +36,7 @@ export const PlacesAutoComplete = ({
   });
 
   return (
-    <Form.Field className={formStyles.form_field} name="location">
+    <Form.Field className={formStyles.form_field} name={name}>
       {label && (
         <div className={formStyles.form_field_label_container}>
           <Form.Label className={formStyles.form_label}>{label}</Form.Label>

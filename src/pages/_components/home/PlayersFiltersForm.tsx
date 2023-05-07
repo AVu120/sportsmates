@@ -16,11 +16,11 @@ interface ComponentProps {
 //@ts-ignore
 const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
   const [location, setLocation] = useState<{
-    lat: number | undefined;
-    long: number | undefined;
+    latitude: number | undefined;
+    longitude: number | undefined;
   }>({
-    lat: undefined,
-    long: undefined,
+    latitude: undefined,
+    longitude: undefined,
   });
 
   return (
@@ -36,7 +36,7 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
             new FormData(event.currentTarget)
           );
 
-          if (location.lat && location.long) {
+          if (location.latitude && location.longitude) {
             const filterData = { ...location, ...formData };
             console.log("submitted", { filterData });
             // @ts-ignore
@@ -45,6 +45,7 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
         }}
       >
         <PlacesAutoComplete
+          name="location"
           onSelect={setLocation}
           options={{
             types: "(cities)",

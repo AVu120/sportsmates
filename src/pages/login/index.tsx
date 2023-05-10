@@ -27,7 +27,6 @@ const LogIn = () => {
     });
 
     //@ts-ignore
-    console.log({ error });
     if (error) {
       if (error.message.includes("Invalid login credentials"))
         alert("Wrong username and/or password.");

@@ -80,7 +80,6 @@ const EditProfilePage = ({ player }: ComponentProps) => {
   const isSaveButtonDisabled = !hasMadeChanges || updatePlayer.isLoading;
   const toggleHasMadeChanges = () => {
     if (!hasMadeChanges) {
-      console.log("CHANGED MADE");
       setHasMadeChanges(true);
     }
   };
@@ -99,8 +98,6 @@ const EditProfilePage = ({ player }: ComponentProps) => {
       latitude,
       longitude,
     };
-
-    console.log({ location, input });
 
     // If player has changed city field value from last saved value.
     if (input.city !== location.address) {
@@ -226,7 +223,6 @@ const EditProfilePage = ({ player }: ComponentProps) => {
             <PlacesAutoComplete
               name="city"
               onSelect={({ latitude, longitude, address }) => {
-                console.log("RUN");
                 setLocation({ latitude, longitude, address });
                 setCity(address);
               }}
@@ -239,7 +235,6 @@ const EditProfilePage = ({ player }: ComponentProps) => {
               onChange={(e) => {
                 setCity(e.target.value);
                 if (!isNaN(location.longitude)) {
-                  console.log("here");
                   setLocation((state) => ({
                     ...state,
                     longitude: NaN,
@@ -300,7 +295,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (user) {
       const supabaseId = user.id;
       const player = await helpers.player.get.fetch({ supabaseId });
-      console.log({ player });
 
       const serializedPlayer = superjson.serialize(player);
 

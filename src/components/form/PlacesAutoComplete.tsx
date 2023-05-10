@@ -32,7 +32,6 @@ export const PlacesAutoComplete = ({
   const onPlaceSelected: ReactGoogleAutocompleteProps["onPlaceSelected"] = (
     places
   ) => {
-    console.log({ places });
     const latitude = places?.geometry?.location?.lat();
     const longitude = places?.geometry?.location?.lng();
     onSelect({ latitude, longitude, address: places?.formatted_address });
@@ -61,11 +60,10 @@ export const PlacesAutoComplete = ({
           value={value}
           onChange={onChange}
           onKeyDown={(e) => {
-            // console.log({ e });
+            // when user presses enter key, do not submit the form
+            // this simulates how a dropdown menu should normally work
             if (e.keyCode === 13) {
-              // e.stopPropagation();
               e.preventDefault();
-              // console.log("FIRE");
             }
           }}
         />

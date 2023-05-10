@@ -127,11 +127,9 @@ export const playerRouter = router({
         gender,
       } = input;
 
-      console.log({ input });
       const isUpdatingCoordinates =
         typeof longitude === "number" && typeof latitude === "number";
 
-      console.log({ isUpdatingCoordinates });
       if (isUpdatingCoordinates)
         await prisma.$queryRaw`
           UPDATE "Player"
@@ -166,7 +164,6 @@ export const playerRouter = router({
     )
     .mutation(async ({ input }) => {
       const { supabaseId, lastSignIn } = input;
-      console.log({ supabaseId, lastSignIn });
       await prisma.$queryRaw`
       UPDATE "Player"
       SET "lastSignIn" = ${lastSignIn}

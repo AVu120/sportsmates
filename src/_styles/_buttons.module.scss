@@ -43,6 +43,13 @@ $primary_button_hover_text_color: rgb(0, 97, 66);
   box-shadow: 0 0 0 2px black;
 }
 
+.primary_button:disabled {
+  border: 1px solid #cccccc;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed
+}
+
 .button_group {
   display: flex;
   column-gap: 10px;

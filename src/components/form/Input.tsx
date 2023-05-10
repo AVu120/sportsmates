@@ -48,14 +48,14 @@ export const Input = ({
         <textarea
           className={formStyles.text_area}
           required={isRequired}
-          value={value}
+          defaultValue={value}
         />
       ) : (
         <input
           className={formStyles.input}
           type={type}
           required={isRequired}
-          value={value}
+          defaultValue={value}
         />
       )}
     </Form.Control>

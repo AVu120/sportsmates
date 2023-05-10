@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Prisma } from "@prisma/client";
 import * as Form from "@radix-ui/react-form";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
@@ -24,12 +24,13 @@ import { trpc } from "@/utils/trpc";
 import styles from "./_edit.module.scss";
 
 // 1. Define a User type that includes the "cars" relation.
-type player = Prisma.PlayerGetPayload<{}>;
+type player = Prisma.PlayerGetPayload<{}> & { birthday: string | null };
 
 interface ComponentProps {
   player: player;
 }
 
+// Server only accepts this interface, no nulls allowed for these fields.
 interface FormFields {
   firstName: string;
   lastName: string;
@@ -37,6 +38,9 @@ interface FormFields {
   birthday: string;
   city: string;
   description: string;
+  gender: "male" | "female";
+  longitude?: number;
+  latitude?: number;
 }
 
 // Every field is required.
@@ -44,23 +48,82 @@ const EditProfilePage = ({ player }: ComponentProps) => {
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
+    address: string | null;
   }>({
     latitude: NaN,
     longitude: NaN,
+    address: player?.city,
   });
+  const [city, setCity] = useState<string>(player?.city || "");
   const router = useRouter();
   const { id } = router.query;
   const { user, isLoggedIn } = useUser();
   const isAllowedToEdit = isLoggedIn && user?.id && user?.id === id;
   const hasNotSetUpProfile = !player?.description;
+  const [hasMadeChanges, setHasMadeChanges] = useState(false);
 
   const updatePlayer = trpc.player.update.useMutation({
     async onSuccess() {
+      // Reset location state so that the user can select a new location
+      setLocation((state) => ({
+        ...state,
+        longitude: NaN,
+        latitude: NaN,
+      }));
       alert("Profile updated successfully");
       // Redirect user to home page after they have set their profile for the first time.
       if (hasNotSetUpProfile) router.push("/");
+      setHasMadeChanges(false);
     },
   });
+
+  const isSaveButtonDisabled = !hasMadeChanges || updatePlayer.isLoading;
+  const toggleHasMadeChanges = () => {
+    if (!hasMadeChanges) {
+      console.log("CHANGED MADE");
+      setHasMadeChanges(true);
+    }
+  };
+
+  const onSubmitForm = async (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    //@ts-ignore
+    const formData = Object.fromEntries(
+      new FormData(event.currentTarget)
+    ) as FormFields;
+    const { latitude, longitude } = location;
+    let input = {
+      ...formData,
+      supabaseId: user?.id as string,
+      birthday: new Date(formData.birthday),
+      latitude,
+      longitude,
+    };
+
+    console.log({ location, input });
+
+    // If player has changed city field value from last saved value.
+    if (input.city !== location.address) {
+      // Player needs to select an address from the dropdown menu first
+      // to save the coordinates of the new location in the db.
+      if (!(location.latitude && location.longitude))
+        return alert(
+          input.city.length === 0
+            ? "Please enter your city"
+            : "Please select your city from the dropdown menu"
+        );
+    }
+
+    // Don't send latitude and longitude to server if they are NaN.
+    // This happens when the user updates the form without updating
+    // their city field.
+    if (isNaN(latitude) || isNaN(longitude)) {
+      const { longitude, latitude, ...inputWithoutLocation } = input;
+      return await updatePlayer.mutateAsync(inputWithoutLocation);
+    }
+
+    await updatePlayer.mutateAsync(input);
+  };
 
   if (!isAllowedToEdit)
     return (
@@ -109,30 +172,9 @@ const EditProfilePage = ({ player }: ComponentProps) => {
           )}
           <ProfilePicture />
           <Form.Root
+            onChange={toggleHasMadeChanges}
             className={`${formStyles.form_root} ${styles.form_root}`}
-            onSubmit={async (event: any) => {
-              event.preventDefault();
-              //@ts-ignore
-              const formData = Object.fromEntries(
-                new FormData(event.currentTarget)
-              ) as FormFields;
-              const input = {
-                ...formData,
-                ...location,
-                supabaseId: user?.id,
-                birthday: new Date(formData.birthday),
-              };
-              if (location.latitude && location.longitude) {
-                console.log({ input });
-                await updatePlayer.mutateAsync(input);
-              } else
-                alert(
-                  //@ts-ignore
-                  input.city.length === 0
-                    ? "Please enter your city"
-                    : "Please select your city from the dropdown menu"
-                );
-            }}
+            onSubmit={onSubmitForm}
           >
             <Input
               label="First name"
@@ -140,7 +182,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
               name="firstName"
               isRequired
               valueMissingText="Please enter your first name"
-              // value={player?.firstName || ""}
+              value={player?.firstName || ""}
             />
             <Input
               label="Last name"
@@ -148,6 +190,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
               name="lastName"
               isRequired
               valueMissingText="Please enter your last name"
+              value={player?.lastName || ""}
             />
             <SelectField
               name="skillLevel"
@@ -160,6 +203,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
                 { label: "Intermediate", value: "intermediate" },
                 { label: "Beginner", value: "beginner" },
               ]}
+              defaultValue={player?.skillLevel || ""}
             />
             <SelectField
               name="gender"
@@ -171,20 +215,38 @@ const EditProfilePage = ({ player }: ComponentProps) => {
                 },
                 { label: "Female", value: "female" },
               ]}
+              defaultValue={player?.gender || ""}
             />
             <DatePicker
               label="Birthday (write below or click on the calendar)"
               name="birthday"
               isRequired
+              defaultValue={player?.birthday?.split("T")[0] || ""}
             />
             <PlacesAutoComplete
               name="city"
-              onSelect={setLocation}
+              onSelect={({ latitude, longitude, address }) => {
+                console.log("RUN");
+                setLocation({ latitude, longitude, address });
+                setCity(address);
+              }}
               options={{
                 types: ["locality"],
                 componentRestrictions: { country: "au" },
               }}
               label="City"
+              value={city}
+              onChange={(e) => {
+                setCity(e.target.value);
+                if (!isNaN(location.longitude)) {
+                  console.log("here");
+                  setLocation((state) => ({
+                    ...state,
+                    longitude: NaN,
+                    latitude: NaN,
+                  }));
+                }
+              }}
             />
             <Input
               label="Profile Description (what other players will see)"
@@ -192,13 +254,15 @@ const EditProfilePage = ({ player }: ComponentProps) => {
               name="description"
               isRequired
               valueMissingText="Please enter your profile description"
+              value={player?.description || ""}
             />
             <Form.Submit asChild>
               <button
                 className={buttonStyles.primary_button}
                 style={{ marginTop: 10 }}
+                disabled={isSaveButtonDisabled}
               >
-                Save changes
+                {`Sav${updatePlayer.isLoading ? "ing..." : "e"} changes`}
               </button>
             </Form.Submit>
           </Form.Root>

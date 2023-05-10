@@ -95,9 +95,15 @@ export const playerRouter = router({
         skillLevel: z.string(),
         birthday: z.coerce.date(),
         city: z.string(),
-        description: z.string().optional(),
-        longitude: z.number().min(-180).max(180),
-        latitude: z.number().min(-180).max(180),
+        description: z.string(),
+        longitude: z.number().min(-180).max(180).optional(),
+        latitude: z.number().min(-180).max(180).optional(),
+        gender: z
+          .string()
+          .refine(
+            (data) => ["male", "female"].includes(data),
+            "Not a valid value"
+          ),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -118,17 +124,37 @@ export const playerRouter = router({
         description,
         longitude,
         latitude,
+        gender,
       } = input;
-      await prisma.$queryRaw`
-      UPDATE "Player"
-      SET "firstName" = ${firstName}, 
-          "lastName" = ${lastName}, 
-          "skillLevel" = ${skillLevel}, 
-          birthday = ${birthday},
-          city = ${city},
-          description = ${description},
-          coordinates = ST_Point(${longitude}, ${latitude})
-      WHERE "supabaseId" = ${supabaseId};`;
+
+      console.log({ input });
+      const isUpdatingCoordinates =
+        typeof longitude === "number" && typeof latitude === "number";
+
+      console.log({ isUpdatingCoordinates });
+      if (isUpdatingCoordinates)
+        await prisma.$queryRaw`
+          UPDATE "Player"
+          SET "firstName" = ${firstName}, 
+              "lastName" = ${lastName}, 
+              "skillLevel" = ${skillLevel}, 
+              birthday = ${birthday},
+              city = ${city},
+              description = ${description},
+              coordinates = ST_Point(${longitude}, ${latitude}),
+              gender = ${gender}
+          WHERE "supabaseId" = ${supabaseId};`;
+      else
+        await prisma.$queryRaw`
+          UPDATE "Player"
+          SET "firstName" = ${firstName}, 
+              "lastName" = ${lastName}, 
+              "skillLevel" = ${skillLevel}, 
+              birthday = ${birthday},
+              city = ${city},
+              description = ${description},
+              gender = ${gender}
+          WHERE "supabaseId" = ${supabaseId};`;
       return input;
     }),
   updateLastSignIn: procedure

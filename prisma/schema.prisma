@@ -26,6 +26,7 @@ model Player {
   coordinates  Unsupported("geography(Point)")?
   city         String?
   description  String?
+  gender      String?
   Meetup      Meetup[]
   MeetupAttendee     MeetupAttendee[]
 

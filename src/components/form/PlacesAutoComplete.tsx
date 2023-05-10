@@ -7,11 +7,17 @@ import * as Form from "@radix-ui/react-form";
 import formStyles from "@/_styles/_forms.module.scss";
 
 interface ComponentProps {
-  onSelect: (location: { latitude: number; longitude: number }) => void;
+  onSelect: (location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => void;
   options: ReactGoogleAutocompleteProps["options"];
   label?: string;
   placeholderText?: string;
   name: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const PlacesAutoComplete = ({
@@ -20,13 +26,16 @@ export const PlacesAutoComplete = ({
   label,
   placeholderText,
   name,
+  value,
+  onChange,
 }: ComponentProps) => {
   const onPlaceSelected: ReactGoogleAutocompleteProps["onPlaceSelected"] = (
     places
   ) => {
-    const latitude = places.geometry.location.lat();
-    const longitude = places.geometry.location.lng();
-    onSelect({ latitude, longitude });
+    console.log({ places });
+    const latitude = places?.geometry?.location?.lat();
+    const longitude = places?.geometry?.location?.lng();
+    onSelect({ latitude, longitude, address: places?.formatted_address });
   };
 
   const { ref } = usePlacesWidget({
@@ -49,6 +58,16 @@ export const PlacesAutoComplete = ({
           placeholder={placeholderText || "Enter your location"}
           //@ts-ignore
           ref={ref}
+          value={value}
+          onChange={onChange}
+          onKeyDown={(e) => {
+            // console.log({ e });
+            if (e.keyCode === 13) {
+              // e.stopPropagation();
+              e.preventDefault();
+              // console.log("FIRE");
+            }
+          }}
         />
       </Form.Control>
     </Form.Field>

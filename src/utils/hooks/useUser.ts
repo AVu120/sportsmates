@@ -16,7 +16,11 @@ const useUser = () => {
 
     if (error) {
       setLoading(false);
-      return alert("Error fetching auth session: " + error.message);
+      return alert(
+        "Error fetching auth session: " +
+          error.message +
+          ". Please log in again to continue using the app."
+      );
     }
     if (session?.user?.id) {
       setUser(session.user);

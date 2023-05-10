@@ -15,11 +15,17 @@ interface ComponentProps {
   options: { value: string; label: string }[];
   label?: string;
   name: string;
+  defaultValue?: string;
 }
 
-export const SelectField = ({ options, label, name }: ComponentProps) => {
+export const SelectField = ({
+  options,
+  label,
+  name,
+  defaultValue,
+}: ComponentProps) => {
   return (
-    <Select.Root name={name} defaultValue={options[0].value}>
+    <Select.Root name={name} defaultValue={defaultValue || options[0].value}>
       {label && <p className={formStyles.form_label}>{label}</p>}
       <Select.Trigger
         className={styles.SelectTrigger}

@@ -14,11 +14,13 @@ interface ComponentProps {
   valueMissingText?: string;
   customValidation?: any;
   invalidValueText?: string;
+  defaultValue?: string;
 }
 
 export const DatePicker = ({
   onChange,
   value,
+  defaultValue,
   name,
   label,
   isRequired,
@@ -56,6 +58,7 @@ export const DatePicker = ({
           value={value}
           onChange={onChange}
           required={isRequired}
+          defaultValue={defaultValue}
         />
       </Form.Control>
     </Form.Field>

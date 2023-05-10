@@ -28,10 +28,8 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
       <Form.Root
         className={`${formStyles.form_root} ${styles.form_root}`}
         style={{ marginTop: 10 }}
-        // `onSubmit` only triggered if it passes client-side validation
         onSubmit={(event: any) => {
           event.preventDefault();
-          /* Not needed yet */
           const formData = Object.fromEntries(
             new FormData(event.currentTarget)
           );

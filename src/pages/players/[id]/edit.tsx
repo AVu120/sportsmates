@@ -35,7 +35,7 @@ interface FormFields {
   birthday: string;
   city: string;
   description: string;
-  gender: "male" | "female";
+  gender: "Male" | "Female";
   longitude?: number;
   latitude?: number;
 }
@@ -203,10 +203,10 @@ const EditProfilePage = ({ player }: ComponentProps) => {
               options={[
                 {
                   label: "Advanced",
-                  value: "advanced",
+                  value: "Advanced",
                 },
-                { label: "Intermediate", value: "intermediate" },
-                { label: "Beginner", value: "beginner" },
+                { label: "Intermediate", value: "Intermediate" },
+                { label: "Beginner", value: "Beginner" },
               ]}
               defaultValue={player?.skillLevel || ""}
             />
@@ -216,9 +216,9 @@ const EditProfilePage = ({ player }: ComponentProps) => {
               options={[
                 {
                   label: "Male",
-                  value: "male",
+                  value: "Male",
                 },
-                { label: "Female", value: "female" },
+                { label: "Female", value: "Female" },
               ]}
               defaultValue={player?.gender || ""}
             />

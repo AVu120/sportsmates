@@ -31,25 +31,33 @@ export const playerRouter = router({
     });
     return latestPlayer || "No players yet";
   }),
-  list: procedure.query(async () => {
-    /**
-     * For pagination docs you can have a look here
-     * @see https://trpc.io/docs/useInfiniteQuery
-     * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
-     */
+  list: procedure
+    .input(
+      z.object({
+        gender: z.string().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { gender } = input;
+      /**
+       * For pagination docs you can have a look here
+       * @see https://trpc.io/docs/useInfiniteQuery
+       * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
+       */
 
-    const players = await prisma.player.findMany({
-      orderBy: {
-        lastSignIn: "desc",
-      },
-      where: {
-        isApproved: true,
-      },
-      take: 10,
-    });
+      const players = await prisma.player.findMany({
+        orderBy: {
+          lastSignIn: "desc",
+        },
+        where: {
+          isApproved: true,
+          ...(gender !== "Any gender" && { gender }),
+        },
+        take: 10,
+      });
 
-    return players;
-  }),
+      return players;
+    }),
   listByLocation: procedure
     .input(
       z.object({
@@ -96,7 +104,12 @@ export const playerRouter = router({
         supabaseId: z.string().uuid(),
         firstName: z.string(),
         lastName: z.string(),
-        skillLevel: z.string(),
+        skillLevel: z
+          .string()
+          .refine(
+            (data) => ["Beginner", "Intermediate", "Advanced"].includes(data),
+            "Not a valid value"
+          ),
         birthday: z.coerce.date(),
         city: z.string(),
         description: z.string(),
@@ -105,7 +118,7 @@ export const playerRouter = router({
         gender: z
           .string()
           .refine(
-            (data) => ["male", "female"].includes(data),
+            (data) => ["Male", "Female"].includes(data),
             "Not a valid value"
           ),
       })

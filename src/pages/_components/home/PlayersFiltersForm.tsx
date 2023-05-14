@@ -5,16 +5,17 @@ import buttonStyles from "@/_styles/_buttons.module.scss";
 import formStyles from "@/_styles/_forms.module.scss";
 import { PlacesAutoComplete } from "@/components/form/PlacesAutoComplete";
 import { SelectField } from "@/components/form/Select";
+import { genderOptions, searchRadiusOptions, sortByOptions } from "@/pages";
 import { FilterFields } from "@/types/forms";
 
 import styles from "./PlayersFiltersForm.module.scss";
 
 interface ComponentProps {
-  onClickSubmitButton: (data: FilterFields) => void;
+  onClickApplyButton: (data: FilterFields) => void;
 }
 
 //@ts-ignore
-const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
+const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
   const [location, setLocation] = useState<{
     latitude: number | undefined;
     longitude: number | undefined;
@@ -35,10 +36,10 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
           );
 
           if (location.latitude && location.longitude) {
-            const filterData = { ...location, ...formData };
-            console.log("submitted", { filterData });
+            const { longitude, latitude } = location;
+            const data = { ...formData, longitude, latitude };
             // @ts-ignore
-            // onClickSubmitButton(data as FilterFields);
+            onClickApplyButton(data as FilterFields);
           } else alert("Please select your location");
         }}
       >
@@ -51,42 +52,16 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
           }}
           label="Filters"
         />
-        <SelectField
-          name="searchRadius"
-          options={[
-            { label: "Any distance from you", value: "Any distance from you" },
-            { label: "Within 10km", value: "10" },
-            { label: "Within 20km", value: "20" },
-            { label: "Within 30km", value: "30" },
-            { label: "Within 40km", value: "40" },
-            { label: "Within 50km", value: "50" },
-          ]}
-        />
-        <SelectField
-          name="gender"
-          options={[
-            { label: "Any gender", value: "Any gender" },
-            { label: "Male", value: "Male" },
-            { label: "Female", value: "Female" },
-          ]}
-        />
-        <SelectField
-          name="sortBy"
-          label="Sort by"
-          options={[
-            { label: "Most recently active", value: "Most recently active" },
-            { label: "Oldest to youngest", value: "Oldest to youngest" },
-            { label: "Youngest to oldest", value: "Youngest to oldest" },
-            { label: "Closest to me", value: "Closest to me" },
-          ]}
-        />
+        <SelectField name="searchRadius" options={searchRadiusOptions} />
+        <SelectField name="gender" options={genderOptions} />
+        <SelectField name="sortBy" label="Sort by" options={sortByOptions} />
 
         <Form.Submit asChild>
           <button
             className={buttonStyles.primary_button}
             style={{ marginTop: 10 }}
           >
-            Apply filters
+            Apply
           </button>
         </Form.Submit>
       </Form.Root>

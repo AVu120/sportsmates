@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Player } from "@prisma/client";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import superjson from "superjson";
+import { set } from "zod";
 
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
@@ -13,24 +15,48 @@ import { supabase } from "@/services/authentication";
 import { FilterFields } from "@/types/forms";
 import { player } from "@/types/player";
 import useUser from "@/utils/hooks/useUser";
+import { trpc } from "@/utils/trpc";
 
 import styles from "./_index.module.scss";
 
 interface ComponentProps {
   player: player;
-  players: player[];
 }
 
+export const searchRadiusOptions = [
+  { label: "Any distance from you", value: "Any distance from you" },
+  { label: "Within 10km", value: "10" },
+  { label: "Within 20km", value: "20" },
+  { label: "Within 30km", value: "30" },
+  { label: "Within 40km", value: "40" },
+  { label: "Within 50km", value: "50" },
+];
+
+export const genderOptions = [
+  { label: "Any gender", value: "Any gender" },
+  { label: "Male", value: "Male" },
+  { label: "Female", value: "Female" },
+];
+
+export const sortByOptions = [
+  { label: "Most recently active", value: "Most recently active" },
+  { label: "Oldest to youngest", value: "Oldest to youngest" },
+  { label: "Youngest to oldest", value: "Youngest to oldest" },
+  { label: "Closest to me", value: "Closest to me" },
+];
+
 // Home Page
-const Players = ({ player, players }: ComponentProps) => {
+const Players = ({ player }: ComponentProps) => {
+  const [queryFilters, setQueryFilters] = useState({
+    gender: genderOptions[0].value,
+  });
   const { isLoggedIn, user } = useUser();
   //@ts-ignore
-  const onClickSubmitButton = async ({ location }: FilterFields) => {
-    // const { data, error } = await supabase.auth.signUp({
-    //   email,
-    //   password,
-    // });
+  const onApplyFilters = (data: FilterFields) => {
+    console.log({ data });
+    setQueryFilters({ gender: data.gender });
   };
+  const listPlayers = trpc.player.list.useQuery(queryFilters);
 
   return (
     <>
@@ -53,10 +79,11 @@ const Players = ({ player, players }: ComponentProps) => {
           <h1 className={styles.title}>Welcome!</h1>
           <div className={styles.filters_players_container}>
             <div className={styles.filters_container}>
-              <PlayersFiltersForm onClickSubmitButton={onClickSubmitButton} />
+              <PlayersFiltersForm onClickApplyButton={onApplyFilters} />
             </div>
             <div className={styles.players_container}>
-              <PlayersList players={players} />
+              {/* @ts-ignore */}
+              <PlayersList players={listPlayers.data || []} />
             </div>
           </div>
         </main>
@@ -106,21 +133,22 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       }
 
       player = superjson.serialize(getPlayerResponse).json;
+      return {
+        props: { player },
+      };
     }
   }
 
   // Query players regardless of whether user is logged in or not.
-  const listPlayersResponse = await helpers.player.list.fetch();
-  const players = superjson.serialize(listPlayersResponse).json;
 
   // If user is logged in.
-  if (player)
-    return {
-      props: { player, players },
-    };
+  // if (player)
+  //   return {
+  //     props: { player, players },
+  //   };
 
   // If user isn't logged in.
   return {
-    props: { players },
+    props: {},
   };
 };

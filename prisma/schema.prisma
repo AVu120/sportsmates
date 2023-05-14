@@ -27,6 +27,9 @@ model Player {
   city         String?
   description  String?
   gender      String?
+  // Whether the player has been approved by an admin to have their profile 
+  // visible to the public.
+  isApproved   Boolean                          @default(false)
   Meetup      Meetup[]
   MeetupAttendee     MeetupAttendee[]
 

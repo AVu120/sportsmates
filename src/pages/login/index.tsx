@@ -39,7 +39,9 @@ const LogIn = () => {
         );
     } else {
       alert("Successfully logged in!");
-      updateLastSign.mutateAsync({ email, lastSignIn: new Date() });
+      updateLastSign
+        .mutateAsync({ email, lastSignIn: new Date() })
+        .catch((e) => console.log({ e }));
       router.push("/");
     }
   };

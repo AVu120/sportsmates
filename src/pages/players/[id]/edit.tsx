@@ -166,7 +166,6 @@ const EditProfilePage = ({ player }: ComponentProps) => {
           user={user}
           hasNotSetUpProfile={hasNotSetUpProfile}
           player={playerState}
-          redirectOnLogout
         />
         <main className={styles.main}>
           <h1 className={styles.title}>Edit your profile</h1>

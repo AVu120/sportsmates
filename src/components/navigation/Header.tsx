@@ -19,7 +19,6 @@ interface ComponentProps {
   isLoggedIn?: boolean;
   user?: User | null;
   hasNotSetUpProfile?: boolean;
-  redirectOnLogout?: boolean;
   player?: player;
 }
 /** Common Header that displays on the top of every page. */
@@ -28,10 +27,21 @@ export const Header = ({
   isLoggedIn,
   user,
   hasNotSetUpProfile,
-  redirectOnLogout,
   player,
 }: ComponentProps) => {
   const router = useRouter();
+
+  const dropdownOptions = [
+    { label: "Edit profile", link: `/players/${user?.id}/edit` },
+    {
+      label: "Log out",
+      onClick: () => {
+        if (page === "home")
+          supabase.auth.signOut().then(() => alert("Logged out successfully"));
+        else router.push("/").then(() => supabase.auth.signOut());
+      },
+    },
+  ];
   return (
     <header className={styles.header}>
       {/* Only show dropdown menu in mobile screen width */}
@@ -73,28 +83,7 @@ export const Header = ({
           <>
             <span>Hello {player?.firstName || user?.email}!</span>
             <div style={{ position: "relative", top: "2px" }}>
-              <DropDownMenu
-                options={[
-                  { label: "Edit profile", link: `/players/${user?.id}/edit` },
-                  {
-                    label: "Log out",
-                    onClick: () => {
-                      if (page === "home")
-                        supabase.auth
-                          .signOut()
-                          .then(() => alert("Logged out successfully"));
-                      // if (redirectOnLogout) {
-                      else router.push("/").then(() => supabase.auth.signOut());
-                      // }
-
-                      //   if (redirectOnLogout) router.push("/").then( () =>  supabase.auth.signOut()
-                      //   );
-                      //   else supabase.auth.signOut();
-                      // };
-                    },
-                  },
-                ]}
-              />
+              <DropDownMenu options={dropdownOptions} />
             </div>
           </>
         )}

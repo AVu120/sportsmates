@@ -1,0 +1,57 @@
+@use "@/_styles/_forms.module.scss";
+
+.top_row_info {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.name_skillLevel_gender_age {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  row-gap: 5px;
+  margin-left: 20px;
+}
+
+
+.lastSignIn_city {
+  margin-top: 33px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  text-align: end;
+}
+
+@media screen and (max-width: 630px) {
+  .top_row_info {
+    flex-direction: column;
+  }
+
+  .lastSignIn_city {
+    text-align: start;
+  }
+}
+
+.card {
+  padding: 20px;
+  // border: 1px solid #000000;
+  border-radius: 4px;
+  box-shadow: forms.$border_shadow;
+}
+
+.description {
+  margin-top: 20px;
+}
+
+.list {
+  width: 70%;
+  height:100vh;
+  // border: 1px solid #000000;
+  border-radius: 4px;
+  padding: 0 10px 10px 10px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}

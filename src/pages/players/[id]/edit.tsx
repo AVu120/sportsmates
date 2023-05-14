@@ -14,7 +14,7 @@ import { PlacesAutoComplete } from "@/components/form/PlacesAutoComplete";
 import { SelectField } from "@/components/form/Select";
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
-import { ProfilePicture } from "@/components/profile/Avatar";
+import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { player } from "@/types/player";
@@ -175,7 +175,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
               players or attend meetups.
             </p>
           )}
-          <ProfilePicture />
+          <ProfilePicture height="200px" />
           <Form.Root
             onChange={toggleHasMadeChanges}
             className={`${formStyles.form_root} ${styles.form_root}`}

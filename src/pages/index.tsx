@@ -6,6 +6,7 @@ import superjson from "superjson";
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
 import PlayersFiltersForm from "@/pages/_components/home/PlayersFiltersForm";
+import { PlayersList } from "@/pages/_components/home/PlayersList";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { FilterFields } from "@/types/forms";
@@ -52,9 +53,9 @@ const Players = ({ player }: ComponentProps) => {
             <div className={styles.filters_container}>
               <PlayersFiltersForm onClickSubmitButton={onClickSubmitButton} />
             </div>
-            <div className={styles.players_container}>
-              Placeholder for list of player cards
-            </div>
+            {/* <div className={styles.players_container}> */}
+            <PlayersList />
+            {/* </div> */}
           </div>
         </main>
         <Footer />

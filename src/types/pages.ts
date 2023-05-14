@@ -1,1 +1,1 @@
-export type Page = "login" | "signup" | "home" | "meetups";
+export type Page = "login" | "signup" | "home" | "meetups" | "edit";

@@ -1,5 +1,4 @@
 import { ChangeEvent, useState } from "react";
-import { Prisma } from "@prisma/client";
 import * as Form from "@radix-ui/react-form";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
@@ -18,13 +17,11 @@ import { Header } from "@/components/navigation/Header";
 import { ProfilePicture } from "@/components/profile/Avatar";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
+import { player } from "@/types/player";
 import useUser from "@/utils/hooks/useUser";
 import { trpc } from "@/utils/trpc";
 
 import styles from "./_edit.module.scss";
-
-// 1. Define a User type that includes the "cars" relation.
-type player = Prisma.PlayerGetPayload<{}> & { birthday: string | null };
 
 interface ComponentProps {
   player: player;
@@ -153,7 +150,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
       </Head>
       <div className={styles.page}>
         <Header
-          page="home"
+          page="edit"
           isLoggedIn={isLoggedIn}
           user={user}
           hasNotSetUpProfile={hasNotSetUpProfile}
@@ -257,7 +254,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
                 style={{ marginTop: 10 }}
                 disabled={isSaveButtonDisabled}
               >
-                {`Sav${updatePlayer.isLoading ? "ing..." : "e"} changes`}
+                {updatePlayer.isLoading ? "Saving changes..." : "Save changes"}
               </button>
             </Form.Submit>
           </Form.Root>

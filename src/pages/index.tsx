@@ -9,13 +9,17 @@ import PlayersFiltersForm from "@/pages/_components/home/PlayersFiltersForm";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { FilterFields } from "@/types/forms";
+import { player } from "@/types/player";
 import useUser from "@/utils/hooks/useUser";
-import { trpc } from "@/utils/trpc";
 
 import styles from "./_index.module.scss";
 
+interface ComponentProps {
+  player: player;
+}
+
 // Home Page
-const Players = () => {
+const Players = ({ player }: ComponentProps) => {
   const { isLoggedIn, user } = useUser();
   //@ts-ignore
   const onClickSubmitButton = async ({ location }: FilterFields) => {
@@ -35,7 +39,12 @@ const Players = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="home" isLoggedIn={isLoggedIn} user={user} />
+        <Header
+          page="home"
+          isLoggedIn={isLoggedIn}
+          user={user}
+          player={player}
+        />
 
         <main className={styles.main}>
           <h1 className={styles.title}>Welcome!</h1>
@@ -79,8 +88,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // If not, redirect to edit profile page.
     if (user) {
       const supabaseId = user.id;
-      const userData = await helpers.player.get.fetch({ supabaseId });
-      if (!userData?.description) {
+      const player = await helpers.player.get.fetch({ supabaseId });
+      if (!player?.description) {
         return {
           redirect: {
             destination: `/players/${supabaseId}/edit`,
@@ -88,6 +97,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
           },
         };
       }
+
+      const serializedPlayer = superjson.serialize(player);
+      return {
+        props: { player: serializedPlayer.json },
+      };
     }
   }
 

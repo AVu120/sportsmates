@@ -16,20 +16,20 @@ export const NavBar = ({ page }: ComponentProps) => {
       <NavigationMenu.List
         className={`${styles.list} ${buttonStyles.button_group}`}
       >
-        <NavigationMenu.Item
+        {/* <NavigationMenu.Item
           className={`${buttonStyles.link_button} ${
             page === "home" ? buttonStyles.selected_link_button : ""
           }`}
         >
           <Link href="/">Players </Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item
+        </NavigationMenu.Item> */}
+        {/* <NavigationMenu.Item
           className={`${buttonStyles.link_button} ${
             page === "meetups" ? buttonStyles.selected_link_button : ""
           }`}
         >
           <Link href="/meetups">Meetups </Link>
-        </NavigationMenu.Item>
+        </NavigationMenu.Item> */}
 
         {/* <NavigationMenu.Indicator className={styles.NavigationMenuIndicator} /> */}
       </NavigationMenu.List>

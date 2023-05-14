@@ -6,7 +6,14 @@ import buttonStyles from "@/_styles/_buttons.module.scss";
 
 import styles from "./DropDownMenu.module.scss";
 
-export const DropDownMenu = () => (
+interface ComponentProps {
+  options: {
+    label: string;
+    link?: string;
+    onClick?: () => void;
+  }[];
+}
+export const DropDownMenu = ({ options }: ComponentProps) => (
   <DropdownMenu.Root>
     <DropdownMenu.Trigger asChild>
       <button
@@ -19,20 +26,25 @@ export const DropDownMenu = () => (
 
     <DropdownMenu.Portal>
       <DropdownMenu.Content className={styles.DropdownMenuContent}>
-        <Link href="/">
-          <DropdownMenu.Item
-            className={`${styles.DropdownMenuItem} ${buttonStyles.link_button}`}
-          >
-            Players
-          </DropdownMenu.Item>
-        </Link>
-        <Link href="/meetups">
-          <DropdownMenu.Item
-            className={`${styles.DropdownMenuItem} ${buttonStyles.link_button}`}
-          >
-            Meetups
-          </DropdownMenu.Item>
-        </Link>
+        {options.map(({ label, link, onClick }) =>
+          link ? (
+            <Link href={link} key={label}>
+              <DropdownMenu.Item
+                className={`${styles.DropdownMenuItem} ${buttonStyles.link_button}`}
+              >
+                {label}
+              </DropdownMenu.Item>
+            </Link>
+          ) : (
+            <DropdownMenu.Item
+              className={`${styles.DropdownMenuItem} ${buttonStyles.link_button}`}
+              key={label}
+              onClick={onClick}
+            >
+              {label}
+            </DropdownMenu.Item>
+          )
+        )}
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   </DropdownMenu.Root>

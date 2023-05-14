@@ -8,6 +8,7 @@ import logoStyles from "@/_styles/_logos.module.scss";
 import { DropDownMenu } from "@/components/menu/DropDownMenu";
 import { supabase } from "@/services/authentication";
 import { Page } from "@/types/pages";
+import { player } from "@/types/player";
 
 import { NavBar } from "./NavBar";
 
@@ -19,6 +20,7 @@ interface ComponentProps {
   user?: User | null;
   hasNotSetUpProfile?: boolean;
   redirectOnLogout?: boolean;
+  player?: player;
 }
 /** Common Header that displays on the top of every page. */
 export const Header = ({
@@ -27,14 +29,15 @@ export const Header = ({
   user,
   hasNotSetUpProfile,
   redirectOnLogout,
+  player,
 }: ComponentProps) => {
   const router = useRouter();
   return (
     <header className={styles.header}>
       {/* Only show dropdown menu in mobile screen width */}
-      <div className={`${styles.dropdown_menu} ${buttonStyles.link_button}`}>
+      {/* <div className={`${styles.dropdown_menu} ${buttonStyles.link_button}`}>
         {!hasNotSetUpProfile && <DropDownMenu />}
-      </div>
+      </div> */}
       {/* Only show this when screen width is more than mobile width */}
       <div className={styles.logo_button}>
         {!hasNotSetUpProfile && (
@@ -67,33 +70,33 @@ export const Header = ({
           </Link>
         )}
         {isLoggedIn && (
-          <div>
-            <span
-              style={{
-                position: "absolute",
-                fontSize: "0.8rem",
-                top: "50px",
-              }}
-            >
-              Hello {user?.email}!
-            </span>
-            <Link href={`/players/${user?.id}/edit`}>
-              <button type="button" className={buttonStyles.link_button}>
-                Edit profile
-              </button>
-            </Link>
-            <button
-              type="button"
-              className={buttonStyles.link_button}
-              onClick={() => {
-                supabase.auth.signOut().then(() => {
-                  if (redirectOnLogout) router.push("/");
-                });
-              }}
-            >
-              Log out
-            </button>
-          </div>
+          <>
+            <span>Hello {player?.firstName || user?.email}!</span>
+            <div style={{ position: "relative", top: "2px" }}>
+              <DropDownMenu
+                options={[
+                  { label: "Edit profile", link: `/players/${user?.id}/edit` },
+                  {
+                    label: "Log out",
+                    onClick: () => {
+                      if (page === "home")
+                        supabase.auth
+                          .signOut()
+                          .then(() => alert("Logged out successfully"));
+                      // if (redirectOnLogout) {
+                      else router.push("/").then(() => supabase.auth.signOut());
+                      // }
+
+                      //   if (redirectOnLogout) router.push("/").then( () =>  supabase.auth.signOut()
+                      //   );
+                      //   else supabase.auth.signOut();
+                      // };
+                    },
+                  },
+                ]}
+              />
+            </div>
+          </>
         )}
       </div>
     </header>

@@ -16,53 +16,59 @@ interface ComponentProps {
   label?: string;
   name: string;
   defaultValue?: string;
+  labelStyle?: React.CSSProperties;
 }
 
 export const SelectField = ({
   options,
   label,
+  labelStyle,
   name,
   defaultValue,
 }: ComponentProps) => {
   return (
-    <Select.Root name={name} defaultValue={defaultValue || options[0].value}>
+    <>
       {label && (
-        <p className={` ${formStyles.form_label} ${styles.label}`}>{label}</p>
+        <p className={` ${formStyles.form_label}`} style={labelStyle}>
+          {label}
+        </p>
       )}
-      <Select.Trigger
-        className={styles.SelectTrigger}
-        aria-label="select-field-trigger"
-      >
-        <Select.Value />
-        <Select.Icon className={styles.SelectIcon}>
-          <ChevronDownIcon />
-        </Select.Icon>
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Content className={styles.SelectContent}>
-          <Select.ScrollUpButton className={styles.SelectScrollButton}>
-            <ChevronUpIcon />
-          </Select.ScrollUpButton>
-          <Select.Viewport className={styles.SelectViewport}>
-            <Select.Group>
-              {options?.map(({ value, label }) => (
-                //@ts-ignore
-                <SelectItem
-                  value={value}
-                  className={styles.SelectItem}
-                  key={value}
-                >
-                  {label}
-                </SelectItem>
-              ))}
-            </Select.Group>
-          </Select.Viewport>
-          <Select.ScrollDownButton className={styles.SelectScrollButton}>
+      <Select.Root name={name} defaultValue={defaultValue || options[0].value}>
+        <Select.Trigger
+          className={styles.SelectTrigger}
+          aria-label="select-field-trigger"
+        >
+          <Select.Value />
+          <Select.Icon className={styles.SelectIcon}>
             <ChevronDownIcon />
-          </Select.ScrollDownButton>
-        </Select.Content>
-      </Select.Portal>
-    </Select.Root>
+          </Select.Icon>
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Content className={styles.SelectContent}>
+            <Select.ScrollUpButton className={styles.SelectScrollButton}>
+              <ChevronUpIcon />
+            </Select.ScrollUpButton>
+            <Select.Viewport className={styles.SelectViewport}>
+              <Select.Group>
+                {options?.map(({ value, label }) => (
+                  //@ts-ignore
+                  <SelectItem
+                    value={value}
+                    className={styles.SelectItem}
+                    key={value}
+                  >
+                    {label}
+                  </SelectItem>
+                ))}
+              </Select.Group>
+            </Select.Viewport>
+            <Select.ScrollDownButton className={styles.SelectScrollButton}>
+              <ChevronDownIcon />
+            </Select.ScrollDownButton>
+          </Select.Content>
+        </Select.Portal>
+      </Select.Root>
+    </>
   );
 };
 

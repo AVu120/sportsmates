@@ -54,7 +54,12 @@ const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
         />
         <SelectField name="searchRadius" options={searchRadiusOptions} />
         <SelectField name="gender" options={genderOptions} />
-        <SelectField name="sortBy" label="Sort by" options={sortByOptions} />
+        <SelectField
+          name="sortBy"
+          label="Sort by"
+          options={sortByOptions}
+          labelStyle={{ position: "relative", top: 10 }}
+        />
 
         <Form.Submit asChild>
           <button

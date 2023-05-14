@@ -42,6 +42,10 @@ interface FormFields {
 
 // Every field is required.
 const EditProfilePage = ({ player }: ComponentProps) => {
+  // Save local state of player data so that if first name changes,
+  // we can immediately display the new name in the header without having to
+  // reload the entire page.
+  const [playerState, setPlayerState] = useState<player>(player);
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -113,10 +117,12 @@ const EditProfilePage = ({ player }: ComponentProps) => {
     // their city field.
     if (isNaN(latitude) || isNaN(longitude)) {
       const { longitude, latitude, ...inputWithoutLocation } = input;
-      return await updatePlayer.mutateAsync(inputWithoutLocation);
+      await updatePlayer.mutateAsync(inputWithoutLocation);
+    } else {
+      await updatePlayer.mutateAsync(input);
     }
 
-    await updatePlayer.mutateAsync(input);
+    setPlayerState((state) => ({ ...state, firstName: input.firstName }));
   };
 
   if (!isAllowedToEdit)
@@ -130,7 +136,12 @@ const EditProfilePage = ({ player }: ComponentProps) => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className={styles.page}>
-          <Header page="meetups" isLoggedIn={isLoggedIn} user={user} />
+          <Header
+            page="edit"
+            isLoggedIn={isLoggedIn}
+            user={user}
+            player={playerState}
+          />
           <main className={styles.main}>
             You are not allowed to edit this page.
           </main>
@@ -154,6 +165,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
           isLoggedIn={isLoggedIn}
           user={user}
           hasNotSetUpProfile={hasNotSetUpProfile}
+          player={playerState}
           redirectOnLogout
         />
         <main className={styles.main}>

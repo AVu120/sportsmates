@@ -20,9 +20,12 @@ const months = [
 
 interface ComponentProps {
   players: player[];
+  isLoading: boolean;
 }
 
-const PlayersList = ({ players }: ComponentProps) => {
+const PlayersList = ({ players, isLoading }: ComponentProps) => {
+  if (isLoading)
+    return <div style={{ textAlign: "center" }}>Loading players...</div>;
   if (!players || players.length === 0) {
     return <div style={{ textAlign: "center" }}>No players found</div>;
   }

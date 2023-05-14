@@ -2,7 +2,7 @@
  *
  * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
  */
-import { z } from "zod";
+import { tuple, z } from "zod";
 
 import { prisma } from "../lib/prisma";
 import { procedure, router } from "../trpc";
@@ -46,6 +46,17 @@ export const playerRouter = router({
        */
 
       const players = await prisma.player.findMany({
+        select: {
+          birthday: true,
+          city: true,
+          description: true,
+          gender: true,
+          firstName: true,
+          lastName: true,
+          id: true,
+          lastSignIn: true,
+          skillLevel: true,
+        },
         orderBy: {
           lastSignIn: "desc",
         },

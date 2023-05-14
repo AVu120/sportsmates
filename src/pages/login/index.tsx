@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { supabase } from "@/services/authentication";
 import { EmailPasswordFields } from "@/types/forms";
 import useUser from "@/utils/hooks/useUser";
+import { trpc } from "@/utils/trpc";
 
 import { EmailPasswordForm } from "../../components/form/EmailPasswordForm";
 import { Header } from "../../components/navigation/Header";
@@ -16,6 +17,8 @@ const LogIn = () => {
   const router = useRouter();
   // Keep this here to enable adding of auth cookies after logging in.
   const user = useUser();
+
+  const updateLastSign = trpc.player.updateLastSignIn.useMutation({});
 
   const onClickSubmitButton = async ({
     email,
@@ -36,6 +39,7 @@ const LogIn = () => {
         );
     } else {
       alert("Successfully logged in!");
+      updateLastSign.mutateAsync({ email, lastSignIn: new Date() });
       router.push("/");
     }
   };

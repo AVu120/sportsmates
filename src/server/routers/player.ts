@@ -158,16 +158,16 @@ export const playerRouter = router({
   updateLastSignIn: procedure
     .input(
       z.object({
-        supabaseId: z.string().uuid(),
+        email: z.string().email(),
         lastSignIn: z.coerce.date(),
       })
     )
     .mutation(async ({ input }) => {
-      const { supabaseId, lastSignIn } = input;
+      const { email, lastSignIn } = input;
       await prisma.$queryRaw`
       UPDATE "Player"
       SET "lastSignIn" = ${lastSignIn}
-      WHERE "supabaseId" = ${supabaseId};`;
+      WHERE "email" = ${email};`;
       return input;
     }),
 });

@@ -16,12 +16,15 @@ interface ComponentProps {
 
 //@ts-ignore
 const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
+  const [typedAddress, setTypedAddress] = useState("");
   const [location, setLocation] = useState<{
-    latitude: number | undefined;
-    longitude: number | undefined;
+    latitude: number;
+    longitude: number;
+    address: string | null;
   }>({
-    latitude: undefined,
-    longitude: undefined,
+    latitude: NaN,
+    longitude: NaN,
+    address: null,
   });
 
   return (
@@ -35,22 +38,39 @@ const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
             new FormData(event.currentTarget)
           );
 
-          if (location.latitude && location.longitude) {
-            const { longitude, latitude } = location;
-            const data = { ...formData, longitude, latitude };
-            // @ts-ignore
-            onClickApplyButton(data as FilterFields);
-          } else alert("Please select your location");
+          if (
+            typedAddress !== location.address &&
+            !(location.latitude && location.longitude)
+          ) {
+            return alert("Please select your location from the dropdown menu");
+          }
+          const data = { ...formData, ...location };
+          console.log({ data });
+          // @ts-ignore
+          onClickApplyButton(data as FilterFields);
         }}
       >
         <PlacesAutoComplete
           name="location"
-          onSelect={setLocation}
+          onSelect={({ latitude, longitude, address }) => {
+            setLocation({ latitude, longitude, address });
+            setTypedAddress(address);
+          }}
           options={{
             types: "(cities)",
             componentRestrictions: { country: "au" },
           }}
           label="Filters"
+          onChange={(e) => {
+            setTypedAddress(e.target.value);
+            if (!isNaN(location.longitude)) {
+              setLocation((state) => ({
+                ...state,
+                longitude: NaN,
+                latitude: NaN,
+              }));
+            }
+          }}
         />
         <SelectField name="searchRadius" options={searchRadiusOptions} />
         <SelectField name="gender" options={genderOptions} />

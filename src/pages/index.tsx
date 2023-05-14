@@ -7,7 +7,7 @@ import superjson from "superjson";
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
 import PlayersFiltersForm from "@/pages/_components/home/PlayersFiltersForm";
-import { PlayersList } from "@/pages/_components/home/PlayersList";
+import PlayersList from "@/pages/_components/home/PlayersList";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { FilterFields } from "@/types/forms";

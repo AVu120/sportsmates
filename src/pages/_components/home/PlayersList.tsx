@@ -22,7 +22,7 @@ interface ComponentProps {
   players: player[];
 }
 
-export const PlayersList = ({ players }: ComponentProps) => {
+const PlayersList = ({ players }: ComponentProps) => {
   if (!players || players.length === 0) {
     return <div style={{ textAlign: "center" }}>No players found</div>;
   }
@@ -78,3 +78,5 @@ export const PlayersList = ({ players }: ComponentProps) => {
     </div>
   );
 };
+
+export default PlayersList;

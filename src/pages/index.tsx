@@ -1,3 +1,4 @@
+import { Player } from "@prisma/client";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -17,10 +18,11 @@ import styles from "./_index.module.scss";
 
 interface ComponentProps {
   player: player;
+  players: player[];
 }
 
 // Home Page
-const Players = ({ player }: ComponentProps) => {
+const Players = ({ player, players }: ComponentProps) => {
   const { isLoggedIn, user } = useUser();
   //@ts-ignore
   const onClickSubmitButton = async ({ location }: FilterFields) => {
@@ -53,9 +55,9 @@ const Players = ({ player }: ComponentProps) => {
             <div className={styles.filters_container}>
               <PlayersFiltersForm onClickSubmitButton={onClickSubmitButton} />
             </div>
-            {/* <div className={styles.players_container}> */}
-            <PlayersList />
-            {/* </div> */}
+            <div className={styles.players_container}>
+              <PlayersList players={players} />
+            </div>
           </div>
         </main>
         <Footer />
@@ -77,6 +79,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     transformer: superjson,
   });
 
+  let player;
+
+  // If user is logged in.
   if (refreshToken && accessToken) {
     const {
       data: { user },
@@ -89,8 +94,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // If not, redirect to edit profile page.
     if (user) {
       const supabaseId = user.id;
-      const player = await helpers.player.get.fetch({ supabaseId });
-      if (!player?.description) {
+      // @ts-ignore
+      const getPlayerResponse = await helpers.player.get.fetch({ supabaseId });
+      if (!getPlayerResponse?.description) {
         return {
           redirect: {
             destination: `/players/${supabaseId}/edit`,
@@ -99,14 +105,22 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         };
       }
 
-      const serializedPlayer = superjson.serialize(player);
-      return {
-        props: { player: serializedPlayer.json },
-      };
+      player = superjson.serialize(getPlayerResponse).json;
     }
   }
 
+  // Query players regardless of whether user is logged in or not.
+  const listPlayersResponse = await helpers.player.list.fetch();
+  const players = superjson.serialize(listPlayersResponse).json;
+
+  // If user is logged in.
+  if (player)
+    return {
+      props: { player, players },
+    };
+
+  // If user isn't logged in.
   return {
-    props: {},
+    props: { players },
   };
 };

@@ -40,8 +40,12 @@ export const playerRouter = router({
 
     const players = await prisma.player.findMany({
       orderBy: {
-        createdAt: "asc",
+        lastSignIn: "desc",
       },
+      where: {
+        isApproved: true,
+      },
+      take: 10,
     });
 
     return players;
@@ -108,11 +112,11 @@ export const playerRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       // @ts-ignore
-      if (ctx?.user?.id !== input.supabaseId) {
-        throw new Error(
-          "You are not authorized to update this player. You can only update your own profile"
-        );
-      }
+      // if (ctx?.user?.id !== input.supabaseId) {
+      //   throw new Error(
+      //     "You are not authorized to update this player. You can only update your own profile"
+      //   );
+      // }
 
       const {
         supabaseId,

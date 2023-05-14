@@ -26,7 +26,9 @@ export const SelectField = ({
 }: ComponentProps) => {
   return (
     <Select.Root name={name} defaultValue={defaultValue || options[0].value}>
-      {label && <p className={formStyles.form_label}>{label}</p>}
+      {label && (
+        <p className={` ${formStyles.form_label} ${styles.label}`}>{label}</p>
+      )}
       <Select.Trigger
         className={styles.SelectTrigger}
         aria-label="select-field-trigger"

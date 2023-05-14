@@ -25,7 +25,9 @@ export const Input = ({
 }: ComponentProps) => (
   <Form.Field className={formStyles.form_field} name={name}>
     <div className={formStyles.form_field_label_container}>
-      <Form.Label className={formStyles.form_label}>{label}</Form.Label>
+      {label && (
+        <Form.Label className={formStyles.form_label}>{label}</Form.Label>
+      )}
       {isRequired && (
         <Form.Message
           className={`${formStyles.form_label} ${formStyles.form_message}`}

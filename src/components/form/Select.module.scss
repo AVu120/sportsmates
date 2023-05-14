@@ -1,6 +1,10 @@
 @use "@/_styles/_forms.module.scss";
 @use "@/_styles/_buttons.module.scss";
 
+.label {
+  padding: 10px 0 0px 0;
+}
+
 .SelectTrigger {
   display: inline-flex;
   align-items: center;

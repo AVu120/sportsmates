@@ -72,6 +72,7 @@ const PlayersFiltersForm = ({ onClickSubmitButton }: ComponentProps) => {
         />
         <SelectField
           name="sortBy"
+          label="Sort by"
           options={[
             { label: "Most recently active", value: "Most recently active" },
             { label: "Oldest to youngest", value: "Oldest to youngest" },

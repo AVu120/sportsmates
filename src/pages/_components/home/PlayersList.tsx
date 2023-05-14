@@ -37,17 +37,12 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
           lastName,
           skillLevel,
           gender,
-          birthday,
+          age,
           lastSignIn,
           city,
           description,
         }) => {
-          const age = Math.floor(
-            // @ts-ignore
-            (new Date().getTime() - new Date(birthday).getTime()) / 3.15576e10
-          );
-          // @ts-ignore
-
+          //@ts-ignore
           const lastSignInDate = new Date(lastSignIn);
           const formattedLastSignInDate = `${lastSignInDate.getDate()} ${
             months[lastSignInDate.getMonth()]
@@ -55,7 +50,7 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
           return (
             <div
               className={styles.card}
-              key={`${firstName} ${lastName} - ${birthday}`}
+              key={`${firstName} ${lastName} - ${age}`}
             >
               <div className={styles.top_row_info}>
                 <div style={{ display: "flex" }}>

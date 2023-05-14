@@ -226,6 +226,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
               label="Birthday (write below or click on the calendar)"
               name="birthday"
               isRequired
+              //@ts-ignore
               defaultValue={player?.birthday?.split("T")[0] || ""}
             />
             <PlacesAutoComplete

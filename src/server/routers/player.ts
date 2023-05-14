@@ -45,7 +45,7 @@ export const playerRouter = router({
        * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
        */
 
-      const players = await prisma.player.findMany({
+      let players = await prisma.player.findMany({
         select: {
           birthday: true,
           city: true,
@@ -65,6 +65,19 @@ export const playerRouter = router({
           ...(gender !== "Any gender" && { gender }),
         },
         take: 10,
+      });
+
+      // Birthday is redacted and only age is returned to prevent leakage of PII to the client.
+      // @ts-ignore
+      players = players.map((player) => {
+        const age = Math.floor(
+          // @ts-ignore
+          (new Date().getTime() - new Date(player.birthday).getTime()) /
+            3.15576e10
+        );
+        const { birthday, ...playerWithoutBirthday } = player;
+
+        return { ...playerWithoutBirthday, age };
       });
 
       return players;

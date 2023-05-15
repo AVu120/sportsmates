@@ -9,7 +9,7 @@ export interface FilterFields {
   longitude: number;
   latitude: number;
   // Range in meters
-  searchRadius: number;
+  searchRadius: string;
   gender: string;
   sortBy: string;
 }

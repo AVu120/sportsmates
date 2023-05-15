@@ -43,7 +43,7 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
           description,
         }) => {
           //@ts-ignore
-          const lastSignInDate = new Date(lastSignIn);
+          const lastSignInDate = lastSignIn ? new Date(lastSignIn) : new Date();
           const formattedLastSignInDate = `${lastSignInDate.getDate()} ${
             months[lastSignInDate.getMonth()]
           } ${lastSignInDate.getFullYear()}`;

@@ -14,6 +14,11 @@ import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { FilterFields } from "@/types/forms";
 import { player } from "@/types/player";
+import {
+  genderOptions,
+  searchRadiusOptions,
+  sortByOptions,
+} from "@/utils/constants/player";
 import useUser from "@/utils/hooks/useUser";
 import { trpc } from "@/utils/trpc";
 
@@ -23,40 +28,26 @@ interface ComponentProps {
   player: player;
 }
 
-export const searchRadiusOptions = [
-  { label: "Any distance from you", value: "Any distance from you" },
-  { label: "Within 10km", value: "10" },
-  { label: "Within 20km", value: "20" },
-  { label: "Within 30km", value: "30" },
-  { label: "Within 40km", value: "40" },
-  { label: "Within 50km", value: "50" },
-];
-
-export const genderOptions = [
-  { label: "Any gender", value: "Any gender" },
-  { label: "Male", value: "Male" },
-  { label: "Female", value: "Female" },
-];
-
-export const sortByOptions = [
-  { label: "Most recently active", value: "Most recently active" },
-  { label: "Oldest to youngest", value: "Oldest to youngest" },
-  { label: "Youngest to oldest", value: "Youngest to oldest" },
-  { label: "Closest to me", value: "Closest to me" },
-];
-
 // Home Page
 const Players = ({ player }: ComponentProps) => {
   const [queryFilters, setQueryFilters] = useState({
+    searchRadius: searchRadiusOptions[0].value,
+    longitude: NaN,
+    latitude: NaN,
     gender: genderOptions[0].value,
+    sortBy: sortByOptions[0].value,
   });
   const { isLoggedIn, user } = useUser();
   //@ts-ignore
   const onApplyFilters = (data: FilterFields) => {
-    console.log({ data });
-    setQueryFilters({ gender: data.gender });
+    const { searchRadius, longitude, latitude, gender, sortBy } = data;
+    setQueryFilters({ searchRadius, longitude, latitude, gender, sortBy });
   };
-  const listPlayers = trpc.player.list.useQuery(queryFilters);
+
+  const { longitude, latitude, ...queryFiltersWithoutLocation } = queryFilters;
+  const listPlayers = trpc.player.list.useQuery(
+    isNaN(longitude) ? queryFiltersWithoutLocation : queryFilters
+  );
 
   return (
     <>
@@ -83,7 +74,8 @@ const Players = ({ player }: ComponentProps) => {
             </div>
             <div className={styles.players_container}>
               {/* @ts-ignore */}
-              <PlayersList players={listPlayers.data || []} />
+              <PlayersList players={listPlayers?.data || []} />
+              {/* <PlayersList players={[]} isLoading={false} /> */}
             </div>
           </div>
         </main>

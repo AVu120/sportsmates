@@ -5,8 +5,14 @@ import buttonStyles from "@/_styles/_buttons.module.scss";
 import formStyles from "@/_styles/_forms.module.scss";
 import { PlacesAutoComplete } from "@/components/form/PlacesAutoComplete";
 import { SelectField } from "@/components/form/Select";
-import { genderOptions, searchRadiusOptions, sortByOptions } from "@/pages";
 import { FilterFields } from "@/types/forms";
+import {
+  ANY_DISTANCE_FROM_YOU,
+  CLOSEST_TO_ME,
+  genderOptions,
+  searchRadiusOptions,
+  sortByOptions,
+} from "@/utils/constants/player";
 
 import styles from "./PlayersFiltersForm.module.scss";
 
@@ -16,6 +22,8 @@ interface ComponentProps {
 
 //@ts-ignore
 const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
+  // Has form been edited since last click of 'Apply' button.
+  const [hasChanges, setHasChanges] = useState(false);
   const [typedAddress, setTypedAddress] = useState("");
   const [location, setLocation] = useState<{
     latitude: number;
@@ -30,6 +38,11 @@ const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
   return (
     <div className={`${formStyles.form_border} ${styles.form_border}`}>
       <Form.Root
+        onChange={() => {
+          if (!hasChanges) {
+            setHasChanges(true);
+          }
+        }}
         className={`${formStyles.form_root} ${styles.form_root}`}
         style={{ marginTop: 10 }}
         onSubmit={(event: any) => {
@@ -39,9 +52,14 @@ const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
           );
 
           if (
-            typedAddress !== location.address &&
-            !(location.latitude && location.longitude)
+            (formData.searchRadius !== ANY_DISTANCE_FROM_YOU ||
+              formData.sortBy === CLOSEST_TO_ME) &&
+            isNaN(location.longitude)
           ) {
+            return alert("Please select your location from the dropdown menu");
+          }
+
+          if (typedAddress && typedAddress !== location.address) {
             return alert("Please select your location from the dropdown menu");
           }
           const data = { ...formData, ...location };
@@ -85,6 +103,7 @@ const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
           <button
             className={buttonStyles.primary_button}
             style={{ marginTop: 10 }}
+            disabled={!hasChanges}
           >
             Apply
           </button>

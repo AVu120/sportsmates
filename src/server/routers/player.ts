@@ -2,7 +2,20 @@
  *
  * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
  */
-import { tuple, z } from "zod";
+import { Prisma } from "@prisma/client";
+import { z } from "zod";
+
+import {
+  ANY_DISTANCE_FROM_YOU,
+  ANY_GENDER,
+  CLOSEST_TO_ME,
+  genderOptions,
+  MOST_RECENTLY_ACTIVE,
+  OLDEST_TO_YOUNGEST,
+  searchRadiusOptions,
+  sortByOptions,
+  YOUNGEST_TO_OLDEST,
+} from "@/utils/constants/player";
 
 import { prisma } from "../lib/prisma";
 import { procedure, router } from "../trpc";
@@ -34,38 +47,67 @@ export const playerRouter = router({
   list: procedure
     .input(
       z.object({
-        gender: z.string().optional(),
+        longitude: z.number().min(-180).max(180).optional(),
+        latitude: z.number().min(-180).max(180).optional(),
+        // Search range in meters.
+        searchRadius: z
+          .string()
+          .refine(
+            (data) =>
+              searchRadiusOptions.map(({ value }) => value).includes(data),
+            "Not a valid value"
+          ),
+        gender: z
+          .string()
+          .refine(
+            (data) => genderOptions.map(({ value }) => value).includes(data),
+            "Not a valid value"
+          ),
+        sortBy: z
+          .string()
+          .refine(
+            (data) => sortByOptions.map(({ value }) => value).includes(data),
+            "Not a valid value"
+          ),
       })
     )
     .query(async ({ input }) => {
-      const { gender } = input;
       /**
        * For pagination docs you can have a look here
        * @see https://trpc.io/docs/useInfiniteQuery
        * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
        */
 
-      let players = await prisma.player.findMany({
-        select: {
-          birthday: true,
-          city: true,
-          description: true,
-          gender: true,
-          firstName: true,
-          lastName: true,
-          id: true,
-          lastSignIn: true,
-          skillLevel: true,
-        },
-        orderBy: {
-          lastSignIn: "desc",
-        },
-        where: {
-          isApproved: true,
-          ...(gender !== "Any gender" && { gender }),
-        },
-        take: 10,
-      });
+      const { longitude, latitude, searchRadius, gender, sortBy } = input;
+
+      const sortByClauseOptions: { [index: string]: string } = {
+        [MOST_RECENTLY_ACTIVE]: `ORDER BY "lastSignIn" DESC`,
+        [OLDEST_TO_YOUNGEST]: "ORDER BY birthday ASC",
+        [YOUNGEST_TO_OLDEST]: "ORDER BY birthday DESC",
+        [CLOSEST_TO_ME]: `ORDER BY coordinates <-> ST_Point(${longitude}, ${latitude}) ASC`,
+      };
+
+      let whereClause = "";
+      // If search radius is not set.
+      if (searchRadius === ANY_DISTANCE_FROM_YOU) {
+        // If gender is set.
+        if (gender !== ANY_GENDER) {
+          whereClause += `WHERE gender = '${gender}' AND "isApproved" = true`;
+        } else whereClause += `WHERE "isApproved" = true`;
+      } else {
+        whereClause += `WHERE ST_DWithin(coordinates, ST_Point(${longitude}, ${latitude}), ${searchRadius}000)`;
+
+        if (gender !== ANY_GENDER) {
+          whereClause += ` AND gender = '${gender}' AND "isApproved" = true`;
+        } else whereClause += ` AND "isApproved" = true`;
+      }
+
+      let players = await prisma.$queryRaw`
+      SELECT id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender
+      FROM "Player"
+      ${Prisma.raw(whereClause)}
+      ${Prisma.raw(sortByClauseOptions[sortBy])}
+      LIMIT 10;`;
 
       // Birthday is redacted and only age is returned to prevent leakage of PII to the client.
       // @ts-ignore
@@ -80,31 +122,6 @@ export const playerRouter = router({
         return { ...playerWithoutBirthday, age };
       });
 
-      return players;
-    }),
-  listByLocation: procedure
-    .input(
-      z.object({
-        longitude: z.number().min(-180).max(180),
-        latitude: z.number().min(-180).max(180),
-        // Search range in meters.
-        range: z.number().min(0),
-      })
-    )
-    .query(async ({ input }) => {
-      /**
-       * For pagination docs you can have a look here
-       * @see https://trpc.io/docs/useInfiniteQuery
-       * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
-       */
-
-      const { longitude, latitude, range } = input;
-
-      const players = await prisma.$queryRaw`
-      SELECT id, "supabaseId", "firstName", "lastName", "skillLevel", birthday, "lastActiveAt", city, description
-      FROM "Player"
-      WHERE ST_DWithin(coordinates, ST_Point(${longitude}, ${latitude}), ${range})
-      ORDER BY coordinates <-> ST_Point(${longitude}, ${latitude}) ASC;`;
       return players;
     }),
   add: procedure

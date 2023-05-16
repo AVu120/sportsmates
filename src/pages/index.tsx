@@ -1,17 +1,11 @@
-import { useState } from "react";
-import { Player } from "@prisma/client";
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { GetServerSideProps } from "next";
+import { useEffect, useState } from "react";
 import Head from "next/head";
-import superjson from "superjson";
-import { set } from "zod";
+import { useRouter } from "next/router";
 
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
 import PlayersFiltersForm from "@/pages/_components/home/PlayersFiltersForm";
 import PlayersList from "@/pages/_components/home/PlayersList";
-import { appRouter } from "@/server/routers/_app";
-import { supabase } from "@/services/authentication";
 import { FilterFields } from "@/types/forms";
 import { player } from "@/types/player";
 import {
@@ -24,12 +18,9 @@ import { trpc } from "@/utils/trpc";
 
 import styles from "./_index.module.scss";
 
-interface ComponentProps {
-  player: player;
-}
-
 // Home Page
-const Players = ({ player }: ComponentProps) => {
+const Players = () => {
+  const router = useRouter();
   const [queryFilters, setQueryFilters] = useState({
     searchRadius: searchRadiusOptions[0].value,
     longitude: NaN,
@@ -45,9 +36,19 @@ const Players = ({ player }: ComponentProps) => {
   };
 
   const { longitude, latitude, ...queryFiltersWithoutLocation } = queryFilters;
+
+  const player = trpc.player.get.useQuery({ supabaseId: user?.id || "" });
+
   const listPlayers = trpc.player.list.useQuery(
     isNaN(longitude) ? queryFiltersWithoutLocation : queryFilters
   );
+
+  // If user is logged in and has not set their profile, redirect them to the edit page.
+  useEffect(() => {
+    if (user && player.isFetched && !player.data?.description) {
+      router.push(`/players/${user?.id}/edit`);
+    }
+  });
 
   return (
     <>
@@ -63,7 +64,8 @@ const Players = ({ player }: ComponentProps) => {
           page="home"
           isLoggedIn={isLoggedIn}
           user={user}
-          player={player}
+          //@ts-ignore
+          player={player.data}
         />
 
         <main className={styles.main}>
@@ -86,61 +88,3 @@ const Players = ({ player }: ComponentProps) => {
 };
 
 export default Players;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { req } = ctx;
-  const refreshToken = req.cookies["my-refresh-token"];
-  const accessToken = req.cookies["my-access-token"];
-
-  const helpers = createProxySSGHelpers({
-    router: appRouter,
-    ctx,
-    transformer: superjson,
-  });
-
-  let player;
-
-  // If user is logged in.
-  if (refreshToken && accessToken) {
-    const {
-      data: { user },
-    } = await supabase.auth.setSession({
-      refresh_token: refreshToken,
-      access_token: accessToken,
-    });
-
-    // Check to see if user has set their profile yet.
-    // If not, redirect to edit profile page.
-    if (user) {
-      const supabaseId = user.id;
-      // @ts-ignore
-      const getPlayerResponse = await helpers.player.get.fetch({ supabaseId });
-      if (!getPlayerResponse?.description) {
-        return {
-          redirect: {
-            destination: `/players/${supabaseId}/edit`,
-            permanent: false,
-          },
-        };
-      }
-
-      player = superjson.serialize(getPlayerResponse).json;
-      return {
-        props: { player },
-      };
-    }
-  }
-
-  // Query players regardless of whether user is logged in or not.
-
-  // If user is logged in.
-  // if (player)
-  //   return {
-  //     props: { player, players },
-  //   };
-
-  // If user isn't logged in.
-  return {
-    props: {},
-  };
-};

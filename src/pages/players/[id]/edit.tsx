@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import { User } from "@supabase/supabase-js";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -25,6 +26,7 @@ import styles from "./_edit.module.scss";
 
 interface ComponentProps {
   player: player;
+  user: User | null;
 }
 
 // Server only accepts this interface, no nulls allowed for these fields.
@@ -41,10 +43,13 @@ interface FormFields {
 }
 
 // Every field is required.
-const EditProfilePage = ({ player }: ComponentProps) => {
+const EditProfilePage = ({ player, user }: ComponentProps) => {
   // Save local state of player data so that if first name changes,
   // we can immediately display the new name in the header without having to
   // reload the entire page.
+  const [hasNotSetUpProfile, setHasNotSetUpProfile] = useState(
+    !player?.description
+  );
   const [playerState, setPlayerState] = useState<player>(player);
   const [location, setLocation] = useState<{
     latitude: number;
@@ -58,9 +63,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
   const [city, setCity] = useState<string>(player?.city || "");
   const router = useRouter();
   const { id } = router.query;
-  const { user, isLoggedIn } = useUser();
-  const isAllowedToEdit = isLoggedIn && user?.id && user?.id === id;
-  const hasNotSetUpProfile = !player?.description;
+  const isAllowedToEdit = user?.id && user?.id === id;
   const [hasMadeChanges, setHasMadeChanges] = useState(false);
 
   const updatePlayer = trpc.player.update.useMutation({
@@ -71,9 +74,8 @@ const EditProfilePage = ({ player }: ComponentProps) => {
         longitude: NaN,
         latitude: NaN,
       }));
+      if (setHasNotSetUpProfile) setHasNotSetUpProfile(false);
       alert("Profile updated successfully");
-      // Redirect user to home page after they have set their profile for the first time.
-      if (hasNotSetUpProfile) router.push("/");
       setHasMadeChanges(false);
     },
   });
@@ -136,12 +138,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className={styles.page}>
-          <Header
-            page="edit"
-            isLoggedIn={isLoggedIn}
-            user={user}
-            player={playerState}
-          />
+          <Header page="edit" user={user} player={playerState} />
           <main className={styles.main}>
             You are not allowed to edit this page.
           </main>
@@ -160,13 +157,7 @@ const EditProfilePage = ({ player }: ComponentProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header
-          page="edit"
-          isLoggedIn={isLoggedIn}
-          user={user}
-          hasNotSetUpProfile={hasNotSetUpProfile}
-          player={playerState}
-        />
+        <Header page="edit" user={user} player={playerState} />
         <main className={styles.main}>
           <h1 className={styles.title}>Edit your profile</h1>
           {hasNotSetUpProfile && (
@@ -308,7 +299,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       const serializedPlayer = superjson.serialize(player);
 
       return {
-        props: { player: serializedPlayer.json },
+        props: { player: serializedPlayer.json, user },
       };
     }
   }

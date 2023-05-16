@@ -16,19 +16,11 @@ import styles from "./Header.module.scss";
 
 interface ComponentProps {
   page?: Page;
-  isLoggedIn?: boolean;
   user?: User | null;
-  hasNotSetUpProfile?: boolean;
   player?: player;
 }
 /** Common Header that displays on the top of every page. */
-export const Header = ({
-  page,
-  isLoggedIn,
-  user,
-  hasNotSetUpProfile,
-  player,
-}: ComponentProps) => {
+export const Header = ({ page, user, player }: ComponentProps) => {
   const router = useRouter();
 
   const dropdownOptions = [
@@ -44,42 +36,34 @@ export const Header = ({
   ];
   return (
     <header className={styles.header}>
-      {/* Only show dropdown menu in mobile screen width */}
-      {/* <div className={`${styles.dropdown_menu} ${buttonStyles.link_button}`}>
-        {!hasNotSetUpProfile && <DropDownMenu />}
-      </div> */}
-      {/* Only show this when screen width is more than mobile width */}
       <div className={styles.logo_button}>
-        {!hasNotSetUpProfile && (
-          <Link href="/">
-            <div className={`${logoStyles.logo} ${buttonStyles.link_button}`}>
-              <Image src="/logo.png" width={25} height={25} alt="" />{" "}
-              <div>
-                <p>Cricket </p>
-                <p>Buddy</p>
-              </div>
+        <Link href="/">
+          <div className={`${logoStyles.logo} ${buttonStyles.link_button}`}>
+            <Image src="/logo.png" width={25} height={25} alt="" />{" "}
+            <div>
+              <p>Cricket </p>
+              <p>Buddy</p>
             </div>
-          </Link>
-        )}
+          </div>
+        </Link>
       </div>
-      {/* Only show this when screen width is more than mobile width */}
       <div className={`${styles.move_buttons_down} ${styles.navbar}`}>
-        {!hasNotSetUpProfile && <NavBar page={page} />}
+        <NavBar page={page} />
       </div>
       <div
         className={`${buttonStyles.button_group} ${styles.move_buttons_down}`}
       >
-        {!isLoggedIn && page !== "login" && (
+        {!user && page !== "login" && (
           <Link href="/login">
             <button className={buttonStyles.link_button}>Log in</button>
           </Link>
         )}
-        {!isLoggedIn && page !== "signup" && (
+        {!user && page !== "signup" && (
           <Link href="/signup">
             <button className={buttonStyles.link_button}>Sign up</button>
           </Link>
         )}
-        {isLoggedIn && (
+        {user && (
           <>
             <span>Hello {player?.firstName || user?.email}!</span>
             <div style={{ position: "relative", top: "2px" }}>

@@ -22,7 +22,7 @@ const Meetups = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="meetups" isLoggedIn={isLoggedIn} user={user} />
+        <Header page="meetups" user={user} />
         <main className={styles.main}>Meetups Page</main>
         <Footer />
       </div>

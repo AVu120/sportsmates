@@ -31,7 +31,9 @@ export const DatePicker = ({
   return (
     <Form.Field className={formStyles.form_field} name={name}>
       <div className={formStyles.form_field_label_container}>
-        <Form.Label className={formStyles.form_label}>{label}</Form.Label>
+        <Form.Label htmlFor={name} className={formStyles.form_label}>
+          {label}
+        </Form.Label>
         {isRequired && (
           <Form.Message
             className={`${formStyles.form_label} ${formStyles.form_message}`}

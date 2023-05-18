@@ -26,7 +26,9 @@ export const Input = ({
   <Form.Field className={formStyles.form_field} name={name}>
     <div className={formStyles.form_field_label_container}>
       {label && (
-        <Form.Label className={formStyles.form_label}>{label}</Form.Label>
+        <Form.Label htmlFor={name} className={formStyles.form_label}>
+          {label}
+        </Form.Label>
       )}
       {isRequired && (
         <Form.Message
@@ -48,12 +50,16 @@ export const Input = ({
     <Form.Control asChild>
       {type === "textarea" ? (
         <textarea
+          id={name}
+          name={name}
           className={formStyles.text_area}
           required={isRequired}
           defaultValue={value}
         />
       ) : (
         <input
+          id={name}
+          name={name}
           className={formStyles.input}
           type={type}
           required={isRequired}

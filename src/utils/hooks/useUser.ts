@@ -3,6 +3,8 @@ import { User } from "@supabase/supabase-js";
 
 import { supabase } from "@/services/authentication";
 
+/** Fetches the current logged in user's auth session data.
+ */
 const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState<boolean>(true);

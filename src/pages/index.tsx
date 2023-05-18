@@ -13,6 +13,7 @@ import {
   searchRadiusOptions,
   sortByOptions,
 } from "@/utils/constants/player";
+import usePlayer from "@/utils/hooks/usePlayer";
 import useUser from "@/utils/hooks/useUser";
 import { trpc } from "@/utils/trpc";
 
@@ -28,7 +29,7 @@ const Players = () => {
     gender: genderOptions[0].value,
     sortBy: sortByOptions[0].value,
   });
-  const { isLoggedIn, user } = useUser();
+  const { user } = useUser();
   //@ts-ignore
   const onApplyFilters = (data: FilterFields) => {
     const { searchRadius, longitude, latitude, gender, sortBy } = data;
@@ -37,18 +38,19 @@ const Players = () => {
 
   const { longitude, latitude, ...queryFiltersWithoutLocation } = queryFilters;
 
-  const player = trpc.player.get.useQuery({ supabaseId: user?.id || "" });
+  // const player = trpc.player.get.useQuery({ supabaseId: user?.id || "" });
 
+  const { player } = usePlayer({ user });
   const listPlayers = trpc.player.list.useQuery(
     isNaN(longitude) ? queryFiltersWithoutLocation : queryFilters
   );
 
   // If user is logged in and has not set their profile, redirect them to the edit page.
-  useEffect(() => {
-    if (user && player.isFetched && !player.data?.description) {
-      router.push(`/players/${user?.id}/edit`);
-    }
-  });
+  // useEffect(() => {
+  //   if (user && player.isFetched && !player.data?.description) {
+  //     router.push(`/players/${user?.id}/edit`);
+  //   }
+  // });
 
   return (
     <>
@@ -62,7 +64,6 @@ const Players = () => {
       <div className={styles.page}>
         <Header
           page="home"
-          isLoggedIn={isLoggedIn}
           user={user}
           //@ts-ignore
           player={player.data}

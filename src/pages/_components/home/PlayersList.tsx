@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { player } from "@/types/player";
 
@@ -41,6 +43,7 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
           lastSignIn,
           city,
           description,
+          id,
         }) => {
           //@ts-ignore
           const lastSignInDate = lastSignIn ? new Date(lastSignIn) : new Date();
@@ -48,28 +51,27 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
             months[lastSignInDate.getMonth()]
           } ${lastSignInDate.getFullYear()}`;
           return (
-            <div
-              className={styles.card}
-              key={`${firstName} ${lastName} - ${age}`}
-            >
-              <div className={styles.top_row_info}>
-                <div style={{ display: "flex" }}>
-                  <ProfilePicture height="75px" />
-                  <div className={styles.name_skillLevel_gender_age}>
-                    <p
-                      style={{ fontWeight: "bold" }}
-                    >{`${firstName} ${lastName}`}</p>
-                    <p>{skillLevel}</p>
-                    <p>{`${gender}, ${age}`}</p>
+            <Link href={`/players/${id}`} key={id}>
+              <div className={styles.card}>
+                <div className={styles.top_row_info}>
+                  <div style={{ display: "flex" }}>
+                    <ProfilePicture height="75px" />
+                    <div className={styles.name_skillLevel_gender_age}>
+                      <p
+                        style={{ fontWeight: "bold" }}
+                      >{`${firstName} ${lastName}`}</p>
+                      <p>{skillLevel}</p>
+                      <p>{`${gender}, ${age}`}</p>
+                    </div>
+                  </div>
+                  <div className={styles.lastSignIn_city}>
+                    <p>{formattedLastSignInDate}</p>
+                    <p>{city}</p>
                   </div>
                 </div>
-                <div className={styles.lastSignIn_city}>
-                  <p>{formattedLastSignInDate}</p>
-                  <p>{city}</p>
-                </div>
+                <div className={styles.description}>{description}</div>
               </div>
-              <div className={styles.description}>{description}</div>
-            </div>
+            </Link>
           );
         }
       )}

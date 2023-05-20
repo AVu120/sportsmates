@@ -138,7 +138,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className={styles.page}>
-          <Header page="edit" user={user} player={playerState} />
+          <Header page="edit" user={user} />
           <main className={styles.main}>
             You are not allowed to edit this page.
           </main>
@@ -157,7 +157,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="edit" user={user} player={playerState} />
+        <Header page="edit" user={user} />
         <main className={styles.main}>
           <h1 className={styles.title}>Edit your profile</h1>
           {hasNotSetUpProfile && (

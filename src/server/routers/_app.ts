@@ -8,17 +8,6 @@ import { netRouter } from "./net";
 import { playerRouter } from "./player";
 
 export const appRouter = router({
-  hello: procedure
-    .input(
-      z.object({
-        text: z.string(),
-      })
-    )
-    .query(({ input }) => {
-      return {
-        greeting: `hello ${input.text}`,
-      };
-    }),
   player: playerRouter,
   net: netRouter,
   meetup: meetupRouter,

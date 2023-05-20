@@ -62,12 +62,7 @@ const Players = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header
-          page="home"
-          user={user}
-          //@ts-ignore
-          player={player.data}
-        />
+        <Header page="home" user={user} />
 
         <main className={styles.main}>
           <h1 className={styles.title}>Welcome!</h1>

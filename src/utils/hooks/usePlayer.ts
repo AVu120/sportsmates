@@ -16,8 +16,13 @@ const usePlayer = ({ user }: HookProps) => {
 
   // If user is logged in and has not set their profile, redirect them to the edit page.
   useEffect(() => {
-    if (user && player.isFetched && !player.data?.description) {
-      router.push(`/players/${user?.id}/edit`);
+    if (user && player.isFetched) {
+      if (!player.data?.description) router.push(`/players/${user?.id}/edit`);
+      else
+        window.localStorage.setItem(
+          "userFirstName",
+          player.data.firstName || ""
+        );
     }
   }, [player.isFetched, player.data, user]);
 

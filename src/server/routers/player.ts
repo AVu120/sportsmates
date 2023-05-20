@@ -103,7 +103,7 @@ export const playerRouter = router({
       }
 
       let players = await prisma.$queryRaw`
-      SELECT id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender
+      SELECT "supabaseId" as id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender
       FROM "Player"
       ${Prisma.raw(whereClause)}
       ${Prisma.raw(sortByClauseOptions[sortBy])}

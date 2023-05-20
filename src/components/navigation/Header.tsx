@@ -8,7 +8,6 @@ import logoStyles from "@/_styles/_logos.module.scss";
 import { DropDownMenu } from "@/components/menu/DropDownMenu";
 import { supabase } from "@/services/authentication";
 import { Page } from "@/types/pages";
-import { player } from "@/types/player";
 
 import { NavBar } from "./NavBar";
 
@@ -17,10 +16,10 @@ import styles from "./Header.module.scss";
 interface ComponentProps {
   page?: Page;
   user?: User | null;
-  player?: player;
 }
 /** Common Header that displays on the top of every page. */
-export const Header = ({ page, user, player }: ComponentProps) => {
+export const Header = ({ page, user }: ComponentProps) => {
+  const firstName = window.localStorage.getItem("userFirstName");
   const router = useRouter();
 
   const dropdownOptions = [
@@ -65,7 +64,7 @@ export const Header = ({ page, user, player }: ComponentProps) => {
         )}
         {user && (
           <>
-            <span>Hello {player?.firstName || user?.email}!</span>
+            <span>Hello {firstName || user?.email}!</span>
             <div style={{ position: "relative", top: "2px" }}>
               <DropDownMenu options={dropdownOptions} />
             </div>

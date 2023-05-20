@@ -11,6 +11,12 @@ $field_box_shadow: 0 0 0 1px black;
 $field_placeholder_text_color: rgb(133, 133, 133);
 $border_shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
 
+%label-shared {
+  font-size: $field_label_size;
+  line-height: 1;
+  padding: 10px 0 5px 0;
+}
+
 .form_border {
   padding: 10px;
 }
@@ -30,10 +36,13 @@ $border_shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px 
 }
 
 .form_label {
-  font-size: $field_label_size;
+  @extend %label-shared;
   font-weight: 500;
-  line-height: 1;
-  padding: 10px 0 5px 0;
+}
+
+.label {
+  @extend %label-shared;
+  font-weight: bolder
 }
 
 .form_message {

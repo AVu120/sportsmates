@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
 import PlayersFiltersForm from "@/pages/_components/home/PlayersFiltersForm";
 import PlayersList from "@/pages/_components/home/PlayersList";
 import { FilterFields } from "@/types/forms";
-import { player } from "@/types/player";
 import {
   genderOptions,
   searchRadiusOptions,
@@ -21,7 +19,6 @@ import styles from "./_index.module.scss";
 
 // Home Page
 const Players = () => {
-  const router = useRouter();
   const [queryFilters, setQueryFilters] = useState({
     searchRadius: searchRadiusOptions[0].value,
     longitude: NaN,
@@ -38,19 +35,10 @@ const Players = () => {
 
   const { longitude, latitude, ...queryFiltersWithoutLocation } = queryFilters;
 
-  // const player = trpc.player.get.useQuery({ supabaseId: user?.id || "" });
-
   const { player } = usePlayer({ user });
   const listPlayers = trpc.player.list.useQuery(
     isNaN(longitude) ? queryFiltersWithoutLocation : queryFilters
   );
-
-  // If user is logged in and has not set their profile, redirect them to the edit page.
-  // useEffect(() => {
-  //   if (user && player.isFetched && !player.data?.description) {
-  //     router.push(`/players/${user?.id}/edit`);
-  //   }
-  // });
 
   return (
     <>
@@ -62,7 +50,11 @@ const Players = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="home" user={user} />
+        <Header
+          page="home"
+          user={user}
+          firstName={player?.data?.firstName || ""}
+        />
 
         <main className={styles.main}>
           <h1 className={styles.title}>Welcome!</h1>

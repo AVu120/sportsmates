@@ -16,10 +16,14 @@ import styles from "./Header.module.scss";
 interface ComponentProps {
   page?: Page;
   user?: User | null;
+  firstName?: string;
 }
 /** Common Header that displays on the top of every page. */
-export const Header = ({ page, user }: ComponentProps) => {
-  const firstName = window.localStorage.getItem("userFirstName");
+export const Header = ({ page, user, firstName }: ComponentProps) => {
+  const isRunningOnClient = typeof window !== "undefined";
+  const displayedFirstName =
+    firstName ||
+    (isRunningOnClient ? window.localStorage.getItem("userFirstName") : "");
   const router = useRouter();
 
   const dropdownOptions = [
@@ -27,8 +31,12 @@ export const Header = ({ page, user }: ComponentProps) => {
     {
       label: "Log out",
       onClick: () => {
+        window.localStorage.removeItem("userFirstName");
+
         if (page === "home")
-          supabase.auth.signOut().then(() => alert("Logged out successfully"));
+          supabase.auth.signOut().then(() => {
+            alert("Logged out successfully");
+          });
         else router.push("/").then(() => supabase.auth.signOut());
       },
     },
@@ -64,7 +72,7 @@ export const Header = ({ page, user }: ComponentProps) => {
         )}
         {user && (
           <>
-            <span>Hello {firstName || user?.email}!</span>
+            <span>Hello {displayedFirstName || user?.email}!</span>
             <div style={{ position: "relative", top: "2px" }}>
               <DropDownMenu options={dropdownOptions} />
             </div>

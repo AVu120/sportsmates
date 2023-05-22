@@ -50,7 +50,6 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const [hasNotSetUpProfile, setHasNotSetUpProfile] = useState(
     !player?.description
   );
-  const [playerState, setPlayerState] = useState<player>(player);
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -123,8 +122,6 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
     } else {
       await updatePlayer.mutateAsync(input);
     }
-
-    setPlayerState((state) => ({ ...state, firstName: input.firstName }));
   };
 
   if (!isAllowedToEdit)
@@ -281,27 +278,34 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     transformer: superjson,
   });
 
-  if (refreshToken && accessToken) {
-    const {
-      data: { user },
-    } = await supabase.auth.setSession({
-      refresh_token: refreshToken,
-      access_token: accessToken,
-    });
+  try {
+    if (refreshToken && accessToken) {
+      const {
+        data: { user },
+      } = await supabase.auth.setSession({
+        refresh_token: refreshToken,
+        access_token: accessToken,
+      });
 
-    // Check to see if user has set their profile yet.
-    // If not, hide navigation links in navbar and display message that they
-    // need to set their profile in order to use the app.
-    if (user) {
-      const supabaseId = user.id;
-      const player = await helpers.player.get.fetch({ supabaseId });
+      // Check to see if user has set their profile yet.
+      // If not, hide navigation links in navbar and display message that they
+      // need to set their profile in order to use the app.
+      if (user) {
+        const supabaseId = user.id;
+        const player = await helpers.player.getPrivateData.fetch({
+          supabaseId,
+        });
 
-      const serializedPlayer = superjson.serialize(player);
+        const serializedPlayer = superjson.serialize(player);
 
-      return {
-        props: { player: serializedPlayer.json, user },
-      };
+        return {
+          props: { player: serializedPlayer.json, user },
+        };
+      }
     }
+  } catch (error) {
+    console.log({ error });
+    return { props: {} };
   }
 
   return {

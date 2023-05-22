@@ -5,6 +5,7 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
+import { supabase } from "@/services/authentication";
 import {
   ANY_DISTANCE_FROM_YOU,
   ANY_GENDER,
@@ -20,21 +21,94 @@ import {
 import { prisma } from "../lib/prisma";
 import { procedure, router } from "../trpc";
 
+/** User must be logged in and the owner of this data to access this. */
+const secureApi = (id: string, supabaseId: string) => {
+  if (id !== supabaseId) {
+    throw new Error("You are not authorized to do this.");
+  }
+};
+
+const calculateAge = (birthday: string) =>
+  Math.floor(
+    // @ts-ignore
+    (new Date().getTime() - new Date(birthday).getTime()) / 3.15576e10
+  );
+
 export const playerRouter = router({
-  get: procedure
+  getPrivateData: procedure
+    .input(
+      z.object({
+        supabaseId: z.string().uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { supabaseId } = input;
+
+      // Only enable this to run from server in getServerSideProps.
+      // Blocks use from client side.
+      //@ts-ignore
+      const accessToken = ctx?.req?.cookies["my-access-token"];
+      //@ts-ignore
+      const refreshToken = ctx?.req?.cookies["my-refresh-token"];
+      if (accessToken && refreshToken) {
+        const {
+          data: { user },
+          error,
+        } = await supabase?.auth.setSession({
+          //@ts-ignore
+          refresh_token: refreshToken,
+          //@ts-ignore
+          access_token: accessToken,
+        });
+
+        if (error || user?.id !== supabaseId)
+          throw new Error("You are not authorized to do this.");
+
+        const latestPlayer = await prisma.player.findFirst({
+          where: {
+            supabaseId,
+          },
+        });
+        return latestPlayer;
+      } else throw new Error("You are not authorized to do this.");
+    }),
+  getPublicData: procedure
     .input(
       z.object({
         supabaseId: z.string().uuid(),
       })
     )
     .query(async ({ input }) => {
-      const { supabaseId } = input;
       const latestPlayer = await prisma.player.findFirst({
+        select: {
+          supabaseId: true,
+          firstName: true,
+          lastName: true,
+          skillLevel: true,
+          gender: true,
+          birthday: true,
+          city: true,
+          description: true,
+          lastSignIn: true,
+        },
         where: {
-          supabaseId,
+          supabaseId: input.supabaseId,
         },
       });
-      return latestPlayer;
+
+      const redactedPlayer = {
+        id: latestPlayer?.supabaseId,
+        firstName: latestPlayer?.firstName,
+        lastName: latestPlayer?.lastName,
+        skillLevel: latestPlayer?.skillLevel,
+        gender: latestPlayer?.gender,
+        //@ts-ignore
+        birthday: calculateAge(latestPlayer?.birthday as string),
+        city: latestPlayer?.city,
+        description: latestPlayer?.description,
+        lastSignIn: latestPlayer?.lastSignIn,
+      };
+      return redactedPlayer;
     }),
   getLatest: procedure.query(async ({}) => {
     const latestPlayer = await prisma.player.findFirst({
@@ -112,11 +186,7 @@ export const playerRouter = router({
       // Birthday is redacted and only age is returned to prevent leakage of PII to the client.
       // @ts-ignore
       players = players.map((player) => {
-        const age = Math.floor(
-          // @ts-ignore
-          (new Date().getTime() - new Date(player.birthday).getTime()) /
-            3.15576e10
-        );
+        const age = calculateAge(player.birthday);
         const { birthday, ...playerWithoutBirthday } = player;
 
         return { ...playerWithoutBirthday, age };
@@ -166,11 +236,7 @@ export const playerRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       // @ts-ignore
-      // if (ctx?.user?.id !== input.supabaseId) {
-      //   throw new Error(
-      //     "You are not authorized to update this player. You can only update your own profile"
-      //   );
-      // }
+      secureApi(ctx?.user?.id, input.supabaseId);
 
       const {
         supabaseId,

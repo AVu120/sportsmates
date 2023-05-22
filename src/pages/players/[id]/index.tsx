@@ -35,7 +35,7 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page}>
-        <Header page="home" user={user} />
+        <Header page="profile" user={user} />
         <main className={styles.main}>
           <h1>{`${player.firstName} ${player.lastName}`}</h1>
           <p className={formStyles.label}>Skill Level</p>
@@ -64,7 +64,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   // There shouldn't be an array of IDs, if there is just convert to string and query nothing.
   const supabaseId = (!Array.isArray(query?.id) ? query?.id : "") || "";
-  const player = await helpers.player.get.fetch({
+  const player = await helpers.player.getPublicData.fetch({
     supabaseId: supabaseId,
   });
   const serializedPlayer = superjson.serialize(player).json;

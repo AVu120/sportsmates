@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +21,8 @@ interface ComponentProps {
 }
 /** Common Header that displays on the top of every page. */
 export const Header = ({ page, user, firstName }: ComponentProps) => {
-  const isRunningOnClient = typeof window !== "undefined";
+  const [isRunningOnClient, setIsRunningOnClient] = useState(false);
+
   const displayedFirstName =
     firstName ||
     (isRunningOnClient ? window.localStorage.getItem("userFirstName") : "");
@@ -41,6 +43,11 @@ export const Header = ({ page, user, firstName }: ComponentProps) => {
       },
     },
   ];
+
+  useEffect(() => {
+    setIsRunningOnClient(true);
+  }, []);
+
   return (
     <header className={styles.header}>
       <div className={styles.logo_button}>

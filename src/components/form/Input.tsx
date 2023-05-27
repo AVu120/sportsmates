@@ -4,7 +4,7 @@ import * as Form from "@radix-ui/react-form";
 import formStyles from "@/_styles/_forms.module.scss";
 
 interface ComponentProps {
-  label: string;
+  label?: string;
   type: HTMLInputTypeAttribute | "textarea";
   name: string;
   isRequired: boolean;

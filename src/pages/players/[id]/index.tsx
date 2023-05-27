@@ -6,6 +6,7 @@ import superjson from "superjson";
 
 import buttonStyles from "@/_styles/_buttons.module.scss";
 import formStyles from "@/_styles/_forms.module.scss";
+import { SendMessageModal } from "@/components/modal/SendMessage";
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
 import { ProfilePicture } from "@/components/profile/ProfilePicture";
@@ -47,9 +48,7 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <h1>{`${player.firstName} ${player.lastName}`}</h1>
                 <div className={styles.button_container}>
-                  <button className={buttonStyles.primary_button}>
-                    Message
-                  </button>
+                  <SendMessageModal />
                 </div>
               </div>
               <div className={styles.profile_picture_container}>

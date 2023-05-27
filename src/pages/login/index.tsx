@@ -49,9 +49,9 @@ const LogIn = () => {
   return (
     <>
       <Head>
-        <title>Log in - Cricket Buddy</title>
+        <title>Log in - Sportsmates</title>
 
-        <meta name="description" content="Find a cricket buddy near you" />
+        <meta name="description" content="Find a sports mate near you" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -59,7 +59,7 @@ const LogIn = () => {
         <Header page="login" />
         <main className={styles.main}>
           <EmailPasswordForm
-            title="Log in to Cricket Buddy"
+            title="Log in to Sportsmates"
             onClickSubmitButton={onClickSubmitButton}
             page="login"
           />

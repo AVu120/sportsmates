@@ -15,6 +15,7 @@ import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { player } from "@/types/player";
 import useUser from "@/utils/hooks/useUser";
+import { formatLastSignInDate } from "@/utils/player";
 
 import styles from "./_index.module.scss";
 // const router = useRouter();
@@ -25,13 +26,26 @@ interface ComponentProps {
   user: User | null;
 }
 
+// {
+//   "id": "5e334931-66b3-4f5d-8027-6bddbdde283c",
+//   "firstName": "Faker",
+//   "lastName": "Six",
+//   "skillLevel": "Intermediate",
+//   "gender": "Female",
+//   "age": 57,
+//   "city": "Camden Park",
+//   "description": "Ye to misery wisdom plenty polite to as. Prepared interest proposal it he exercise. My wishing an in attempt ferrars. Visited eat you why service looking engaged. At place no walls hopes rooms fully in. Roof hope shy tore leaf joy paid boy. Noisier out brought entered detract because sitting sir. Fat put occasion rendered off humanity has.",
+//   "lastSignIn": null
+// }
+
 const ProfilePage = ({ user, player }: ComponentProps) => {
+  const formattedLastSignInDate = formatLastSignInDate(player.lastSignIn);
   return (
     <>
       <Head>
-        <title>Cricket Buddy - Player Profile</title>
+        <title>Sportsmates - Player Profile</title>
 
-        <meta name="description" content="Find a cricket buddy near you" />
+        <meta name="description" content="Find a sports mate near you" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -45,15 +59,23 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
               <div className={styles.profile_picture_container}>
                 <ProfilePicture height="200px" />
               </div>
+              {player.lastSignIn && (
+                <p className={formStyles.label}>Last Active At</p>
+              )}
+              {player.lastSignIn && <p>{formattedLastSignInDate}</p>}
               <p className={formStyles.label}>Skill Level</p>
               <p>{player.skillLevel}</p>
               <p className={formStyles.label}>Gender</p>
               <p>{player.gender}</p>
+              <p className={formStyles.label}>Age</p>
+              <p>{player.age}</p>
+              <p className={formStyles.label}>City</p>
+              <p>{player.city}</p>
+              <p className={formStyles.label}>Description</p>
+              <p>{player.description}</p>
             </div>
             <div className={styles.button_container}>
-              <button className={buttonStyles.primary_button}>
-                Send message
-              </button>
+              <button className={buttonStyles.primary_button}>Message</button>
             </div>
           </div>
           {/* <div className={styles.profile_card}>

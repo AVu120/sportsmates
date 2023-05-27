@@ -2,24 +2,10 @@ import Link from "next/link";
 
 import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { player } from "@/types/player";
+import { months } from "@/utils/constants/dates";
+import { formatLastSignInDate } from "@/utils/player";
 
 import styles from "./PlayersList.module.scss";
-
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "June",
-  "July",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
 interface ComponentProps {
   players: player[];
   isLoading: boolean;
@@ -45,11 +31,7 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
           description,
           id,
         }) => {
-          //@ts-ignore
-          const lastSignInDate = lastSignIn ? new Date(lastSignIn) : new Date();
-          const formattedLastSignInDate = `${lastSignInDate.getDate()} ${
-            months[lastSignInDate.getMonth()]
-          } ${lastSignInDate.getFullYear()}`;
+          const formattedLastSignInDate = formatLastSignInDate(lastSignIn);
           return (
             <Link href={`/players/${id}`} key={id}>
               <div className={styles.card}>

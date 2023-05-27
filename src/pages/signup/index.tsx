@@ -54,9 +54,9 @@ const SignUp = () => {
   return (
     <>
       <Head>
-        <title>Sign up - Cricket Buddy</title>
+        <title>Sign up - Sportsmates</title>
 
-        <meta name="description" content="Find a cricket buddy near you" />
+        <meta name="description" content="Find a sports mate near you" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -66,13 +66,13 @@ const SignUp = () => {
         <main className={styles.main}>
           {hasSignedUp ? (
             <p style={{ wordWrap: "break-word", width: "360px" }}>
-              We are happy you signed up for Cricket Buddy! To start finding
-              other players and meetups, please verify your email by clicking
-              the link in the email we just sent to you!
+              We are happy you signed up for Sportsmates! To start finding other
+              players and meetups, please verify your email by clicking the link
+              in the email we just sent to you!
             </p>
           ) : (
             <EmailPasswordForm
-              title="Sign up to Cricket Buddy"
+              title="Sign up to Sportsmates"
               onClickSubmitButton={onClickSubmitButton}
               page="signup"
             />

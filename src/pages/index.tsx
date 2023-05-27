@@ -43,9 +43,9 @@ const Players = () => {
   return (
     <>
       <Head>
-        <title>Cricket Buddy</title>
+        <title>Sportsmates</title>
 
-        <meta name="description" content="Find a cricket buddy near you" />
+        <meta name="description" content="Find a sports mate near you" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

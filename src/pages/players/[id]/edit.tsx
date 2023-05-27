@@ -128,9 +128,9 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
     return (
       <>
         <Head>
-          <title>Cricket Buddy - Meetups</title>
+          <title>Sportsmates - Meetups</title>
 
-          <meta name="description" content="Find a cricket buddy near you" />
+          <meta name="description" content="Find a sports mate near you" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -147,9 +147,9 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   return (
     <>
       <Head>
-        <title>Cricket Buddy - Edit Player</title>
+        <title>Sportsmates - Edit Player</title>
 
-        <meta name="description" content="Find a cricket buddy near you" />
+        <meta name="description" content="Find a sports mate near you" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

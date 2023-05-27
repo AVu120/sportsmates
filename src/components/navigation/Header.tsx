@@ -55,8 +55,7 @@ export const Header = ({ page, user, firstName }: ComponentProps) => {
           <div className={`${logoStyles.logo} ${buttonStyles.link_button}`}>
             <Image src="/logo.png" width={25} height={25} alt="" />{" "}
             <div>
-              <p>Cricket </p>
-              <p>Buddy</p>
+              <p>Sportsmates </p>
             </div>
           </div>
         </Link>

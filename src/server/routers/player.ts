@@ -64,7 +64,7 @@ export const playerRouter = router({
         if (error || user?.id !== supabaseId)
           throw new Error("You are not authorized to do this.");
 
-        const latestPlayer = await prisma.player.findFirst({
+        const latestPlayer = await prisma.player.findUnique({
           where: {
             supabaseId,
           },
@@ -79,7 +79,7 @@ export const playerRouter = router({
       })
     )
     .query(async ({ input }) => {
-      const latestPlayer = await prisma.player.findFirst({
+      const latestPlayer = await prisma.player.findUnique({
         select: {
           supabaseId: true,
           firstName: true,
@@ -103,7 +103,7 @@ export const playerRouter = router({
         skillLevel: latestPlayer?.skillLevel,
         gender: latestPlayer?.gender,
         //@ts-ignore
-        birthday: calculateAge(latestPlayer?.birthday as string),
+        age: calculateAge(latestPlayer?.birthday as string),
         city: latestPlayer?.city,
         description: latestPlayer?.description,
         lastSignIn: latestPlayer?.lastSignIn,

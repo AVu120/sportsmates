@@ -6,9 +6,11 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import superjson from "superjson";
 
+import buttonStyles from "@/_styles/_buttons.module.scss";
 import formStyles from "@/_styles/_forms.module.scss";
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
+import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { player } from "@/types/player";
@@ -19,12 +21,11 @@ import styles from "./_index.module.scss";
 // const { id } = router.query;
 
 interface ComponentProps {
-  player: player;
+  player: Omit<player, "birthday"> & { age: number };
   user: User | null;
 }
 
 const ProfilePage = ({ user, player }: ComponentProps) => {
-  console.log({ user, player });
   return (
     <>
       <Head>
@@ -37,11 +38,28 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
       <div className={styles.page}>
         <Header page="profile" user={user} />
         <main className={styles.main}>
-          <h1>{`${player.firstName} ${player.lastName}`}</h1>
-          <p className={formStyles.label}>Skill Level</p>
-          <p>{player.skillLevel}</p>
-          <p className={formStyles.label}>Gender</p>
-          <p>{player.gender}</p>
+          {/* <div className={styles.profile_cards_container}> */}
+          <div className={styles.profile_card}>
+            <div>
+              <h1>{`${player.firstName} ${player.lastName}`}</h1>
+              <div className={styles.profile_picture_container}>
+                <ProfilePicture height="200px" />
+              </div>
+              <p className={formStyles.label}>Skill Level</p>
+              <p>{player.skillLevel}</p>
+              <p className={formStyles.label}>Gender</p>
+              <p>{player.gender}</p>
+            </div>
+            <div className={styles.button_container}>
+              <button className={buttonStyles.primary_button}>
+                Send message
+              </button>
+            </div>
+          </div>
+          {/* <div className={styles.profile_card}>
+              <p>Send them a message</p>
+            </div> */}
+          {/* </div> */}
         </main>
         <Footer />
       </div>

@@ -9,26 +9,44 @@ import { Input } from "@/components/form/Input";
 
 import styles from "./SendMessage.module.scss";
 
-export const SendMessageModal = () => (
-  <Dialog.Root>
-    <Dialog.Trigger asChild>
-      <button className={buttonStyles.primary_button}>Message</button>
-    </Dialog.Trigger>
+interface ComponentProps {
+  open: boolean;
+  onClose: () => void;
+  onSend: () => void;
+}
+
+export const SendMessageModal = ({ open, onClose, onSend }: ComponentProps) => (
+  <Dialog.Root open={open}>
     <Dialog.Portal>
       <Dialog.Overlay className={styles.DialogOverlay} />
-      <Dialog.Content className={styles.DialogContent}>
+      <Dialog.Content
+        className={styles.DialogContent}
+        onPointerDownOutside={onClose}
+        onInteractOutside={onClose}
+      >
         <Dialog.Title className={styles.DialogTitle}>Send Message</Dialog.Title>
-        <Form.Root>
+        <Form.Root onSubmit={onSend}>
           <Input isRequired type="textarea" name="message" />
+          <div
+            style={{
+              display: "flex",
+              marginTop: 25,
+              justifyContent: "flex-end",
+            }}
+          >
+            <Form.Submit>
+              <button className={buttonStyles.primary_button} type="submit">
+                Send
+              </button>
+            </Form.Submit>
+          </div>
         </Form.Root>
-        <div
-          style={{ display: "flex", marginTop: 25, justifyContent: "flex-end" }}
+
+        <button
+          className={styles.IconButton}
+          aria-label="Close"
+          onClick={onClose}
         >
-          <button className={buttonStyles.primary_button} onClick={() => {}}>
-            Send
-          </button>
-        </div>
-        <button className={styles.IconButton} aria-label="Close">
           <Cross2Icon />
         </button>
       </Dialog.Content>

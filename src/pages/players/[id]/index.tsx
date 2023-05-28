@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
@@ -24,6 +25,11 @@ interface ComponentProps {
 
 const ProfilePage = ({ user, player }: ComponentProps) => {
   const formattedLastSignInDate = formatLastSignInDate(player.lastSignIn);
+  const [isSendMessageModalOpen, setIsSendMessageModalOpen] = useState(false);
+
+  const toggleIsSendMessageModalOpen = () =>
+    setIsSendMessageModalOpen(!isSendMessageModalOpen);
+
   return (
     <>
       <Head>
@@ -48,7 +54,15 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <h1>{`${player.firstName} ${player.lastName}`}</h1>
                 <div className={styles.button_container}>
-                  <SendMessageModal />
+                  <button
+                    className={buttonStyles.primary_button}
+                    onClick={() => {
+                      if (!user) return alert("Please login to send a message");
+                      toggleIsSendMessageModalOpen();
+                    }}
+                  >
+                    Message
+                  </button>
                 </div>
               </div>
               <div className={styles.profile_picture_container}>
@@ -84,6 +98,11 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
           </div>
         </main>
         <Footer />
+        <SendMessageModal
+          open={isSendMessageModalOpen}
+          onClose={toggleIsSendMessageModalOpen}
+          onSend={toggleIsSendMessageModalOpen}
+        />
       </div>
     </>
   );

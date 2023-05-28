@@ -3,6 +3,7 @@
  * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
  */
 import { Prisma } from "@prisma/client";
+import sgMail from "@sendgrid/mail";
 import { z } from "zod";
 
 import { supabase } from "@/services/authentication";
@@ -293,5 +294,36 @@ export const playerRouter = router({
       SET "lastSignIn" = ${lastSignIn}
       WHERE "email" = ${email};`;
       return input;
+    }),
+  sendEmail: procedure
+    .input(
+      z.object({
+        // toEmail: z.string().email(),
+        // fromEmail: z.string().email(),
+        // fromName: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // @ts-ignore
+      if (!ctx.user)
+        throw new Error("You must be logged in to send a message.");
+
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
+      const msg = {
+        to: "avu120@gmail.com", // Change to your recipient
+        from: "info@sportsmates.net", // Change to your verified sender
+        subject: `Anthony has messaged you from Sportsmates!`,
+        text: "and easy to do anywhere, even with Node.js",
+        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+      };
+      sgMail
+        .send(msg)
+        .then(() => {
+          return { response: { status: 200, message: "Email sent!" } };
+        })
+        .catch((error) => {
+          console.error(error);
+          throw new Error(error.message);
+        });
     }),
 });

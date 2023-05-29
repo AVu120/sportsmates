@@ -298,9 +298,9 @@ export const playerRouter = router({
   sendEmail: procedure
     .input(
       z.object({
-        // toEmail: z.string().email(),
-        // fromEmail: z.string().email(),
-        // fromName: z.string(),
+        supabaseId: z.string().uuid(),
+        fromName: z.string(),
+        message: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -308,22 +308,35 @@ export const playerRouter = router({
       if (!ctx.user)
         throw new Error("You must be logged in to send a message.");
 
+      const { supabaseId, fromName, message } = input;
+
       sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
+
+      const emailResponse = await prisma.player.findUnique({
+        select: {
+          email: true,
+        },
+        where: {
+          supabaseId: supabaseId,
+        },
+      });
+
+      // Basically will never run but I want to keep TS happy.
+      if (!emailResponse?.email)
+        throw new Error("This user has not provided an email.");
+
+      const { email } = emailResponse;
+
       const msg = {
-        to: "avu120@gmail.com", // Change to your recipient
+        to: email, // Change to your recipient
         from: "info@sportsmates.net", // Change to your verified sender
-        subject: `Anthony has messaged you from Sportsmates!`,
-        text: "and easy to do anywhere, even with Node.js",
-        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+        subject: `${fromName} has messaged you from Sportsmates!`,
+        text: message,
+        html: `<strong>${message}</strong>`,
       };
-      sgMail
-        .send(msg)
-        .then(() => {
-          return { response: { status: 200, message: "Email sent!" } };
-        })
-        .catch((error) => {
-          console.error(error);
-          throw new Error(error.message);
-        });
+      sgMail.send(msg).catch((error) => {
+        console.error(error);
+        throw new Error(error.message);
+      });
     }),
 });

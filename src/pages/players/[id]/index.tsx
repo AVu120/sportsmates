@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import superjson from "superjson";
 
 import buttonStyles from "@/_styles/_buttons.module.scss";
@@ -15,6 +16,7 @@ import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { player } from "@/types/player";
 import { formatLastSignInDate } from "@/utils/player";
+import { trpc } from "@/utils/trpc";
 
 import styles from "./_index.module.scss";
 
@@ -24,11 +26,42 @@ interface ComponentProps {
 }
 
 const ProfilePage = ({ user, player }: ComponentProps) => {
+  const router = useRouter();
+  const { id } = router.query;
   const formattedLastSignInDate = formatLastSignInDate(player.lastSignIn);
   const [isSendMessageModalOpen, setIsSendMessageModalOpen] = useState(false);
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
 
   const toggleIsSendMessageModalOpen = () =>
     setIsSendMessageModalOpen(!isSendMessageModalOpen);
+
+  const sendEmail = trpc.player.sendEmail.useMutation({
+    async onSuccess() {
+      alert("Message sent!");
+      toggleIsSendMessageModalOpen();
+    },
+
+    async onSettled() {
+      setIsSendingMessage(false);
+    },
+  });
+
+  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+    setIsSendingMessage(true);
+    const formData = Object.fromEntries(new FormData(e.currentTarget));
+    const { message } = formData;
+    try {
+      if (id && typeof id === "string") {
+        await sendEmail.mutateAsync({
+          supabaseId: id,
+          fromName: `${player.firstName} ${player.lastName}`,
+          message: message as string,
+        });
+      }
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
+  };
 
   return (
     <>
@@ -101,7 +134,9 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
         <SendMessageModal
           open={isSendMessageModalOpen}
           onClose={toggleIsSendMessageModalOpen}
-          onSend={toggleIsSendMessageModalOpen}
+          onSend={sendMessage}
+          name="message"
+          isSendingMessage={isSendingMessage}
         />
       </div>
     </>

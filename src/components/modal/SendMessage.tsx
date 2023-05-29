@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -12,10 +12,18 @@ import styles from "./SendMessage.module.scss";
 interface ComponentProps {
   open: boolean;
   onClose: () => void;
-  onSend: () => void;
+  onSend: (e: FormEvent<HTMLFormElement>) => void;
+  name: string;
+  isSendingMessage: boolean;
 }
 
-export const SendMessageModal = ({ open, onClose, onSend }: ComponentProps) => (
+export const SendMessageModal = ({
+  open,
+  onClose,
+  onSend,
+  name,
+  isSendingMessage,
+}: ComponentProps) => (
   <Dialog.Root open={open}>
     <Dialog.Portal>
       <Dialog.Overlay className={styles.DialogOverlay} />
@@ -25,8 +33,13 @@ export const SendMessageModal = ({ open, onClose, onSend }: ComponentProps) => (
         onInteractOutside={onClose}
       >
         <Dialog.Title className={styles.DialogTitle}>Send Message</Dialog.Title>
-        <Form.Root onSubmit={onSend}>
-          <Input isRequired type="textarea" name="message" />
+        <Form.Root
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSend(e);
+          }}
+        >
+          <Input isRequired type="textarea" name={name} />
           <div
             style={{
               display: "flex",
@@ -35,9 +48,22 @@ export const SendMessageModal = ({ open, onClose, onSend }: ComponentProps) => (
             }}
           >
             <Form.Submit>
-              <button className={buttonStyles.primary_button} type="submit">
-                Send
-              </button>
+              <div className={buttonStyles.button_group}>
+                <button
+                  className={buttonStyles.secondary_button}
+                  disabled={isSendingMessage}
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+                <button
+                  className={buttonStyles.primary_button}
+                  type="submit"
+                  disabled={isSendingMessage}
+                >
+                  {isSendingMessage ? "Sending..." : "Send"}
+                </button>
+              </div>
             </Form.Submit>
           </div>
         </Form.Root>

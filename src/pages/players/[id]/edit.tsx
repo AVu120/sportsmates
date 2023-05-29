@@ -163,7 +163,19 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
               players or attend meetups.
             </p>
           )}
-          <ProfilePicture height="200px" />
+          <input
+            accept="image/*"
+            id="upload-profile-picture-button"
+            type="file"
+            style={{ display: "none" }}
+            onChange={(e) => console.log(e)}
+          />
+          <label
+            htmlFor="upload-profile-picture-button"
+            style={{ cursor: "pointer" }}
+          >
+            <ProfilePicture height="200px" canUpload />
+          </label>
           <Form.Root
             onChange={toggleHasMadeChanges}
             className={`${formStyles.form_root} ${styles.form_root}`}

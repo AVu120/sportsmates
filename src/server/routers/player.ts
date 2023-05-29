@@ -335,16 +335,18 @@ export const playerRouter = router({
         text: message,
         html: `<strong>${message}</strong>`,
       };
-      sgMail
-        .send(msg)
-        .then(() =>
-          console.log(
-            `Email sent from supabaseIds: ${fromSupabaseId} to ${supabaseId}`
+      await new Promise((resolve) => {
+        sgMail
+          .send(msg)
+          .then(() =>
+            console.log(
+              `Email sent from supabaseIds: ${fromSupabaseId} to ${supabaseId}`
+            )
           )
-        )
-        .catch((error) => {
-          console.error(error);
-          throw new Error(error.message);
-        });
+          .catch((error) => {
+            console.error(error);
+          })
+          .finally(() => resolve(true));
+      });
     }),
 });

@@ -51,8 +51,9 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
     const formData = Object.fromEntries(new FormData(e.currentTarget));
     const { message } = formData;
     try {
-      if (id && typeof id === "string") {
+      if (id && typeof id === "string" && user) {
         await sendEmail.mutateAsync({
+          fromSupabaseId: user?.id,
           supabaseId: id,
           fromName: `${player.firstName} ${player.lastName}`,
           message: message as string,

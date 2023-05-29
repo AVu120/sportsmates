@@ -298,6 +298,7 @@ export const playerRouter = router({
   sendEmail: procedure
     .input(
       z.object({
+        fromSupabaseId: z.string().uuid(),
         supabaseId: z.string().uuid(),
         fromName: z.string(),
         message: z.string(),
@@ -308,7 +309,7 @@ export const playerRouter = router({
       if (!ctx.user)
         throw new Error("You must be logged in to send a message.");
 
-      const { supabaseId, fromName, message } = input;
+      const { supabaseId, fromName, message, fromSupabaseId } = input;
 
       sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
@@ -334,9 +335,16 @@ export const playerRouter = router({
         text: message,
         html: `<strong>${message}</strong>`,
       };
-      sgMail.send(msg).catch((error) => {
-        console.error(error);
-        throw new Error(error.message);
-      });
+      sgMail
+        .send(msg)
+        .then(() =>
+          console.log(
+            `Email sent from supabaseIds: ${fromSupabaseId} to ${supabaseId}`
+          )
+        )
+        .catch((error) => {
+          console.error(error);
+          throw new Error(error.message);
+        });
     }),
 });

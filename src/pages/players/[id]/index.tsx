@@ -60,7 +60,8 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
         });
       }
     } catch (error) {
-      alert(JSON.stringify(error));
+      // @ts-ignore
+      alert(`Failed to send message: ${error?.shape?.message}`);
     }
   };
 

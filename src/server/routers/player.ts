@@ -4,6 +4,7 @@
  */
 import { Prisma } from "@prisma/client";
 import sgMail from "@sendgrid/mail";
+// import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
 
 import { supabase } from "@/services/authentication";
@@ -351,4 +352,21 @@ export const playerRouter = router({
           });
       });
     }),
+  // uploadProfilePicture: procedure
+  //   .input(
+  //     z.object({
+  //       supabaseId: z.string().uuid(),
+  //       file: z.instanceof(File),
+  //     })
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     const { supabaseId, file } = input;
+  //     // @ts-ignore
+  //     secureApi(ctx.user?.id, supabaseId);
+
+  //     cloudinary.uploader
+  //       .upload(file)
+  //       .then((response) => console.log({ response }))
+  //       .catch((error) => console.error({ error }));
+  //   }),
 });

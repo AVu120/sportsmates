@@ -124,6 +124,32 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
     }
   };
 
+  const uploadProfilePicture = async (e: ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+    if (e?.target?.files?.[0] === undefined) return alert("No file selected");
+    formData.append("file", e.target.files[0]);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_UNSIGNED_UPLOAD_PRESET || ""
+    );
+    formData.append("public_id", `${user?.id}-profile-picture`);
+    const requestOptions = {
+      method: "POST",
+      body: formData,
+    };
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        requestOptions
+      );
+      console.log("RUN");
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (!isAllowedToEdit)
     return (
       <>
@@ -163,19 +189,12 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
               players or attend meetups.
             </p>
           )}
-          <input
-            accept="image/*"
-            id="upload-profile-picture-button"
-            type="file"
-            style={{ display: "none" }}
-            onChange={(e) => console.log(e)}
+
+          <ProfilePicture
+            height="200px"
+            canUpload
+            onChange={uploadProfilePicture}
           />
-          <label
-            htmlFor="upload-profile-picture-button"
-            style={{ cursor: "pointer" }}
-          >
-            <ProfilePicture height="200px" canUpload />
-          </label>
           <Form.Root
             onChange={toggleHasMadeChanges}
             className={`${formStyles.form_root} ${styles.form_root}`}

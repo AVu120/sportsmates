@@ -8,12 +8,14 @@ interface ComponentProps {
   height?: any;
   canUpload?: boolean;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  isUploading?: boolean;
 }
 
 export const ProfilePicture = ({
   height,
   canUpload,
   onChange,
+  isUploading,
 }: ComponentProps) => {
   if (canUpload)
     return (
@@ -37,9 +39,11 @@ export const ProfilePicture = ({
               // src="https://media.licdn.com/dms/image/D5603AQECPv6Ob-MP4g/profile-displayphoto-shrink_800_800/0/1666912345281?e=1689811200&v=beta&t=RUlU5Dt7y_7Nfs_t6e6Get3BiaCI6TS-s7mOog1cvMs"
               alt="Profile picture"
             />
+            {isUploading && <p>Uploading...</p>}
             <Avatar.Fallback className={styles.AvatarFallback}>
               AV
             </Avatar.Fallback>
+
             <div className={styles.upload_icon_container}>
               <UploadIcon className={styles.upload_icon} />
             </div>

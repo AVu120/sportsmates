@@ -64,6 +64,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const { id } = router.query;
   const isAllowedToEdit = user?.id && user?.id === id;
   const [hasMadeChanges, setHasMadeChanges] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const updatePlayer = trpc.player.update.useMutation({
     async onSuccess() {
@@ -129,29 +130,28 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const onUploadProfilePicture = (e: ChangeEvent<HTMLInputElement>) => {
     // const formData = new FormData();
     if (e?.target?.files?.[0] === undefined) return alert("No file selected");
+    setIsUploading(true);
     let reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
 
     reader.onload = async () => {
       try {
         if (user?.id) {
-          console.log("RUN");
-
-          const response = await uploadProfilePicture.mutateAsync({
+          await uploadProfilePicture.mutateAsync({
             supabaseId: user?.id,
             //@ts-ignore
             file: reader.result,
           });
-
-          console.log(response);
-          // const data = await response.json();
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsUploading(false);
       }
     };
 
     reader.onerror = (error) => {
+      setIsUploading(false);
       console.error(error);
     };
   };
@@ -200,6 +200,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
             height="200px"
             canUpload
             onChange={onUploadProfilePicture}
+            isUploading={isUploading}
           />
           <Form.Root
             onChange={toggleHasMadeChanges}

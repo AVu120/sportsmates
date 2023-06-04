@@ -65,6 +65,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const isAllowedToEdit = user?.id && user?.id === id;
   const [hasMadeChanges, setHasMadeChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [profilePicturePublicId, setProfilePicturePublicId] = useState("");
 
   const updatePlayer = trpc.player.update.useMutation({
     async onSuccess() {
@@ -130,20 +131,29 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const onUploadProfilePicture = (e: ChangeEvent<HTMLInputElement>) => {
     // const formData = new FormData();
     if (e?.target?.files?.[0] === undefined) return alert("No file selected");
+    const fileSize = e.target.files[0].size;
+    const fileSizeInMB = (fileSize / 1000000).toFixed(2);
+    if (fileSize > 1000000)
+      return alert(
+        `This image is roughly ${fileSizeInMB} MB. You can only upload an image < 1 MB.`
+      );
     setIsUploading(true);
     let reader = new FileReader();
+    console.log({ "File size": e.target.files[0].size });
     reader.readAsDataURL(e.target.files[0]);
 
     reader.onload = async () => {
       try {
         if (user?.id) {
-          await uploadProfilePicture.mutateAsync({
+          const publicId: string = await uploadProfilePicture.mutateAsync({
             supabaseId: user?.id,
             //@ts-ignore
             file: reader.result,
           });
+          setProfilePicturePublicId(publicId);
         }
       } catch (error) {
+        alert(error);
         console.error(error);
       } finally {
         setIsUploading(false);
@@ -197,10 +207,10 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
           )}
 
           <ProfilePicture
-            height="200px"
             canUpload
             onChange={onUploadProfilePicture}
             isUploading={isUploading}
+            publicId={profilePicturePublicId}
           />
           <Form.Root
             onChange={toggleHasMadeChanges}

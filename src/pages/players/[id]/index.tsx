@@ -101,7 +101,7 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
                 </div>
               </div>
               <div className={styles.profile_picture_container}>
-                <ProfilePicture height="200px" />
+                <ProfilePicture />
               </div>
               {player.lastSignIn && (
                 <div>

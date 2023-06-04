@@ -37,7 +37,7 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
               <div className={styles.card}>
                 <div className={styles.top_row_info}>
                   <div style={{ display: "flex" }}>
-                    <ProfilePicture height="75px" />
+                    <ProfilePicture />
                     <div className={styles.name_skillLevel_gender_age}>
                       <p
                         style={{ fontWeight: "bold" }}

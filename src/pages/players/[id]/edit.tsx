@@ -132,10 +132,10 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
     // const formData = new FormData();
     if (e?.target?.files?.[0] === undefined) return alert("No file selected");
     const fileSize = e.target.files[0].size;
-    const fileSizeInMB = (fileSize / 1000000).toFixed(2);
-    if (fileSize > 1000000)
+    const fileSizeInMB = (fileSize / 4000000).toFixed(2);
+    if (fileSize > 4000000)
       return alert(
-        `This image is roughly ${fileSizeInMB} MB. You can only upload an image < 1 MB.`
+        `This image is roughly ${fileSizeInMB} MB. You can only upload an image < 4 MB.`
       );
     setIsUploading(true);
     let reader = new FileReader();
@@ -150,6 +150,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
             //@ts-ignore
             file: reader.result,
           });
+          console.log({ publicId });
           setProfilePicturePublicId(publicId);
         }
       } catch (error) {

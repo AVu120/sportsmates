@@ -4,7 +4,7 @@
  */
 import { Prisma } from "@prisma/client";
 import sgMail from "@sendgrid/mail";
-// import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
 
 import { supabase } from "@/services/authentication";
@@ -352,21 +352,66 @@ export const playerRouter = router({
           });
       });
     }),
-  // uploadProfilePicture: procedure
-  //   .input(
-  //     z.object({
-  //       supabaseId: z.string().uuid(),
-  //       file: z.instanceof(File),
-  //     })
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     const { supabaseId, file } = input;
-  //     // @ts-ignore
-  //     secureApi(ctx.user?.id, supabaseId);
+  uploadProfilePicture: procedure
+    .input(
+      z.object({
+        supabaseId: z.string().uuid(),
+        // @ts-ignore
+        file: z.custom<File>(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { supabaseId, file } = input;
+      console.log({ file });
+      // @ts-ignore
+      secureApi(ctx.user?.id, supabaseId);
 
-  //     cloudinary.uploader
-  //       .upload(file)
-  //       .then((response) => console.log({ response }))
-  //       .catch((error) => console.error({ error }));
-  //   }),
+      // Use the uploaded file's name as the asset's public ID and
+      // allow overwriting the asset with new versions
+      // const options = {
+      //   upload_preset: process.env.SIGNED_UPLOAD_PRESET,
+      //   public_id: `${supabaseId}-profile-picture`,
+      // };
+
+      const timestamp = Math.round(new Date().getTime() / 1000);
+      const signature = cloudinary.utils.api_sign_request(
+        {
+          timestamp: timestamp,
+          public_id: `${supabaseId}-profile-picture`,
+          folder: process.env.IMAGE_FOLDER || "",
+          upload_preset: process.env.SIGNED_UPLOAD_PRESET || "",
+        },
+        process.env.CLOUDINARY_API_SECRET || ""
+      );
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("public_id", `${supabaseId}-profile-picture`);
+      formData.append("api_key", process.env.CLOUDINARY_API_KEY || "");
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", process.env.IMAGE_FOLDER || "");
+      formData.append("upload_preset", process.env.SIGNED_UPLOAD_PRESET || "");
+
+      const requestOptions = {
+        method: "POST",
+        body: formData,
+      };
+      try {
+        // Upload the image
+        // @ts-ignore
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+          requestOptions
+        );
+        // const result = await cloudinary.uploader.upload_stream(file, options);
+        console.log("RAN");
+        const data = await response.json();
+        console.log(data);
+        return response;
+      } catch (error) {
+        console.log("ERROR");
+        console.error(error);
+      }
+    }),
 });

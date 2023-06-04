@@ -79,6 +79,8 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
     },
   });
 
+  const uploadProfilePicture = trpc.player.uploadProfilePicture.useMutation({});
+
   const isSaveButtonDisabled = !hasMadeChanges || updatePlayer.isLoading;
   const toggleHasMadeChanges = () => {
     if (!hasMadeChanges) {
@@ -124,30 +126,34 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
     }
   };
 
-  const uploadProfilePicture = async (e: ChangeEvent<HTMLInputElement>) => {
-    const formData = new FormData();
+  const onUploadProfilePicture = (e: ChangeEvent<HTMLInputElement>) => {
+    // const formData = new FormData();
     if (e?.target?.files?.[0] === undefined) return alert("No file selected");
-    formData.append("file", e.target.files[0]);
-    formData.append(
-      "upload_preset",
-      process.env.NEXT_PUBLIC_UNSIGNED_UPLOAD_PRESET || ""
-    );
-    formData.append("public_id", `${user?.id}-profile-picture`);
-    const requestOptions = {
-      method: "POST",
-      body: formData,
+    let reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+
+    reader.onload = async () => {
+      try {
+        if (user?.id) {
+          console.log("RUN");
+
+          const response = await uploadProfilePicture.mutateAsync({
+            supabaseId: user?.id,
+            //@ts-ignore
+            file: reader.result,
+          });
+
+          console.log(response);
+          // const data = await response.json();
+        }
+      } catch (error) {
+        console.error(error);
+      }
     };
-    try {
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-        requestOptions
-      );
-      console.log("RUN");
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
+
+    reader.onerror = (error) => {
       console.error(error);
-    }
+    };
   };
 
   if (!isAllowedToEdit)
@@ -193,7 +199,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
           <ProfilePicture
             height="200px"
             canUpload
-            onChange={uploadProfilePicture}
+            onChange={onUploadProfilePicture}
           />
           <Form.Root
             onChange={toggleHasMadeChanges}

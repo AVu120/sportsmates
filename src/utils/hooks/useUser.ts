@@ -38,6 +38,7 @@ const useUser = () => {
         document.cookie = `my-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
         setUser(null);
         setToken(null);
+        window.localStorage.removeItem("userFirstName");
       } else if (
         (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") &&
         session?.access_token

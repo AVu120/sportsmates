@@ -65,7 +65,10 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const isAllowedToEdit = user?.id && user?.id === id;
   const [hasMadeChanges, setHasMadeChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [profilePicturePublicId, setProfilePicturePublicId] = useState("");
+  const [profilePicturePublicId, setProfilePicturePublicId] = useState({
+    public_id: "",
+    version: NaN,
+  });
 
   const updatePlayer = trpc.player.update.useMutation({
     async onSuccess() {
@@ -145,13 +148,14 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
     reader.onload = async () => {
       try {
         if (user?.id) {
-          const publicId: string = await uploadProfilePicture.mutateAsync({
-            supabaseId: user?.id,
-            //@ts-ignore
-            file: reader.result,
-          });
-          console.log({ publicId });
-          setProfilePicturePublicId(publicId);
+          const { public_id, version } = await uploadProfilePicture.mutateAsync(
+            {
+              supabaseId: user?.id,
+              //@ts-ignore
+              file: reader.result,
+            }
+          );
+          setProfilePicturePublicId({ public_id, version });
         }
       } catch (error) {
         alert(error);
@@ -211,7 +215,13 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
             canUpload
             onChange={onUploadProfilePicture}
             isUploading={isUploading}
-            publicId={profilePicturePublicId}
+            // publicId={profilePicturePublicId.public_id}
+            // version={profilePicturePublicId.version}
+            publicId={
+              "dev/b780ea0e-4c34-450e-8f41-8b0761786d90-profile-picture"
+            }
+            version={1685916182}
+            height={200}
           />
           <Form.Root
             onChange={toggleHasMadeChanges}

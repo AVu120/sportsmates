@@ -10,6 +10,8 @@ interface ComponentProps {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   isUploading?: boolean;
   publicId?: string;
+  version?: number;
+  height?: number;
 }
 
 export const ProfilePicture = ({
@@ -17,6 +19,8 @@ export const ProfilePicture = ({
   onChange,
   isUploading,
   publicId,
+  version,
+  height,
 }: ComponentProps) => {
   if (canUpload)
     return (
@@ -36,9 +40,10 @@ export const ProfilePicture = ({
             {isUploading && <p>Uploading...</p>}
             {publicId ? (
               <CldImage
+                version={version}
                 className={styles.AvatarImage}
-                width={75}
-                height={75}
+                width={height || 75}
+                height={height || 75}
                 src={publicId}
                 alt="profile picture"
               />
@@ -62,8 +67,8 @@ export const ProfilePicture = ({
         {publicId ? (
           <CldImage
             className={styles.AvatarImage}
-            width={75}
-            height={75}
+            width={height || 75}
+            height={height || 75}
             src={publicId}
             alt="profile picture"
           />

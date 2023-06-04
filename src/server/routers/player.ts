@@ -407,8 +407,8 @@ export const playerRouter = router({
         // const result = await cloudinary.uploader.upload_stream(file, options);
         console.log("RAN");
         const data = await response.json();
-        console.log({ data });
-        return data.public_id;
+        const { public_id, version } = data;
+        return { public_id, version } as { public_id: string; version: number };
       } catch (error) {
         console.log("ERROR");
         console.error(error);

@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import * as Tabs from "@radix-ui/react-tabs";
 import { User } from "@supabase/supabase-js";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { GetServerSideProps } from "next";
@@ -43,6 +44,9 @@ interface FormFields {
   latitude?: number;
 }
 
+const PROFILE_INFO = "profile info";
+const YOUR_SPORTS = "your sports";
+
 // Every field is required.
 const EditProfilePage = ({ player, user }: ComponentProps) => {
   // Save local state of player data so that if first name changes,
@@ -69,6 +73,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const [profilePictureUrl, setProfilePictureUrl] = useState(
     player?.profilePictureUrl || ""
   );
+  const [selectedTab, setSelectedTab] = useState(PROFILE_INFO);
 
   const initials = getInitials(player?.firstName || "", player?.lastName || "");
 
@@ -207,114 +212,150 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
         <Header page="edit" user={user} />
         <main className={styles.main}>
           <h1 className={styles.title}>Edit your profile</h1>
+
           {hasNotSetUpProfile && (
             <p className={styles.not_set_up_profile_message}>
               You must set up your profile below before you can message other
               players or attend meetups.
             </p>
           )}
-
-          <ProfilePicture
-            canUpload
-            onChange={onUploadProfilePicture}
-            isUploading={isUploading}
-            url={profilePictureUrl}
-            initials={initials}
-          />
-          <Form.Root
-            onChange={toggleHasMadeChanges}
-            className={`${formStyles.form_root} ${styles.form_root}`}
-            onSubmit={onSubmitForm}
-          >
-            <Input
-              label="First name"
-              type="text"
-              name="firstName"
-              isRequired
-              valueMissingText="Please enter your first name"
-              value={player?.firstName || ""}
-            />
-            <Input
-              label="Last name"
-              type="text"
-              name="lastName"
-              isRequired
-              valueMissingText="Please enter your last name"
-              value={player?.lastName || ""}
-            />
-            <SelectField
-              name="skillLevel"
-              label="Skill level"
-              options={[
-                {
-                  label: "Advanced",
-                  value: "Advanced",
-                },
-                { label: "Intermediate", value: "Intermediate" },
-                { label: "Beginner", value: "Beginner" },
-              ]}
-              defaultValue={player?.skillLevel || ""}
-            />
-            <SelectField
-              name="gender"
-              label="Gender"
-              options={[
-                {
-                  label: "Male",
-                  value: "Male",
-                },
-                { label: "Female", value: "Female" },
-              ]}
-              defaultValue={player?.gender || ""}
-            />
-            <DatePicker
-              label="Birthday (write below or click on the calendar)"
-              name="birthday"
-              isRequired
-              //@ts-ignore
-              defaultValue={player?.birthday?.split("T")[0] || ""}
-            />
-            <PlacesAutoComplete
-              name="city"
-              onSelect={({ latitude, longitude, address }) => {
-                setLocation({ latitude, longitude, address });
-                setCity(address);
-              }}
-              options={{
-                types: ["locality"],
-                componentRestrictions: { country: "au" },
-              }}
-              label="City"
-              value={city}
-              onChange={(e) => {
-                setCity(e.target.value);
-                if (!isNaN(location.longitude)) {
-                  setLocation((state) => ({
-                    ...state,
-                    longitude: NaN,
-                    latitude: NaN,
-                  }));
-                }
-              }}
-            />
-            <Input
-              label="Profile Description (what other players will see)"
-              type="textarea"
-              name="description"
-              isRequired
-              valueMissingText="Please enter your profile description"
-              value={player?.description || ""}
-            />
-            <Form.Submit asChild>
-              <button
-                className={buttonStyles.primary_button}
-                style={{ marginTop: 10 }}
-                disabled={isSaveButtonDisabled}
+          <Tabs.Root defaultValue={PROFILE_INFO} style={{ width: "100%" }}>
+            <Tabs.List
+              className={styles.tabs_list}
+              aria-label="Edit your profile"
+            >
+              <Tabs.Trigger
+                className={`${buttonStyles.link_button} ${
+                  selectedTab === PROFILE_INFO &&
+                  buttonStyles.selected_link_button
+                }`}
+                value={PROFILE_INFO}
+                onClick={() => setSelectedTab(PROFILE_INFO)}
               >
-                {updatePlayer.isLoading ? "Saving changes..." : "Save changes"}
-              </button>
-            </Form.Submit>
-          </Form.Root>
+                Profile Info
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                className={`${buttonStyles.link_button} ${
+                  selectedTab === YOUR_SPORTS &&
+                  buttonStyles.selected_link_button
+                }`}
+                value={YOUR_SPORTS}
+                onClick={() => setSelectedTab(YOUR_SPORTS)}
+              >
+                Your Sports
+              </Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value={PROFILE_INFO} className={styles.tab_content}>
+              <Form.Root
+                onChange={toggleHasMadeChanges}
+                className={`${formStyles.form_root} ${styles.form_root}`}
+                onSubmit={onSubmitForm}
+              >
+                <div style={{ textAlign: "center", marginTop: "2rem" }}>
+                  <ProfilePicture
+                    canUpload
+                    onChange={onUploadProfilePicture}
+                    isUploading={isUploading}
+                    url={profilePictureUrl}
+                    initials={initials}
+                  />
+                </div>
+                <Input
+                  label="First name"
+                  type="text"
+                  name="firstName"
+                  isRequired
+                  valueMissingText="Please enter your first name"
+                  value={player?.firstName || ""}
+                />
+                <Input
+                  label="Last name"
+                  type="text"
+                  name="lastName"
+                  isRequired
+                  valueMissingText="Please enter your last name"
+                  value={player?.lastName || ""}
+                />
+                <SelectField
+                  name="skillLevel"
+                  label="Skill level"
+                  options={[
+                    {
+                      label: "Advanced",
+                      value: "Advanced",
+                    },
+                    { label: "Intermediate", value: "Intermediate" },
+                    { label: "Beginner", value: "Beginner" },
+                  ]}
+                  defaultValue={player?.skillLevel || ""}
+                />
+                <SelectField
+                  name="gender"
+                  label="Gender"
+                  options={[
+                    {
+                      label: "Male",
+                      value: "Male",
+                    },
+                    { label: "Female", value: "Female" },
+                  ]}
+                  defaultValue={player?.gender || ""}
+                />
+                <DatePicker
+                  label="Birthday (write below or click on the calendar)"
+                  name="birthday"
+                  isRequired
+                  //@ts-ignore
+                  defaultValue={player?.birthday?.split("T")[0] || ""}
+                />
+                <PlacesAutoComplete
+                  name="city"
+                  onSelect={({ latitude, longitude, address }) => {
+                    setLocation({ latitude, longitude, address });
+                    setCity(address);
+                  }}
+                  options={{
+                    types: ["locality"],
+                    componentRestrictions: { country: "au" },
+                  }}
+                  label="City"
+                  value={city}
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    if (!isNaN(location.longitude)) {
+                      setLocation((state) => ({
+                        ...state,
+                        longitude: NaN,
+                        latitude: NaN,
+                      }));
+                    }
+                  }}
+                />
+                <Input
+                  label="Profile Description (what other players will see)"
+                  type="textarea"
+                  name="description"
+                  isRequired
+                  valueMissingText="Please enter your profile description"
+                  value={player?.description || ""}
+                />
+                <Form.Submit asChild>
+                  <button
+                    className={buttonStyles.primary_button}
+                    style={{ marginTop: 10 }}
+                    disabled={isSaveButtonDisabled}
+                  >
+                    {updatePlayer.isLoading
+                      ? "Saving changes..."
+                      : "Save changes"}
+                  </button>
+                </Form.Submit>
+              </Form.Root>
+            </Tabs.Content>
+            <Tabs.Content value={YOUR_SPORTS} className={styles.tab_content}>
+              BBB
+            </Tabs.Content>
+          </Tabs.Root>
         </main>
         <Footer />
       </div>

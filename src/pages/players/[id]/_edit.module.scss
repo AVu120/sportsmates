@@ -1,4 +1,6 @@
 @use '@/_styles/_basePage.module.scss';
+@use '@/_styles/buttons.module.scss';
+
 
 
 .title {
@@ -17,4 +19,18 @@
 
 .not_set_up_profile_message {
   width: max(260px, 50%);
+}
+
+.tabs_list {
+  display: flex;
+  column-gap: 1rem;
+  justify-content: center;
+}
+
+.tab_content {
+  display: flex;
+  justify-content: center;
+}
+.tab {
+  cursor: pointer;
 }

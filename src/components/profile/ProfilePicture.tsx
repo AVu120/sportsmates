@@ -32,7 +32,9 @@ export const ProfilePicture = ({
         />
         <label
           htmlFor="upload-profile-picture-button"
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+          }}
         >
           <Avatar.Root className={styles.AvatarRoot}>
             {isUploading && <p>Uploading...</p>}
@@ -48,9 +50,7 @@ export const ProfilePicture = ({
               </Avatar.Fallback>
             )}
 
-            <div className={styles.upload_icon_container}>
-              <UploadIcon className={styles.upload_icon} />
-            </div>
+            <UploadIcon className={styles.upload_icon} />
           </Avatar.Root>
         </label>
       </div>

@@ -102,7 +102,10 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
                 </div>
               </div>
               <div className={styles.profile_picture_container}>
-                <ProfilePicture initials={initials} />
+                <ProfilePicture
+                  initials={initials}
+                  url={player?.profilePictureUrl || ""}
+                />
               </div>
               {player.lastSignIn && (
                 <div>

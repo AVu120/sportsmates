@@ -32,47 +32,6 @@ model Player {
   isApproved   Boolean                          @default(false)
   profilePictureUrl  String?                     @unique
   isProfilePictureApproved Boolean              @default(false)
-  Meetup      Meetup[]
-  MeetupAttendee     MeetupAttendee[]
 
   @@index([coordinates], name: "player_coordinates_index", type: Gist)
-}
-
-model Net {
-  id          String                          @id @default(cuid())
-  name        String                          @unique
-  description String?
-  coordinates Unsupported("geography(Point)") @unique
-  address     String                          @unique
-  Meetup     Meetup[]
-
-  @@index([coordinates], name: "net_coordinates_index", type: Gist)
-}
-
-model Meetup {
-  id             String   @id @default(cuid())
-  host           Player   @relation(fields: [hostId], references: [id])
-  hostId         String
-  net            Net      @relation(fields: [netId], references: [id])
-  netId          String
-  startDatetime DateTime @db.Timestamptz(3)
-  endDatetime   DateTime @db.Timestamptz(3)
-  name           String
-  description    String?
-  maxNumberOfAttendees Int
-  MeetupAttendee     MeetupAttendee[]
-
-  @@unique([hostId, netId, startDatetime])
-  @@unique([hostId, netId, endDatetime])
-  @@unique([hostId, netId, startDatetime, endDatetime])
-}
-
-model MeetupAttendee {
-  id             String   @id @default(cuid())
-  player           Player   @relation(fields: [playerId], references: [id])
-  playerId         String
-  meetup            Meetup      @relation(fields: [meetupId], references: [id])
-  meetupId          String
-
-  @@unique([playerId, meetupId])
 }

@@ -32,6 +32,8 @@ model Player {
   isApproved   Boolean                          @default(false)
   profilePictureUrl  String?                     @unique
   isProfilePictureApproved Boolean              @default(false)
+  // Sports that the player plays.
+  sports     String?
   playerSports PlayerSport[]
   @@index([coordinates], name: "player_coordinates_index", type: Gist)
 }

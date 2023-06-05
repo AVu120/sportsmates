@@ -94,6 +94,7 @@ export const playerRouter = router({
           description: true,
           lastSignIn: true,
           profilePictureUrl: true,
+          isProfilePictureApproved: true,
         },
         where: {
           supabaseId: input.supabaseId,
@@ -111,19 +112,14 @@ export const playerRouter = router({
         city: latestPlayer?.city,
         description: latestPlayer?.description,
         lastSignIn: latestPlayer?.lastSignIn,
-        profilePictureUrl: latestPlayer?.profilePictureUrl,
+        profilePictureUrl: latestPlayer?.isProfilePictureApproved
+          ? latestPlayer?.profilePictureUrl
+          : "",
       };
+      console.log({ latestPlayer });
       console.log({ redactedPlayer });
       return redactedPlayer;
     }),
-  getLatest: procedure.query(async ({}) => {
-    const latestPlayer = await prisma.player.findFirst({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return latestPlayer || "No players yet";
-  }),
   list: procedure
     .input(
       z.object({
@@ -183,7 +179,7 @@ export const playerRouter = router({
       }
 
       let players = await prisma.$queryRaw`
-      SELECT "supabaseId" as id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender, "profilePictureUrl"
+      SELECT "supabaseId" as id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender, "profilePictureUrl", "isProfilePictureApproved"
       FROM "Player"
       ${Prisma.raw(whereClause)}
       ${Prisma.raw(sortByClauseOptions[sortBy])}
@@ -195,7 +191,14 @@ export const playerRouter = router({
         const age = calculateAge(player.birthday);
         const { birthday, ...playerWithoutBirthday } = player;
 
-        return { ...playerWithoutBirthday, age };
+        return {
+          ...playerWithoutBirthday,
+          age,
+          // Only show profile picture if it has been approved by admin
+          profilePictureUrl: player?.isProfilePictureApproved
+            ? player?.profilePictureUrl
+            : "",
+        };
       });
 
       return players;

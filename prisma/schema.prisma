@@ -31,6 +31,7 @@ model Player {
   // visible to the public.
   isApproved   Boolean                          @default(false)
   profilePictureUrl  String?                     @unique
+  isProfilePictureApproved Boolean              @default(false)
   Meetup      Meetup[]
   MeetupAttendee     MeetupAttendee[]
 

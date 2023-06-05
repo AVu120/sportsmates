@@ -5,6 +5,7 @@
 import { Prisma } from "@prisma/client";
 import sgMail from "@sendgrid/mail";
 import { v2 as cloudinary } from "cloudinary";
+import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 import { supabase } from "@/services/authentication";
@@ -92,6 +93,7 @@ export const playerRouter = router({
           city: true,
           description: true,
           lastSignIn: true,
+          profilePictureUrl: true,
         },
         where: {
           supabaseId: input.supabaseId,
@@ -109,7 +111,9 @@ export const playerRouter = router({
         city: latestPlayer?.city,
         description: latestPlayer?.description,
         lastSignIn: latestPlayer?.lastSignIn,
+        profilePictureUrl: latestPlayer?.profilePictureUrl,
       };
+      console.log({ redactedPlayer });
       return redactedPlayer;
     }),
   getLatest: procedure.query(async ({}) => {
@@ -179,7 +183,7 @@ export const playerRouter = router({
       }
 
       let players = await prisma.$queryRaw`
-      SELECT "supabaseId" as id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender
+      SELECT "supabaseId" as id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender, "profilePictureUrl"
       FROM "Player"
       ${Prisma.raw(whereClause)}
       ${Prisma.raw(sortByClauseOptions[sortBy])}
@@ -234,6 +238,7 @@ export const playerRouter = router({
             (data) => ["Male", "Female"].includes(data),
             "Not a valid value"
           ),
+        profilePictureUrl: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -251,6 +256,7 @@ export const playerRouter = router({
         longitude,
         latitude,
         gender,
+        profilePictureUrl,
       } = input;
 
       const isUpdatingCoordinates =
@@ -266,7 +272,8 @@ export const playerRouter = router({
               city = ${city},
               description = ${description},
               coordinates = ST_Point(${longitude}, ${latitude}),
-              gender = ${gender}
+              gender = ${gender},
+              "profilePictureUrl" = ${profilePictureUrl}
           WHERE "supabaseId" = ${supabaseId};`;
       else
         await prisma.$queryRaw`
@@ -277,7 +284,8 @@ export const playerRouter = router({
               birthday = ${birthday},
               city = ${city},
               description = ${description},
-              gender = ${gender}
+              gender = ${gender},
+              "profilePictureUrl" = ${profilePictureUrl}
           WHERE "supabaseId" = ${supabaseId};`;
       return input;
     }),
@@ -374,10 +382,11 @@ export const playerRouter = router({
       // };
 
       const timestamp = Math.round(new Date().getTime() / 1000);
+      const uuidValue = uuid();
       const signature = cloudinary.utils.api_sign_request(
         {
           timestamp: timestamp,
-          public_id: `${supabaseId}-profile-picture`,
+          public_id: `${supabaseId}-profile-picture-${uuidValue}`,
           folder: process.env.IMAGE_FOLDER || "",
           upload_preset: process.env.SIGNED_UPLOAD_PRESET || "",
         },
@@ -386,7 +395,10 @@ export const playerRouter = router({
 
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("public_id", `${supabaseId}-profile-picture`);
+      formData.append(
+        "public_id",
+        `${supabaseId}-profile-picture-${uuidValue}`
+      );
       formData.append("api_key", process.env.CLOUDINARY_API_KEY || "");
       formData.append("timestamp", timestamp.toString());
       formData.append("signature", signature);
@@ -404,11 +416,10 @@ export const playerRouter = router({
           `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
           requestOptions
         );
-        // const result = await cloudinary.uploader.upload_stream(file, options);
-        console.log("RAN");
         const data = await response.json();
-        const { public_id, version } = data;
-        return { public_id, version } as { public_id: string; version: number };
+        console.log({ data });
+        const { secure_url } = data;
+        return { secure_url } as { secure_url: string };
       } catch (error) {
         console.log("ERROR");
         console.error(error);

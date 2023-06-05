@@ -9,18 +9,16 @@ interface ComponentProps {
   canUpload?: boolean;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   isUploading?: boolean;
-  publicId?: string;
-  version?: number;
-  height?: number;
+  url?: string;
+  initials: string;
 }
 
 export const ProfilePicture = ({
   canUpload,
   onChange,
   isUploading,
-  publicId,
-  version,
-  height,
+  url,
+  initials,
 }: ComponentProps) => {
   if (canUpload)
     return (
@@ -38,18 +36,15 @@ export const ProfilePicture = ({
         >
           <Avatar.Root className={styles.AvatarRoot}>
             {isUploading && <p>Uploading...</p>}
-            {publicId ? (
-              <CldImage
-                version={version}
+            {url ? (
+              <Avatar.Image
                 className={styles.AvatarImage}
-                width={height || 75}
-                height={height || 75}
-                src={publicId}
-                alt="profile picture"
+                src={url}
+                alt="Profile picture"
               />
             ) : (
               <Avatar.Fallback className={styles.AvatarFallback}>
-                AV
+                {initials}
               </Avatar.Fallback>
             )}
 
@@ -64,17 +59,15 @@ export const ProfilePicture = ({
   return (
     <div>
       <Avatar.Root className={styles.AvatarRoot}>
-        {publicId ? (
-          <CldImage
+        {url ? (
+          <Avatar.Image
             className={styles.AvatarImage}
-            width={height || 75}
-            height={height || 75}
-            src={publicId}
-            alt="profile picture"
+            src={url}
+            alt="Profile picture"
           />
         ) : (
           <Avatar.Fallback className={styles.AvatarFallback}>
-            AV
+            {initials}
           </Avatar.Fallback>
         )}
       </Avatar.Root>

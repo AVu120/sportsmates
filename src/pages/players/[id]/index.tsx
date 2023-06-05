@@ -15,7 +15,7 @@ import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { player } from "@/types/player";
-import { formatLastSignInDate } from "@/utils/player";
+import { formatLastSignInDate, getInitials } from "@/utils/player";
 import { trpc } from "@/utils/trpc";
 
 import styles from "./_index.module.scss";
@@ -31,6 +31,7 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
   const formattedLastSignInDate = formatLastSignInDate(player.lastSignIn);
   const [isSendMessageModalOpen, setIsSendMessageModalOpen] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const initials = getInitials(player?.firstName || "", player?.lastName || "");
 
   const toggleIsSendMessageModalOpen = () =>
     setIsSendMessageModalOpen(!isSendMessageModalOpen);
@@ -101,7 +102,7 @@ const ProfilePage = ({ user, player }: ComponentProps) => {
                 </div>
               </div>
               <div className={styles.profile_picture_container}>
-                <ProfilePicture />
+                <ProfilePicture initials={initials} />
               </div>
               {player.lastSignIn && (
                 <div>

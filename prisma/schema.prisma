@@ -30,6 +30,7 @@ model Player {
   // Whether the player has been approved by an admin to have their profile 
   // visible to the public.
   isApproved   Boolean                          @default(false)
+  profilePictureUrl  String?                     @unique
   Meetup      Meetup[]
   MeetupAttendee     MeetupAttendee[]
 

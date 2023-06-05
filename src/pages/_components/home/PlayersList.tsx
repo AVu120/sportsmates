@@ -2,8 +2,7 @@ import Link from "next/link";
 
 import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { player } from "@/types/player";
-import { months } from "@/utils/constants/dates";
-import { formatLastSignInDate } from "@/utils/player";
+import { formatLastSignInDate, getInitials } from "@/utils/player";
 
 import styles from "./PlayersList.module.scss";
 interface ComponentProps {
@@ -30,14 +29,19 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
           city,
           description,
           id,
+          profilePictureUrl,
         }) => {
           const formattedLastSignInDate = formatLastSignInDate(lastSignIn);
+          const initials = getInitials(firstName || "", lastName || "");
           return (
             <Link href={`/players/${id}`} key={id}>
               <div className={styles.card}>
                 <div className={styles.top_row_info}>
                   <div style={{ display: "flex" }}>
-                    <ProfilePicture />
+                    <ProfilePicture
+                      initials={initials}
+                      url={profilePictureUrl || ""}
+                    />
                     <div className={styles.name_skillLevel_gender_age}>
                       <p
                         style={{ fontWeight: "bold" }}

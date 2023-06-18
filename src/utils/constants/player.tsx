@@ -34,11 +34,11 @@ export const sortByOptions = [
 ];
 
 export const SPORT_OPTIONS = [
-  { title: "Cricket" },
-  { title: "Tennis" },
-  { title: "Basketball" },
-  { title: "Soccer" },
-  { title: "Volleyball" },
-  { title: "Cycling" },
-  { title: "Running" },
+  "Cricket",
+  "Tennis",
+  "Basketball",
+  "Soccer",
+  "Volleyball",
+  "Cycling",
+  "Running",
 ];

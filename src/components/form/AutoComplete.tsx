@@ -5,19 +5,15 @@ import TextField from "@mui/material/TextField";
 
 import styles from "./AutoComplete.module.scss";
 
-export interface Option {
-  title: string;
-}
-
 export type OnChangeType = (
   event: SyntheticEvent<Element, Event>,
-  newValue: Option | null
+  newValue: string | null
 ) => void;
 interface ComponentProps {
-  options: Option[];
+  options: string[];
   label: string;
   onChange: OnChangeType;
-  value: Option | null;
+  value: string | null;
 }
 
 const AutoCompleteComponent = ({
@@ -32,7 +28,7 @@ const AutoCompleteComponent = ({
       fullWidth
       id="tags-outlined"
       options={options}
-      getOptionLabel={(option) => option.title}
+      getOptionLabel={(option) => option}
       filterSelectedOptions
       onChange={onChange}
       value={value}

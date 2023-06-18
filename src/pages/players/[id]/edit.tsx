@@ -1,4 +1,4 @@
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
 // import * as Tabs from "@radix-ui/react-tabs";
 import { User } from "@supabase/supabase-js";
@@ -11,7 +11,6 @@ import superjson from "superjson";
 import buttonStyles from "@/_styles/_buttons.module.scss";
 import formStyles from "@/_styles/_forms.module.scss";
 import AutoComplete, { OnChangeType } from "@/components/form/AutoComplete";
-import { Option } from "@/components/form/AutoComplete";
 import { DatePicker } from "@/components/form/DatePicker";
 import { Input } from "@/components/form/Input";
 import { PlacesAutoComplete } from "@/components/form/PlacesAutoComplete";
@@ -23,7 +22,6 @@ import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { player } from "@/types/player";
 import { SPORT_OPTIONS } from "@/utils/constants/player";
-import useUser from "@/utils/hooks/useUser";
 import { getInitials } from "@/utils/player";
 import { trpc } from "@/utils/trpc";
 
@@ -73,13 +71,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const [profilePictureUrl, setProfilePictureUrl] = useState(
     player?.profilePictureUrl || ""
   );
-  const [sport, setSport] = useState<Option | null>(
-    player?.sport
-      ? SPORT_OPTIONS[
-          SPORT_OPTIONS.findIndex((option) => option.title === player.sport)
-        ]
-      : null
-  );
+  const [sport, setSport] = useState<string | null>(player?.sport || null);
 
   const initials = getInitials(player?.firstName || "", player?.lastName || "");
 

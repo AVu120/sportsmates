@@ -119,6 +119,7 @@ export const playerRouter = router({
           : "",
         sport: latestPlayer?.sport,
       };
+      console.log({ redactedPlayer });
       return redactedPlayer;
     }),
   list: procedure
@@ -180,7 +181,7 @@ export const playerRouter = router({
       }
 
       let players = await prisma.$queryRaw`
-      SELECT "supabaseId" as id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender, "profilePictureUrl", "isProfilePictureApproved"
+      SELECT "supabaseId" as id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender, "profilePictureUrl", "isProfilePictureApproved", sport
       FROM "Player"
       ${Prisma.raw(whereClause)}
       ${Prisma.raw(sortByClauseOptions[sortBy])}
@@ -243,9 +244,7 @@ export const playerRouter = router({
             "Not a valid value"
           ),
         profilePictureUrl: z.string().optional(),
-        sport: z.object({
-          title: z.string(),
-        }),
+        sport: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -282,7 +281,7 @@ export const playerRouter = router({
               coordinates = ST_Point(${longitude}, ${latitude}),
               gender = ${gender},
               "profilePictureUrl" = ${profilePictureUrl},
-              sport = ${sport.title}
+              sport = ${sport}
           WHERE "supabaseId" = ${supabaseId};`;
       else
         await prisma.$queryRaw`
@@ -295,7 +294,7 @@ export const playerRouter = router({
               description = ${description},
               gender = ${gender},
               "profilePictureUrl" = ${profilePictureUrl},
-              sport = ${sport.title}
+              sport = ${sport}
           WHERE "supabaseId" = ${supabaseId};`;
       return input;
     }),

@@ -45,12 +45,18 @@ export const ProfilePicture = ({
                 alt="Profile picture"
               />
             ) : (
-              <Avatar.Fallback className={styles.AvatarFallback}>
-                {initials}
-              </Avatar.Fallback>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Avatar.Fallback className={styles.AvatarFallback}>
+                  {initials}
+                </Avatar.Fallback>
+              </div>
             )}
 
-            <UploadIcon className={styles.upload_icon} />
+            <UploadIcon
+              className={`${styles.upload_icon} ${
+                !url && styles.upload_icon_fallback
+              }`}
+            />
           </Avatar.Root>
         </label>
       </div>

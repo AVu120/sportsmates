@@ -12,6 +12,10 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.4",
     "@next/font": "13.1.6",
     "@paralleldrive/cuid2": "^2.2.0",
     "@prisma/client": "^4.10.1",
@@ -36,6 +40,9 @@
     "@types/node": "18.13.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.10",
+    "Autocomplete": "link:@mui/material/Autocomplete",
+    "CheckBox": "link:@mui/icons-material/CheckBox",
+    "TextField": "link:@mui/material/TextField",
     "add": "^2.0.6",
     "classnames": "^2.3.2",
     "cloudinary": "^1.37.0",

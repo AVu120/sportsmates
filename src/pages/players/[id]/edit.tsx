@@ -10,6 +10,7 @@ import superjson from "superjson";
 
 import buttonStyles from "@/_styles/_buttons.module.scss";
 import formStyles from "@/_styles/_forms.module.scss";
+import AutoComplete from "@/components/form/AutoComplete";
 import { DatePicker } from "@/components/form/DatePicker";
 import { Input } from "@/components/form/Input";
 import { PlacesAutoComplete } from "@/components/form/PlacesAutoComplete";
@@ -219,33 +220,6 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
               players or attend meetups.
             </p>
           )}
-          {/* <Tabs.Root defaultValue={PROFILE_INFO} style={{ width: "100%" }}>
-            <Tabs.List
-              className={styles.tabs_list}
-              aria-label="Edit your profile"
-            >
-              <Tabs.Trigger
-                className={`${buttonStyles.link_button} ${
-                  selectedTab === PROFILE_INFO &&
-                  buttonStyles.selected_link_button
-                }`}
-                value={PROFILE_INFO}
-                onClick={() => setSelectedTab(PROFILE_INFO)}
-              >
-                Profile Info
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                className={`${buttonStyles.link_button} ${
-                  selectedTab === YOUR_SPORTS &&
-                  buttonStyles.selected_link_button
-                }`}
-                value={YOUR_SPORTS}
-                onClick={() => setSelectedTab(YOUR_SPORTS)}
-              >
-                Your Sports
-              </Tabs.Trigger>
-            </Tabs.List>
-            <Tabs.Content value={PROFILE_INFO} className={styles.tab_content}> */}
           <Form.Root
             onChange={toggleHasMadeChanges}
             className={`${formStyles.form_root} ${styles.form_root}`}
@@ -259,6 +233,12 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
                 url={profilePictureUrl}
                 initials={initials}
               />
+              {!player.isProfilePictureApproved && player.profilePictureUrl && (
+                <p className={styles.picture_pending_admin_approval}>
+                  Picture is waiting for admin approval - after which it will be
+                  displayed to others.
+                </p>
+              )}
             </div>
             <Input
               label="First name"
@@ -331,6 +311,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
                 }
               }}
             />
+            {/* <AutoComplete /> */}
             <Input
               label="Profile Description (what other players will see)"
               type="textarea"

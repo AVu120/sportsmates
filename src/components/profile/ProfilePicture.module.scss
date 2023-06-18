@@ -25,9 +25,12 @@
   background-color: pink;
   color: purple;
   font-size: 1.5rem;
+  object-fit: cover;
+  // border-radius: inherit;
   // line-height: 1;
   // font-weight: 500;
   border-radius: 100%;
+  // text-align: center;
 }
 
 .upload_icon {
@@ -35,5 +38,11 @@
   right: 15px;
   background-color: white;
   border-radius: 100%;
+}
+
+.upload_icon_fallback {
+  right: 0px;
+  left: 20px;
+  bottom: 15px;
 }
 

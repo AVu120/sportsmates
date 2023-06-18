@@ -9,16 +9,17 @@ import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 import { supabase } from "@/services/authentication";
-import { SPORT_OPTIONS } from "@/utils/constants/player";
 import {
   ANY_DISTANCE_FROM_YOU,
   ANY_GENDER,
+  ANY_SPORT,
   CLOSEST_TO_ME,
   genderOptions,
   MOST_RECENTLY_ACTIVE,
   OLDEST_TO_YOUNGEST,
   searchRadiusOptions,
   sortByOptions,
+  sportOptions,
   YOUNGEST_TO_OLDEST,
 } from "@/utils/constants/player";
 
@@ -147,6 +148,12 @@ export const playerRouter = router({
             (data) => sortByOptions.map(({ value }) => value).includes(data),
             "Not a valid value"
           ),
+        sport: z
+          .string()
+          .refine(
+            (data) => sportOptions.map(({ value }) => value).includes(data),
+            "Not a valid value"
+          ),
       })
     )
     .query(async ({ input }) => {
@@ -156,7 +163,8 @@ export const playerRouter = router({
        * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
        */
 
-      const { longitude, latitude, searchRadius, gender, sortBy } = input;
+      const { longitude, latitude, searchRadius, gender, sortBy, sport } =
+        input;
 
       const sortByClauseOptions: { [index: string]: string } = {
         [MOST_RECENTLY_ACTIVE]: `ORDER BY "lastSignIn" DESC`,
@@ -178,6 +186,10 @@ export const playerRouter = router({
         if (gender !== ANY_GENDER) {
           whereClause += ` AND gender = '${gender}' AND "isApproved" = true`;
         } else whereClause += ` AND "isApproved" = true`;
+      }
+
+      if (sport !== ANY_SPORT) {
+        whereClause += ` AND sport = '${sport}'`;
       }
 
       let players = await prisma.$queryRaw`

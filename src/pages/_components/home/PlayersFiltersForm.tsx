@@ -12,6 +12,7 @@ import {
   genderOptions,
   searchRadiusOptions,
   sortByOptions,
+  sportOptions,
 } from "@/utils/constants/player";
 
 import styles from "./PlayersFiltersForm.module.scss";
@@ -90,6 +91,7 @@ const PlayersFiltersForm = ({ onClickApplyButton }: ComponentProps) => {
             }
           }}
         />
+        <SelectField name="sport" options={sportOptions} />
         <SelectField name="searchRadius" options={searchRadiusOptions} />
         <SelectField name="gender" options={genderOptions} />
         <SelectField

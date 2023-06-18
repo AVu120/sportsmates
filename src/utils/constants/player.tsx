@@ -33,7 +33,7 @@ export const sortByOptions = [
   { label: CLOSEST_TO_ME, value: CLOSEST_TO_ME },
 ];
 
-export const SPORT_OPTIONS = [
+export const SPORTS = [
   "Cricket",
   "Tennis",
   "Basketball",
@@ -41,4 +41,13 @@ export const SPORT_OPTIONS = [
   "Volleyball",
   "Cycling",
   "Running",
+];
+
+export const ANY_SPORT = "Any sport";
+export const sportOptions = [
+  { label: ANY_SPORT, value: ANY_SPORT },
+  ...SPORTS.map((sport) => ({
+    label: sport,
+    value: sport,
+  })),
 ];

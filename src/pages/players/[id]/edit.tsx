@@ -21,7 +21,7 @@ import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { player } from "@/types/player";
-import { SPORT_OPTIONS } from "@/utils/constants/player";
+import { SPORTS } from "@/utils/constants/player";
 import { getInitials } from "@/utils/player";
 import { trpc } from "@/utils/trpc";
 
@@ -320,7 +320,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
             {/* Sports AutoComplete */}
             <AutoComplete
               label="What sport do you play?"
-              options={SPORT_OPTIONS}
+              options={SPORTS}
               onChange={onChangeSport}
               value={sport}
             />

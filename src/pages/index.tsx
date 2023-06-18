@@ -10,6 +10,7 @@ import {
   genderOptions,
   searchRadiusOptions,
   sortByOptions,
+  sportOptions,
 } from "@/utils/constants/player";
 import usePlayer from "@/utils/hooks/usePlayer";
 import useUser from "@/utils/hooks/useUser";
@@ -25,12 +26,20 @@ const Players = () => {
     latitude: NaN,
     gender: genderOptions[0].value,
     sortBy: sortByOptions[0].value,
+    sport: sportOptions[0].value,
   });
   const { user } = useUser();
   //@ts-ignore
   const onApplyFilters = (data: FilterFields) => {
-    const { searchRadius, longitude, latitude, gender, sortBy } = data;
-    setQueryFilters({ searchRadius, longitude, latitude, gender, sortBy });
+    const { searchRadius, longitude, latitude, gender, sortBy, sport } = data;
+    setQueryFilters({
+      searchRadius,
+      longitude,
+      latitude,
+      gender,
+      sortBy,
+      sport,
+    });
   };
 
   const { longitude, latitude, ...queryFiltersWithoutLocation } = queryFilters;

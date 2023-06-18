@@ -12,4 +12,5 @@ export interface FilterFields {
   searchRadius: string;
   gender: string;
   sortBy: string;
+  sport: string;
 }

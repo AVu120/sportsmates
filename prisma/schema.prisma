@@ -32,15 +32,6 @@ model Player {
   isApproved   Boolean                          @default(false)
   profilePictureUrl  String?                     @unique
   isProfilePictureApproved Boolean              @default(false)
-  // Sports that the player plays.
-  sports     String?
-  playerSports PlayerSport[]
+  sport     String?
   @@index([coordinates], name: "player_coordinates_index", type: Gist)
-}
-
-model PlayerSport {
-  id String @id @default(cuid())
-  player   Player @relation(fields: [playerId], references: [id])
-  playerId String 
-  sport    String
 }

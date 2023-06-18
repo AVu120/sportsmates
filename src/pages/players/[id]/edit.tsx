@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
 // import * as Tabs from "@radix-ui/react-tabs";
 import { User } from "@supabase/supabase-js";
@@ -10,7 +10,8 @@ import superjson from "superjson";
 
 import buttonStyles from "@/_styles/_buttons.module.scss";
 import formStyles from "@/_styles/_forms.module.scss";
-import AutoComplete from "@/components/form/AutoComplete";
+import AutoComplete, { OnChangeType } from "@/components/form/AutoComplete";
+import { Option } from "@/components/form/AutoComplete";
 import { DatePicker } from "@/components/form/DatePicker";
 import { Input } from "@/components/form/Input";
 import { PlacesAutoComplete } from "@/components/form/PlacesAutoComplete";
@@ -21,6 +22,7 @@ import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { appRouter } from "@/server/routers/_app";
 import { supabase } from "@/services/authentication";
 import { player } from "@/types/player";
+import { SPORT_OPTIONS } from "@/utils/constants/player";
 import useUser from "@/utils/hooks/useUser";
 import { getInitials } from "@/utils/player";
 import { trpc } from "@/utils/trpc";
@@ -44,9 +46,6 @@ interface FormFields {
   longitude?: number;
   latitude?: number;
 }
-
-// const PROFILE_INFO = "profile info";
-// const YOUR_SPORTS = "your sports";
 
 // Every field is required.
 const EditProfilePage = ({ player, user }: ComponentProps) => {
@@ -74,7 +73,13 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
   const [profilePictureUrl, setProfilePictureUrl] = useState(
     player?.profilePictureUrl || ""
   );
-  // const [selectedTab, setSelectedTab] = useState(PROFILE_INFO);
+  const [sport, setSport] = useState<Option | null>(
+    player?.sport
+      ? SPORT_OPTIONS[
+          SPORT_OPTIONS.findIndex((option) => option.title === player.sport)
+        ]
+      : null
+  );
 
   const initials = getInitials(player?.firstName || "", player?.lastName || "");
 
@@ -101,13 +106,21 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
     }
   };
 
+  const onChangeSport: OnChangeType = (event, newValue) => {
+    setSport(newValue);
+    toggleHasMadeChanges();
+  };
+
   const onSubmitForm = async (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!sport) return alert("Please select a sport");
+
     //@ts-ignore
     const formData = Object.fromEntries(
       new FormData(event.currentTarget)
     ) as FormFields;
     const { latitude, longitude } = location;
+
     let input = {
       ...formData,
       supabaseId: user?.id as string,
@@ -115,6 +128,7 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
       latitude,
       longitude,
       profilePictureUrl,
+      sport,
     };
 
     // If player has changed city field value from last saved value.
@@ -311,7 +325,13 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
                 }
               }}
             />
-            {/* <AutoComplete /> */}
+            {/* Sports AutoComplete */}
+            <AutoComplete
+              label="What sport do you play?"
+              options={SPORT_OPTIONS}
+              onChange={onChangeSport}
+              value={sport}
+            />
             <Input
               label="Profile Description (what other players will see)"
               type="textarea"
@@ -330,11 +350,6 @@ const EditProfilePage = ({ player, user }: ComponentProps) => {
               </button>
             </Form.Submit>
           </Form.Root>
-          {/* </Tabs.Content>
-            <Tabs.Content value={YOUR_SPORTS} className={styles.tab_content}>
-              BBB
-            </Tabs.Content>
-          </Tabs.Root> */}
         </main>
         <Footer />
       </div>

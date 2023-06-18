@@ -9,6 +9,7 @@ import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 import { supabase } from "@/services/authentication";
+import { SPORT_OPTIONS } from "@/utils/constants/player";
 import {
   ANY_DISTANCE_FROM_YOU,
   ANY_GENDER,
@@ -95,6 +96,7 @@ export const playerRouter = router({
           lastSignIn: true,
           profilePictureUrl: true,
           isProfilePictureApproved: true,
+          sport: true,
         },
         where: {
           supabaseId: input.supabaseId,
@@ -115,9 +117,8 @@ export const playerRouter = router({
         profilePictureUrl: latestPlayer?.isProfilePictureApproved
           ? latestPlayer?.profilePictureUrl
           : "",
+        sport: latestPlayer?.sport,
       };
-      console.log({ latestPlayer });
-      console.log({ redactedPlayer });
       return redactedPlayer;
     }),
   list: procedure
@@ -242,6 +243,9 @@ export const playerRouter = router({
             "Not a valid value"
           ),
         profilePictureUrl: z.string().optional(),
+        sport: z.object({
+          title: z.string(),
+        }),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -260,6 +264,7 @@ export const playerRouter = router({
         latitude,
         gender,
         profilePictureUrl,
+        sport,
       } = input;
 
       const isUpdatingCoordinates =
@@ -276,7 +281,8 @@ export const playerRouter = router({
               description = ${description},
               coordinates = ST_Point(${longitude}, ${latitude}),
               gender = ${gender},
-              "profilePictureUrl" = ${profilePictureUrl}
+              "profilePictureUrl" = ${profilePictureUrl},
+              sport = ${sport.title}
           WHERE "supabaseId" = ${supabaseId};`;
       else
         await prisma.$queryRaw`
@@ -288,7 +294,8 @@ export const playerRouter = router({
               city = ${city},
               description = ${description},
               gender = ${gender},
-              "profilePictureUrl" = ${profilePictureUrl}
+              "profilePictureUrl" = ${profilePictureUrl},
+              sport = ${sport.title}
           WHERE "supabaseId" = ${supabaseId};`;
       return input;
     }),

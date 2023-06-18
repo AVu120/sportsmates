@@ -32,3 +32,13 @@ export const sortByOptions = [
   { label: YOUNGEST_TO_OLDEST, value: YOUNGEST_TO_OLDEST },
   { label: CLOSEST_TO_ME, value: CLOSEST_TO_ME },
 ];
+
+export const SPORT_OPTIONS = [
+  { title: "Cricket" },
+  { title: "Tennis" },
+  { title: "Basketball" },
+  { title: "Soccer" },
+  { title: "Volleyball" },
+  { title: "Cycling" },
+  { title: "Running" },
+];

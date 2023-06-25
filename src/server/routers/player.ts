@@ -15,12 +15,8 @@ import {
   ANY_GENDER,
   ANY_SPORT,
   CLOSEST_TO_ME,
-  genderOptions,
   MOST_RECENTLY_ACTIVE,
   OLDEST_TO_YOUNGEST,
-  searchRadiusOptions,
-  sortByOptions,
-  sportOptions,
   YOUNGEST_TO_OLDEST,
 } from "@/utils/constants/player";
 import { calculateAge } from "@/utils/player";
@@ -126,16 +122,7 @@ export const playerRouter = router({
      * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
      */
 
-    const {
-      longitude,
-      latitude,
-      searchRadius,
-      gender,
-      sortBy,
-      sport,
-      offset,
-      limit,
-    } = input;
+    const { longitude, latitude, searchRadius, gender, sortBy, sport } = input;
 
     const sortByClauseOptions: { [index: string]: string } = {
       [MOST_RECENTLY_ACTIVE]: `ORDER BY "lastSignIn" DESC`,
@@ -168,7 +155,7 @@ export const playerRouter = router({
       FROM "Player"
       ${Prisma.raw(whereClause)}
       ${Prisma.raw(sortByClauseOptions[sortBy])}
-      OFFSET ${offset || 0} LIMIT ${limit || 10};`;
+      LIMIT 10;`;
 
     // Birthday is redacted and only age is returned to prevent leakage of PII to the client.
     // @ts-ignore

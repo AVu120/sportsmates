@@ -20,9 +20,10 @@ import { trpc } from "@/utils/trpc";
 
 import styles from "./_index.module.scss";
 
+const LIMIT = 10;
 // Home Page
 const Players = () => {
-  const [pagination, setPagination] = useState({ offset: 0, limit: 10 });
+  const [offset, setOffset] = useState(0);
   const [players, setPlayers] = useState<player[]>([]);
   const [queryFilters, setQueryFilters] = useState({
     searchRadius: searchRadiusOptions[0].value,
@@ -44,22 +45,21 @@ const Players = () => {
       sortBy,
       sport,
     });
-    setPagination({ offset: 0, limit: 10 });
+    setOffset(0);
   };
 
   const loadMorePlayers = async () => {
     const { searchRadius, longitude, latitude, gender, sortBy, sport } =
       queryFilters;
-    const updatedOffset = pagination.offset + 10;
-    const updatedLimit = pagination.limit + 10;
+    const updatedOffset = offset + 10;
     const response = await fetch(
-      `/api/players?searchRadius=${searchRadius}&longitude=${longitude}&latitude=${latitude}&gender=${gender}&sortBy=${sortBy}&sport=${sport}&limit=${updatedLimit}&offset=${updatedOffset}`
+      `/api/players?searchRadius=${searchRadius}&longitude=${longitude}&latitude=${latitude}&gender=${gender}&sortBy=${sortBy}&sport=${sport}&limit=${LIMIT}&offset=${updatedOffset}`
     );
     const data = await response.json();
     if (data.length === 0) return alert("No more players");
 
     setPlayers((prev) => [...prev, ...data]);
-    setPagination({ offset: updatedOffset, limit: updatedLimit });
+    setOffset(updatedOffset);
   };
 
   const { longitude, latitude, ...queryFiltersWithoutLocation } = queryFilters;

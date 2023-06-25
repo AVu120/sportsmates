@@ -25,16 +25,8 @@ export default async function handler(
   if (req.method === "GET") {
     listPlayersBodyAPIValidation.parse(req.query);
 
-    const {
-      longitude,
-      latitude,
-      searchRadius,
-      gender,
-      sortBy,
-      sport,
-      offset,
-      limit,
-    } = req.query;
+    const { longitude, latitude, searchRadius, gender, sortBy, sport, offset } =
+      req.query;
 
     if (longitude && latitude) {
       if (
@@ -57,17 +49,6 @@ export default async function handler(
         return res
           .status(400)
           .json({ message: "Offset must be greater than or equal to 0." });
-      }
-    }
-
-    if (limit) {
-      if (isNaN(Number(limit))) {
-        return res.status(400).json({ message: "Limit must be a number." });
-      }
-      if (Number(limit) < 0) {
-        return res
-          .status(400)
-          .json({ message: "Limit must be greater than or equal to 10." });
       }
     }
 
@@ -102,7 +83,7 @@ export default async function handler(
   FROM "Player"
   ${Prisma.raw(whereClause)}
   ${Prisma.raw(sortByClauseOptions[sortBy as string])}
-  OFFSET ${Number(offset) || 0} LIMIT ${Number(limit) || 10};`;
+  OFFSET ${Number(offset) || 0} LIMIT 10;`;
 
     // Birthday is redacted and only age is returned to prevent leakage of PII to the client.
     // @ts-ignore

@@ -56,6 +56,7 @@ const Players = () => {
       `/api/players?searchRadius=${searchRadius}&longitude=${longitude}&latitude=${latitude}&gender=${gender}&sortBy=${sortBy}&sport=${sport}&limit=${updatedLimit}&offset=${updatedOffset}`
     );
     const data = await response.json();
+    if (data.length === 0) return alert("No more players");
 
     setPlayers((prev) => [...prev, ...data]);
     setPagination({ offset: updatedOffset, limit: updatedLimit });

@@ -7,7 +7,7 @@ import { formatLastSignInDate, getInitials } from "@/utils/player";
 import styles from "./PlayersList.module.scss";
 interface ComponentProps {
   players: player[];
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 const PlayersList = ({ players, isLoading }: ComponentProps) => {

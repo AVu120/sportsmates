@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 
+import buttonStyles from "@/_styles/_buttons.module.scss";
 import { Footer } from "@/components/navigation/Footer";
 import { Header } from "@/components/navigation/Header";
 import PlayersFiltersForm from "@/pages/_components/home/PlayersFiltersForm";
 import PlayersList from "@/pages/_components/home/PlayersList";
 import { FilterFields } from "@/types/forms";
+import { player } from "@/types/player";
 import {
   genderOptions,
   searchRadiusOptions,
@@ -20,6 +22,8 @@ import styles from "./_index.module.scss";
 
 // Home Page
 const Players = () => {
+  const [pagination, setPagination] = useState({ offset: 0, limit: 10 });
+  const [players, setPlayers] = useState<player[]>([]);
   const [queryFilters, setQueryFilters] = useState({
     searchRadius: searchRadiusOptions[0].value,
     longitude: NaN,
@@ -40,6 +44,21 @@ const Players = () => {
       sortBy,
       sport,
     });
+    setPagination({ offset: 0, limit: 10 });
+  };
+
+  const loadMorePlayers = async () => {
+    const { searchRadius, longitude, latitude, gender, sortBy, sport } =
+      queryFilters;
+    const updatedOffset = pagination.offset + 10;
+    const updatedLimit = pagination.limit + 10;
+    const response = await fetch(
+      `/api/players?searchRadius=${searchRadius}&longitude=${longitude}&latitude=${latitude}&gender=${gender}&sortBy=${sortBy}&sport=${sport}&limit=${updatedLimit}&offset=${updatedOffset}`
+    );
+    const data = await response.json();
+
+    setPlayers((prev) => [...prev, ...data]);
+    setPagination({ offset: updatedOffset, limit: updatedLimit });
   };
 
   const { longitude, latitude, ...queryFiltersWithoutLocation } = queryFilters;
@@ -48,6 +67,16 @@ const Players = () => {
   const listPlayers = trpc.player.list.useQuery(
     isNaN(longitude) ? queryFiltersWithoutLocation : queryFilters
   );
+
+  useEffect(() => {
+    // @ts-ignore
+    setPlayers(listPlayers.data);
+  }, [listPlayers?.data]);
+
+  const hasMorePlayers =
+    !listPlayers.isLoading &&
+    players?.length !== 0 &&
+    players?.length % 10 === 0;
 
   return (
     <>
@@ -73,8 +102,18 @@ const Players = () => {
             </div>
             <div className={styles.players_container}>
               {/* @ts-ignore */}
-              <PlayersList players={listPlayers?.data || []} />
-              {/* <PlayersList players={[]} isLoading={false} /> */}
+              <PlayersList
+                players={players}
+                isLoading={listPlayers.isLoading}
+              />
+              {hasMorePlayers && (
+                <button
+                  className={`${buttonStyles.primary_button} ${styles.load_more_players_button}`}
+                  onClick={loadMorePlayers}
+                >
+                  Load More Players
+                </button>
+              )}
             </div>
           </div>
         </main>

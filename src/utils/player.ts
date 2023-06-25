@@ -19,3 +19,9 @@ export const formatLastSignInDate = (date: Date | null) => {
 
 export const getInitials = (firstName: string, lastName: string) =>
   `${firstName?.[0]}${lastName?.[0]}`.toUpperCase();
+
+export const calculateAge = (birthday: string) =>
+  Math.floor(
+    // @ts-ignore
+    (new Date().getTime() - new Date(birthday).getTime()) / 3.15576e10
+  );

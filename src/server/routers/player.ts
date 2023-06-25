@@ -8,6 +8,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
+import { prisma } from "@/server/lib/prisma";
 import { supabase } from "@/services/authentication";
 import {
   ANY_DISTANCE_FROM_YOU,
@@ -22,8 +23,9 @@ import {
   sportOptions,
   YOUNGEST_TO_OLDEST,
 } from "@/utils/constants/player";
+import { calculateAge } from "@/utils/player";
+import { listPlayersBodyValidation } from "@/utils/validation/player";
 
-import { prisma } from "../lib/prisma";
 import { procedure, router } from "../trpc";
 
 /** User must be logged in and the owner of this data to access this. */
@@ -32,12 +34,6 @@ const secureApi = (id: string, supabaseId: string) => {
     throw new Error("You are not authorized to do this.");
   }
 };
-
-const calculateAge = (birthday: string) =>
-  Math.floor(
-    // @ts-ignore
-    (new Date().getTime() - new Date(birthday).getTime()) / 3.15576e10
-  );
 
 export const playerRouter = router({
   getPrivateData: procedure
@@ -123,100 +119,75 @@ export const playerRouter = router({
       console.log({ redactedPlayer });
       return redactedPlayer;
     }),
-  list: procedure
-    .input(
-      z.object({
-        longitude: z.number().min(-180).max(180).optional(),
-        latitude: z.number().min(-180).max(180).optional(),
-        // Search range in meters.
-        searchRadius: z
-          .string()
-          .refine(
-            (data) =>
-              searchRadiusOptions.map(({ value }) => value).includes(data),
-            "Not a valid value"
-          ),
-        gender: z
-          .string()
-          .refine(
-            (data) => genderOptions.map(({ value }) => value).includes(data),
-            "Not a valid value"
-          ),
-        sortBy: z
-          .string()
-          .refine(
-            (data) => sortByOptions.map(({ value }) => value).includes(data),
-            "Not a valid value"
-          ),
-        sport: z
-          .string()
-          .refine(
-            (data) => sportOptions.map(({ value }) => value).includes(data),
-            "Not a valid value"
-          ),
-      })
-    )
-    .query(async ({ input }) => {
-      /**
-       * For pagination docs you can have a look here
-       * @see https://trpc.io/docs/useInfiniteQuery
-       * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
-       */
+  list: procedure.input(listPlayersBodyValidation).query(async ({ input }) => {
+    /**
+     * For pagination docs you can have a look here
+     * @see https://trpc.io/docs/useInfiniteQuery
+     * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
+     */
 
-      const { longitude, latitude, searchRadius, gender, sortBy, sport } =
-        input;
+    const {
+      longitude,
+      latitude,
+      searchRadius,
+      gender,
+      sortBy,
+      sport,
+      offset,
+      limit,
+    } = input;
 
-      const sortByClauseOptions: { [index: string]: string } = {
-        [MOST_RECENTLY_ACTIVE]: `ORDER BY "lastSignIn" DESC`,
-        [OLDEST_TO_YOUNGEST]: "ORDER BY birthday ASC",
-        [YOUNGEST_TO_OLDEST]: "ORDER BY birthday DESC",
-        [CLOSEST_TO_ME]: `ORDER BY coordinates <-> ST_Point(${longitude}, ${latitude}) ASC`,
-      };
+    const sortByClauseOptions: { [index: string]: string } = {
+      [MOST_RECENTLY_ACTIVE]: `ORDER BY "lastSignIn" DESC`,
+      [OLDEST_TO_YOUNGEST]: "ORDER BY birthday ASC",
+      [YOUNGEST_TO_OLDEST]: "ORDER BY birthday DESC",
+      [CLOSEST_TO_ME]: `ORDER BY coordinates <-> ST_Point(${longitude}, ${latitude}) ASC`,
+    };
 
-      let whereClause = "";
-      // If search radius is not set.
-      if (searchRadius === ANY_DISTANCE_FROM_YOU) {
-        // If gender is set.
-        if (gender !== ANY_GENDER) {
-          whereClause += `WHERE gender = '${gender}' AND "isApproved" = true`;
-        } else whereClause += `WHERE "isApproved" = true`;
-      } else {
-        whereClause += `WHERE ST_DWithin(coordinates, ST_Point(${longitude}, ${latitude}), ${searchRadius}000)`;
+    let whereClause = "";
+    // If search radius is not set.
+    if (searchRadius === ANY_DISTANCE_FROM_YOU) {
+      // If gender is set.
+      if (gender !== ANY_GENDER) {
+        whereClause += `WHERE gender = '${gender}' AND "isApproved" = true`;
+      } else whereClause += `WHERE "isApproved" = true`;
+    } else {
+      whereClause += `WHERE ST_DWithin(coordinates, ST_Point(${longitude}, ${latitude}), ${searchRadius}000)`;
 
-        if (gender !== ANY_GENDER) {
-          whereClause += ` AND gender = '${gender}' AND "isApproved" = true`;
-        } else whereClause += ` AND "isApproved" = true`;
-      }
+      if (gender !== ANY_GENDER) {
+        whereClause += ` AND gender = '${gender}' AND "isApproved" = true`;
+      } else whereClause += ` AND "isApproved" = true`;
+    }
 
-      if (sport !== ANY_SPORT) {
-        whereClause += ` AND sport = '${sport}'`;
-      }
+    if (sport !== ANY_SPORT) {
+      whereClause += ` AND sport = '${sport}'`;
+    }
 
-      let players = await prisma.$queryRaw`
+    let players = await prisma.$queryRaw`
       SELECT "supabaseId" as id, "firstName", "lastName", "skillLevel", birthday, "lastSignIn", city, description, gender, "profilePictureUrl", "isProfilePictureApproved", sport
       FROM "Player"
       ${Prisma.raw(whereClause)}
       ${Prisma.raw(sortByClauseOptions[sortBy])}
-      LIMIT 10;`;
+      OFFSET ${offset || 0} LIMIT ${limit || 10};`;
 
-      // Birthday is redacted and only age is returned to prevent leakage of PII to the client.
-      // @ts-ignore
-      players = players.map((player) => {
-        const age = calculateAge(player.birthday);
-        const { birthday, ...playerWithoutBirthday } = player;
+    // Birthday is redacted and only age is returned to prevent leakage of PII to the client.
+    // @ts-ignore
+    players = players.map((player) => {
+      const age = calculateAge(player.birthday);
+      const { birthday, ...playerWithoutBirthday } = player;
 
-        return {
-          ...playerWithoutBirthday,
-          age,
-          // Only show profile picture if it has been approved by admin
-          profilePictureUrl: player?.isProfilePictureApproved
-            ? player?.profilePictureUrl
-            : "",
-        };
-      });
+      return {
+        ...playerWithoutBirthday,
+        age,
+        // Only show profile picture if it has been approved by admin
+        profilePictureUrl: player?.isProfilePictureApproved
+          ? player?.profilePictureUrl
+          : "",
+      };
+    });
 
-      return players;
-    }),
+    return players;
+  }),
   add: procedure
     .input(
       z.object({

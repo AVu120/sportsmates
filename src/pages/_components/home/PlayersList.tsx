@@ -3,15 +3,31 @@ import Link from "next/link";
 
 import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import { player } from "@/types/player";
+import { useViewport } from "@/utils/hooks/useViewport";
 import { formatLastSignInDate, getInitials } from "@/utils/player";
 
 import styles from "./PlayersList.module.scss";
+
 interface ComponentProps {
   players: player[];
   isLoading?: boolean;
 }
 
+const getDynamicRowHeight = (width: number) => {
+  if (width < 400) return 420;
+  if (width < 500) return 350;
+  if (width < 600) return 320;
+  if (width < 800) return 275;
+  if (width < 1000) return 250;
+  if (width < 1200) return 220;
+  if (width < 1400) return 210;
+  if (width < 1600) return 200;
+  if (width >= 1600) return 200;
+  return 200;
+};
+
 const PlayersList = ({ players, isLoading }: ComponentProps) => {
+  const { width } = useViewport();
   if (isLoading)
     return <div style={{ textAlign: "center" }}>Loading players...</div>;
   if (!players || players.length === 0) {
@@ -19,7 +35,12 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
   }
   return (
     <div>
-      <List height={800} itemCount={players.length} itemSize={235} width="100%">
+      <List
+        height={800}
+        itemCount={players.length}
+        itemSize={getDynamicRowHeight(width)}
+        width="100%"
+      >
         {({ index, style }: { index: number; style: React.CSSProperties }) => {
           const {
             lastSignIn,
@@ -35,6 +56,7 @@ const PlayersList = ({ players, isLoading }: ComponentProps) => {
           } = players[index];
           const formattedLastSignInDate = formatLastSignInDate(lastSignIn);
           const initials = getInitials(firstName || "", lastName || "");
+
           return (
             <div style={style}>
               <Link href={`/players/${id}`} key={id}>

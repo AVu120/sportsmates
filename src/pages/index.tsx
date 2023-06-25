@@ -16,7 +16,6 @@ import {
 } from "@/utils/constants/player";
 import usePlayer from "@/utils/hooks/usePlayer";
 import useUser from "@/utils/hooks/useUser";
-import { useViewport } from "@/utils/hooks/useViewport";
 import { trpc } from "@/utils/trpc";
 
 import styles from "./_index.module.scss";

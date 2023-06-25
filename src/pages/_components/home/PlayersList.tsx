@@ -28,6 +28,7 @@ const getDynamicRowHeight = (width: number) => {
 
 const PlayersList = ({ players, isLoading }: ComponentProps) => {
   const { width } = useViewport();
+  console.log({ width });
   if (isLoading)
     return <div style={{ textAlign: "center" }}>Loading players...</div>;
   if (!players || players.length === 0) {

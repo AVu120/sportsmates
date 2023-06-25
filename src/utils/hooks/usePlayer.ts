@@ -12,9 +12,12 @@ interface HookProps {
  * if the player has not yet set their profile.
  */
 const usePlayer = ({ user }: HookProps) => {
-  const player = trpc.player.getPublicData.useQuery({
-    supabaseId: user?.id || "",
-  });
+  const player = trpc.player.getPublicData.useQuery(
+    {
+      supabaseId: user?.id || "",
+    },
+    { enabled: !!user?.id }
+  );
 
   // If user is logged in and has not set their profile, redirect them to the edit page.
   useEffect(() => {

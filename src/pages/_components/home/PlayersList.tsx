@@ -17,6 +17,7 @@ const getDynamicRowHeight = (width: number) => {
   if (width < 400) return 420;
   if (width < 500) return 350;
   if (width < 600) return 320;
+  if (width < 700) return 300;
   if (width < 800) return 275;
   if (width < 1000) return 250;
   if (width < 1200) return 220;

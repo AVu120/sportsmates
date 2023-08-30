@@ -43,5 +43,10 @@
 
 .description {
   margin-top: 20px;
+  overflow: hidden;
+  // height: 2rem;
+  // white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 

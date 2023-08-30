@@ -10,7 +10,6 @@ export default trpcNext.createNextApiHandler({
 });
 
 export const config = {
-  runtime: "edge",
   api: {
     bodyParser: {
       sizeLimit: "4mb", // Set desired value here
